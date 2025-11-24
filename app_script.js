@@ -1,82 +1,105 @@
-/* app_script.js */
+// SPLASH SCREEN TIMER
+setTimeout(() => {
+    // 2.5 Saniye sonra Splash ekranı kalkar, Welcome gelir
+    document.getElementById('welcome-screen').style.display = 'flex';
+}, 2500);
 
-document.addEventListener('DOMContentLoaded', () => {
+// UYGULAMAYI BAŞLAT (Home'a Geç)
+function startApp() {
+    document.getElementById('welcome-screen').style.display = 'none';
+    document.getElementById('app-header').style.display = 'flex';
+    document.getElementById('content-area').style.display = 'block';
+    document.getElementById('bottom-nav').style.display = 'flex';
     switchTab('home');
-});
+}
 
-// Sekme Değiştirme
+// TAB DEĞİŞTİRME
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.nav-center').forEach(el => el.classList.remove('active'));
-
+    
     document.getElementById(tabId).classList.add('active');
     
-    // Alt menüyü aktif yap
-    const navBtn = document.querySelector(`.nav-item[onclick="switchTab('${tabId}')"]`);
-    if(navBtn) navBtn.classList.add('active');
-    
-    // Orta buton (Buddy) kontrolü
-    if(tabId === 'buddy') {
-        document.querySelector('.nav-center').classList.add('active');
+    // Alt menüyü güncelle
+    const navItem = document.querySelector(`.nav-item[onclick="switchTab('${tabId}')"]`);
+    if(navItem) navItem.classList.add('active');
+}
+
+// GUIDE DETAY MANTIĞI (ADIM ADIM)
+let currentStep = 1;
+const totalSteps = 3;
+const steps = [
+    { title: "Step 1: Roll the Ball", desc: "Take orange dough and roll it into a smooth ball.", img: "step1.jpg" },
+    { title: "Step 2: Create Petals", desc: "Make 5 small pink balls and flatten them for petals.", img: "step2.jpg" },
+    { title: "Step 3: Assemble", desc: "Attach petals to the center and add a green stem!", img: "step3.jpg" }
+];
+
+function openGuideDetail(guideId) {
+    // Şimdilik sadece 'flower' var
+    switchTab('guide-detail');
+    currentStep = 1;
+    updateStepUI();
+}
+
+function nextStep() {
+    if(currentStep < totalSteps) {
+        currentStep++;
+        updateStepUI();
+    } else {
+        alert("Challenge Complete! +50 Points");
+        switchTab('rewards');
     }
 }
 
-// FOTOĞRAF YÜKLEME SİMÜLASYONU
-function uploadBuddy() {
-    const uploadText = document.getElementById('upload-text');
-    const loading = document.getElementById('upload-loading');
-    const image = document.getElementById('my-buddy-img');
-    const actionBtn = document.getElementById('buddy-action-btn');
+function prevStep() {
+    if(currentStep > 1) {
+        currentStep--;
+        updateStepUI();
+    }
+}
 
-    // 1. Yükleniyor efekti
-    uploadText.style.display = 'none';
-    loading.style.display = 'block';
-    loading.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Character Scanning...';
+function updateStepUI() {
+    const step = steps[currentStep - 1];
+    document.getElementById('step-title').innerText = step.title;
+    document.getElementById('step-desc').innerText = step.desc;
+    document.getElementById('step-image').src = step.img;
+    
+    // Bar güncelleme
+    for(let i=1; i<=3; i++) {
+        document.getElementById(`bar-${i}`).className = i <= currentStep ? 'step-bar active' : 'step-bar';
+    }
+}
 
-    // 2. 2 saniye sonra fotoğrafı göster
+// BUDDY UPLOAD & MATH
+function triggerUpload() {
+    document.getElementById('upload-placeholder').style.display = 'none';
+    document.getElementById('loading-spinner').style.display = 'block';
+    
     setTimeout(() => {
-        loading.style.display = 'none';
-        image.style.display = 'block'; // FOTOĞRAFI GÖSTER
+        document.getElementById('loading-spinner').style.display = 'none';
+        document.getElementById('uploaded-buddy').style.display = 'block';
         
-        // Butonu "Ders Çalış" moduna çevir
-        actionBtn.innerText = "Start Learning Together!";
-        actionBtn.setAttribute("onclick", "startLesson()");
-        actionBtn.style.backgroundColor = "#C4DFD9";
-        actionBtn.style.color = "#3b6b3b";
-        
-        alert("Harika! Arkadaşın 'Doughy' başarıyla yüklendi. Artık beraber ders çalışabilirsiniz!");
+        const btn = document.getElementById('btn-start-lesson');
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
+        btn.style.background = '#424874';
     }, 2000);
 }
 
-// DERS ÇALIŞMA MODUNU BAŞLAT
-function startLesson() {
-    // Buddy ekranını gizle, ders ekranını aç
-    document.getElementById('buddy-home').style.display = 'none';
-    document.getElementById('lesson-mode').classList.add('active');
+function startMathLesson() {
+    document.getElementById('buddy-upload-screen').style.display = 'none';
+    document.getElementById('math-screen').style.display = 'block';
 }
 
-// CEVAP KONTROLÜ
 function checkAnswer(btn, isCorrect) {
     if(isCorrect) {
-        btn.style.background = '#C4DFD9'; // Yeşil
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Correct!';
-        setTimeout(() => {
-            alert("Tebrikler! Doughy seninle gurur duyuyor! +50 Puan");
-            switchTab('rewards'); // Ödül sayfasına at
-        }, 1000);
+        btn.style.background = '#C4DFD9';
+        setTimeout(() => alert("Correct! Great job!"), 500);
     } else {
-        btn.style.background = '#FFD1BA'; // Kırmızımsı
-        btn.innerText = 'Try Again';
+        btn.style.background = '#FFD1BA';
     }
 }
 
-// DETAY SAYFALARI (Guide vb.)
-function openPage(pageId) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-}
-
-function goBack(toTab) {
-    switchTab(toTab);
+function goBack(tab) {
+    switchTab(tab);
 }
