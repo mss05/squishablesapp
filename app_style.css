@@ -1,0 +1,116 @@
+/* app_style.css - MOBİL UYGULAMA TASARIMI */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap');
+
+:root {
+    --app-purple: #DCD6F7; /* Header Moru */
+    --app-bg: #F4F7F6;
+    --app-peach: #FFD1BA; /* Butonlar */
+    --app-mint: #C4DFD9; /* Yeşil Alanlar */
+    --app-dark: #424874; /* Yazılar */
+    --white: #ffffff;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    margin: 0; padding: 0;
+    font-family: 'Nunito', sans-serif;
+    background-color: #eef2f5; /* Masaüstü arka planı */
+    display: flex; justify-content: center; min-height: 100vh;
+}
+
+/* MOBİL SİMÜLASYON KUTUSU */
+#mobile-screen {
+    width: 100%; max-width: 414px; /* iPhone Boyutu */
+    background-color: var(--white);
+    height: 100vh;
+    position: relative;
+    box-shadow: 0 0 50px rgba(0,0,0,0.1);
+    overflow: hidden; display: flex; flex-direction: column;
+}
+
+/* HEADER */
+.app-header {
+    padding: 20px; display: flex; justify-content: space-between; align-items: center;
+    background: white; position: sticky; top: 0; z-index: 10;
+}
+.brand-pill {
+    background-color: #C3B1E1; color: #5a4b8f;
+    padding: 5px 15px; border-radius: 20px; font-family: 'Fredoka'; font-weight: bold;
+}
+.bell-icon {
+    font-size: 1.2rem; background: #FFE5D9; padding: 8px; border-radius: 50%; color: #d68c6d; position: relative; cursor: pointer;
+}
+.red-dot {
+    position: absolute; top: 5px; right: 8px; width: 8px; height: 8px; background: red; border-radius: 50%;
+}
+
+/* İÇERİK ALANI (Scroll edilebilir) */
+.content-area {
+    flex: 1; padding: 20px; overflow-y: auto; padding-bottom: 80px; /* Menü payı */
+}
+
+/* KARTLAR */
+.card {
+    background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0f0f0;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.card-col { display: flex; flex-direction: column; gap: 5px; }
+
+h2 { font-family: 'Fredoka'; color: var(--app-dark); margin: 0 0 15px 0; }
+h3 { font-family: 'Fredoka'; margin: 0; color: var(--app-dark); font-size: 1.1rem; }
+p { margin: 0; color: #888; font-size: 0.9rem; }
+
+/* BUTONLAR */
+.btn-start {
+    background-color: #C1E1C1; color: #3b6b3b; border: none; padding: 10px 20px;
+    border-radius: 20px; font-weight: bold; cursor: pointer;
+}
+.btn-resume {
+    background-color: var(--app-peach); color: #8f5e41; border: none; padding: 10px 20px;
+    border-radius: 20px; font-weight: bold; cursor: pointer;
+}
+.btn-big-peach {
+    background-color: #FFAAA5; color: white; width: 100%; padding: 15px;
+    border: none; border-radius: 25px; font-size: 1.1rem; font-weight: bold;
+    margin-top: 20px; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 170, 165, 0.4);
+}
+
+/* ZORLUK SEVİYESİ NOKTALARI */
+.dots { display: flex; gap: 5px; margin-top: 5px; }
+.dot { width: 8px; height: 8px; background: #ddd; border-radius: 50%; }
+.dot.filled { background: orange; }
+
+/* ALT MENÜ (BOTTOM NAV) */
+.bottom-nav {
+    position: absolute; bottom: 0; width: 100%; background: white;
+    display: flex; justify-content: space-around; padding: 15px 0;
+    border-top: 1px solid #f0f0f0;
+}
+.nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    color: #aaa; font-size: 0.8rem; cursor: pointer; width: 25%;
+}
+.nav-item i { font-size: 1.3rem; }
+.nav-item.active { color: #FF8C42; font-weight: bold; }
+
+/* EKRANLAR ARASI GEÇİŞ (Tabs) */
+.tab-content { display: none; animation: fadeIn 0.3s; }
+.tab-content.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* REWARDS SAYFASI ÖZEL */
+.points-card {
+    background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
+    color: white; text-align: center; padding: 40px 20px; border-radius: 25px; margin-bottom: 25px;
+}
+.badge-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+.badge-item { background: white; padding: 15px 10px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+.badge-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+
+/* GUIDE DETAIL SAYFASI */
+.step-card { background: #f9f9f9; padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 4px solid transparent; }
+.step-card.active { background: white; border-left: 4px solid var(--app-mint); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.timer { font-size: 3rem; text-align: center; font-family: 'Fredoka'; color: #2d2d2d; margin: 30px 0; }
