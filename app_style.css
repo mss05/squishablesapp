@@ -114,3 +114,9 @@ p { margin: 0; color: #888; font-size: 0.9rem; }
 .step-card { background: #f9f9f9; padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 4px solid transparent; }
 .step-card.active { background: white; border-left: 4px solid var(--app-mint); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
 .timer { font-size: 3rem; text-align: center; font-family: 'Fredoka'; color: #2d2d2d; margin: 30px 0; }
+/* app_style.css dosyasının EN SONUNA ekle */
+
+.app-logo {
+    height: 35px; /* Logonun yüksekliğini ayarlar, gerekirse 30px veya 40px deneyebilirsin */
+    width: auto; /* Genişliği otomatik ayarlar, bozulmaz */
+}
