@@ -13,39 +13,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- CSS: TASARIM SİSTEMİ --- */
+        /* --- 1. TEMEL AYARLAR --- */
         :root {
-            --theme-color: #C4DFD9; /* Dinamik Tema Rengi */
+            --theme-color: #C4DFD9;
             --mint: #C4DFD9; --dark-mint: #2e5c4d;
             --peach: #FFD1BA; --dark-peach: #d68c6d;
             --purple: #DCD6F7; --dark-purple: #424874;
             --bg-color: #eef2f5;
+            --white: #ffffff;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
         body { margin: 0; padding: 0; font-family: 'Nunito', sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-        /* TELEFON ÇERÇEVESİ */
+        /* TELEFON KASASI */
         #app-frame {
-            width: 375px; height: 812px; background-color: white;
+            width: 375px; height: 812px; background-color: var(--white);
             border-radius: 40px; position: relative; overflow: hidden;
             box-shadow: 0 30px 60px rgba(0,0,0,0.3); border: 8px solid #222;
         }
         .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 30px; background: #222; border-radius: 0 0 20px 20px; z-index: 999; }
 
-        /* EKRAN YÖNETİMİ */
+        /* --- 2. BİLDİRİM SİSTEMİ (TOAST) --- */
+        #toast-container {
+            position: absolute; top: 50px; left: 50%; transform: translateX(-50%);
+            z-index: 2000; width: 90%; pointer-events: none;
+        }
+        .toast {
+            background: #333; color: white; padding: 12px 20px; border-radius: 30px;
+            text-align: center; margin-bottom: 10px; opacity: 0; transform: translateY(-20px);
+            transition: all 0.3s ease; font-size: 0.9rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { background: var(--dark-mint); }
+        .toast.error { background: #ff6b6b; }
+
+        /* --- 3. EKRAN YÖNETİMİ --- */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: white; display: none; flex-direction: column;
             padding-top: 40px; animation: fadeIn 0.3s ease; z-index: 10;
         }
         .screen.active { display: flex; }
-        
-        /* Scroll Alanı */
         .scroll-content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 90px; }
         .scroll-content::-webkit-scrollbar { display: none; }
 
-        /* Tipografi */
+        /* BİLEŞENLER */
         h1, h2, h3 { font-family: 'Fredoka', sans-serif; color: #333; margin: 10px 0; }
         p { color: #888; font-size: 0.9rem; line-height: 1.5; margin-top: 0; }
 
@@ -56,6 +70,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-top: auto; transition: 0.2s;
         }
         .btn-primary:active { transform: scale(0.98); }
+        .btn-secondary { background: #eee; color: #555; }
 
         .btn-action { padding: 8px 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; font-size: 0.8rem; margin-left: auto; }
         .btn-green { background: #C1E1C1; color: #2d5a2d; }
@@ -72,39 +87,49 @@
         .icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; flex-shrink: 0; }
 
         /* Header */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background:white; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background:white; border-bottom: 1px solid #f9f9f9; }
 
-        /* Onboarding Stilleri */
+        /* Onboarding */
         .onboard-img { width: 140px; height: 140px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white; margin: 40px auto; }
         .dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
         .dot { width: 10px; height: 10px; background: #eee; border-radius: 50%; }
         .dot.active { background: #333; }
 
-        /* Profil Stilleri */
+        /* Profil Detaylı */
         .input-group { margin-bottom: 15px; }
         .custom-input { width: 100%; padding: 15px; background: #f9f9f9; border: 1px solid #eee; border-radius: 15px; margin-bottom: 10px; font-family: 'Nunito'; font-size: 1rem; }
         .color-picker { display: flex; gap: 15px; margin-top: 5px; }
         .color-opt { width: 50px; height: 50px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; }
         .color-opt.selected { border-color: #333; transform: scale(1.1); }
+        .toggle-switch { width: 50px; height: 26px; background: #eee; border-radius: 13px; position: relative; cursor: pointer; transition: 0.3s; }
+        .toggle-switch.active { background: var(--theme-color); }
+        .toggle-knob { width: 22px; height: 22px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .toggle-switch.active .toggle-knob { left: 26px; }
 
         /* Home Dashboard */
         .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .dash-item { background: white; padding: 15px; border-radius: 20px; text-align: center; border: 1px solid #f0f0f0; box-shadow: 0 3px 8px rgba(0,0,0,0.03); cursor: pointer; }
         .recent-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-top: 10px; }
-        .recent-item { min-width: 80px; background: white; border-radius: 15px; padding: 10px; text-align: center; border: 1px solid #eee; cursor: pointer; }
+        .recent-item { min-width: 80px; background: white; border-radius: 15px; padding: 10px; text-align: center; border: 1px solid #eee; cursor: pointer; transition: 0.2s; }
+        .recent-item:active { transform: scale(0.95); background: #f0f0f0; }
 
-        /* Guide Detail (Adım Adım) */
+        /* --- REHBER AKIŞI (STEP BY STEP) --- */
+        .progress-bar { width: 100%; height: 6px; background: #eee; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--theme-color); width: 0%; transition: width 0.3s ease; }
+        
         .step-image-box { 
-            width: 100%; height: 200px; background: #f9f9f9; border-radius: 20px; margin-bottom: 20px;
-            display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--theme-color); border: 2px dashed #eee;
+            width: 100%; height: 220px; background: #f9f9f9; border-radius: 20px; margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--theme-color); border: 2px dashed #eee; overflow: hidden;
         }
-        .progress-dots { display: flex; justify-content: center; gap: 5px; margin-bottom: 20px; }
-        .p-dot { width: 100%; height: 5px; background: #eee; border-radius: 5px; flex:1; }
-        .p-dot.active { background: var(--theme-color); }
+        .step-image-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Study Buddy & Upload */
-        .upload-area { border: 2px dashed #ccc; padding: 30px; border-radius: 20px; text-align: center; cursor: pointer; margin-top: 20px; background: #fafafa; }
-        #buddy-preview { width: 100%; max-height: 150px; object-fit: contain; display: none; margin-top: 10px; border-radius: 10px; }
+        /* Upload Area */
+        .upload-area { border: 2px dashed #ccc; padding: 30px; border-radius: 20px; text-align: center; cursor: pointer; margin-top: 20px; background: #fafafa; position: relative; }
+        #guide-upload-preview { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; display: none; position: absolute; top:0; left:0; }
+        
+        /* Summary Screen */
+        .summary-list { text-align: left; background: #f9f9f9; padding: 15px; border-radius: 15px; margin: 20px 0; }
+        .summary-item { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
 
         /* DERS MODU (Quiz) */
         .quiz-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
@@ -117,6 +142,10 @@
         .buddy-corner { position: absolute; bottom: 20px; left: 20px; display: flex; align-items: flex-end; width: 100%; z-index: 20; }
         .buddy-avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); background: white; object-fit: cover; }
         .speech-bubble { background: white; padding: 12px; border-radius: 15px 15px 15px 0; box-shadow: 0 5px 10px rgba(0,0,0,0.05); font-size: 0.9rem; color: var(--dark-purple); max-width: 200px; margin-bottom: 10px; margin-left: 10px; animation: popIn 0.3s ease; }
+
+        /* Rewards */
+        .points-banner { background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); padding: 30px; border-radius: 25px; text-align: center; color: white; margin-bottom: 20px; }
+        .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
 
         /* Bottom Nav */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 80px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #f0f0f0; padding-bottom: 15px; z-index: 100; }
@@ -132,6 +161,9 @@
 
 <div id="app-frame">
     <div class="notch"></div>
+    
+    <!-- BİLDİRİM ALANI -->
+    <div id="toast-container"></div>
 
     <!-- *** 1. SPLASH (AÇILIŞ) *** -->
     <div id="s-splash" class="screen active" style="align-items:center; justify-content:center;">
@@ -156,20 +188,41 @@
         <button class="btn-primary" onclick="nav('s-profile')">Başla</button>
     </div>
 
-    <!-- *** 3. PROFIL KURULUMU *** -->
+    <!-- *** 3. PROFIL KURULUMU (DETAYLI) *** -->
     <div id="s-profile" class="screen">
         <div class="header"><i class="fa-solid fa-arrow-left" onclick="nav('s-on2')"></i><h3>Profil</h3><div></div></div>
         <div class="scroll-content">
             <div class="input-group">
-                <label>İsim</label>
+                <label>Çocuk İsmi</label>
                 <input type="text" id="inp-name" class="custom-input" placeholder="Küçük Yaratıcı">
             </div>
             <div class="input-group">
-                <label>Uygulama Teması</label>
+                <label>Yaş</label>
+                <input type="number" class="custom-input" placeholder="Örn: 5">
+            </div>
+            <div class="input-group">
+                <label>Favori Renk (Uygulama Teması)</label>
                 <div class="color-picker">
                     <div class="color-opt selected" style="background:#C4DFD9;" onclick="pickColor(this, '#C4DFD9')"></div>
                     <div class="color-opt" style="background:#FFD1BA;" onclick="pickColor(this, '#FFD1BA')"></div>
                     <div class="color-opt" style="background:#DCD6F7;" onclick="pickColor(this, '#DCD6F7')"></div>
+                </div>
+            </div>
+            
+            <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
+            
+            <div class="input-group">
+                <label>Ebeveyn Adı</label>
+                <input type="text" class="custom-input" placeholder="Anne/Baba Adı">
+            </div>
+            <div class="input-group">
+                <label>E-posta (İsteğe Bağlı)</label>
+                <input type="email" class="custom-input" placeholder="mail@ornek.com">
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                <label style="margin:0;">Günlük Hatırlatıcı</label>
+                <div class="toggle-switch active" onclick="this.classList.toggle('active'); showToast('Ayarlar güncellendi!', 'success')">
+                    <div class="toggle-knob"></div>
                 </div>
             </div>
         </div>
@@ -189,8 +242,8 @@
         <div class="scroll-content">
             <p style="text-align:center;">Bugün ne yaratmak istersin?</p>
             
-            <!-- Büyük Başlat Butonu (Tıklanabilir) -->
-            <div onclick="nav('s-challenges')" style="width:160px; height:160px; background:var(--theme-color); border-radius:50%; margin:20px auto; display:flex; flex-direction:column; justify-content:center; align-items:center; box-shadow:0 10px 30px rgba(0,0,0,0.1); cursor:pointer;">
+            <!-- Büyük Başlat Butonu -->
+            <div onclick="nav('s-challenges')" style="width:160px; height:160px; background:var(--theme-color); border-radius:50%; margin:20px auto; display:flex; flex-direction:column; justify-content:center; align-items:center; box-shadow:0 10px 30px rgba(0,0,0,0.1); cursor:pointer; transition:0.2s;">
                 <h2 style="margin:0; color:#333;">Başla</h2>
                 <p style="color:#333; margin:0;">Aktivite</p>
             </div>
@@ -206,11 +259,11 @@
                 </div>
             </div>
 
-            <!-- Recent Activity (Tıklanabilir) -->
+            <!-- Tıklanabilir Recent Activity -->
             <h3 style="margin-top:20px;">Son Aktiviteler</h3>
             <div class="recent-scroll">
-                <div class="recent-item" onclick="openGuide('flower')">🌸<br><small>Çiçek</small></div>
-                <div class="recent-item" onclick="openGuide('cake')">🎂<br><small>Pasta</small></div>
+                <div class="recent-item" onclick="setupGuide('flower')">🌸<br><small>Çiçek</small></div>
+                <div class="recent-item" onclick="setupGuide('cake')">🎂<br><small>Pasta</small></div>
                 <div class="recent-item" onclick="startLesson('math')">➕<br><small>Matematik</small></div>
             </div>
         </div>
@@ -222,23 +275,23 @@
         </div>
     </div>
 
-    <!-- *** 5. MEYDAN OKUMALAR (CHALLENGES) *** -->
+    <!-- *** 5. CHALLENGES LISTESI *** -->
     <div id="s-challenges" class="screen">
         <div class="header"><h3>Meydan Okumalar</h3></div>
         <div class="scroll-content">
-            <div class="card" onclick="openGuide('flower')">
+            <div class="card" onclick="setupGuide('flower')">
                 <div class="icon-box" style="background:var(--mint);"><i class="fa-solid fa-seedling"></i></div>
                 <div style="flex:1;"><h3>Çiçek Yap</h3><p>10 dk • Kolay</p></div>
                 <button class="btn-action btn-green">Başla</button>
             </div>
             
-            <div class="card" onclick="openGuide('castle')">
+            <div class="card" onclick="setupGuide('castle')">
                 <div class="icon-box" style="background:var(--peach);"><i class="fa-brands fa-fort-awesome"></i></div>
                 <div style="flex:1;"><h3>Kale İnşa Et</h3><p>15 dk • Orta</p></div>
                 <button class="btn-action btn-peach">Başla</button>
             </div>
 
-            <div class="card" onclick="openGuide('animal')">
+            <div class="card" onclick="setupGuide('animal')">
                 <div class="icon-box" style="background:var(--purple);"><i class="fa-solid fa-paw"></i></div>
                 <div style="flex:1;"><h3>Hayvan Yarat</h3><p>12 dk • Kolay</p></div>
                 <button class="btn-action btn-purple">Başla</button>
@@ -252,26 +305,78 @@
         </div>
     </div>
 
-    <!-- *** 6. REHBER DETAY (ADIM ADIM SİSTEM) *** -->
-    <div id="s-guide-detail" class="screen">
+    <!-- *** 6A. GUIDE INTRO (GİRİŞ) *** -->
+    <div id="s-guide-intro" class="screen">
         <div class="header">
             <i class="fa-solid fa-arrow-left" onclick="nav('s-challenges')" style="cursor:pointer;"></i>
-            <h3 id="guide-title">Başlık</h3>
+            <h3>Rehber Başlıyor</h3>
+            <div></div>
+        </div>
+        <div class="scroll-content" style="text-align:center; display:flex; flex-direction:column; justify-content:center; height:100%;">
+            <div style="font-size:5rem; margin-bottom:20px;" id="intro-icon">🌸</div>
+            <h1 id="intro-title">Çiçek Yapımı</h1>
+            <p id="intro-desc">Gerekli malzemeler: Turuncu, Pembe ve Yeşil oyun hamuru.</p>
+            <div style="margin-top:20px; font-size:1.5rem; font-weight:bold; color:var(--theme-color);">
+                <i class="fa-regular fa-clock"></i> <span id="intro-time">10:00</span>
+            </div>
+            <button class="btn-primary" onclick="startActualGuide()">Adımları Başlat</button>
+        </div>
+    </div>
+
+    <!-- *** 6B. GUIDE STEPS (ADIM ADIM) *** -->
+    <div id="s-guide-steps" class="screen">
+        <div class="header">
+            <i class="fa-solid fa-xmark" onclick="nav('s-challenges')" style="cursor:pointer;"></i>
+            <h3 id="step-header">Adım 1/4</h3>
             <div></div>
         </div>
         <div class="scroll-content" style="text-align:center;">
             
-            <!-- İlerleme Çubuğu -->
-            <div class="progress-dots" id="guide-progress"></div>
+            <div class="progress-bar"><div class="progress-fill" id="p-fill"></div></div>
 
             <div class="step-image-box">
-                <i class="fa-solid fa-camera" id="step-icon"></i>
+                <i class="fa-solid fa-image" id="step-img-icon"></i>
             </div>
 
-            <h2 id="step-text" style="margin-top:20px;">Adım 1</h2>
-            <p id="step-desc">Açıklama burada.</p>
+            <h2 id="step-title-text">Top Yuvarla</h2>
+            <p id="step-desc-text">Büyük bir parça al ve yuvarla.</p>
 
-            <button class="btn-primary" id="btn-next-step" onclick="nextStep()">Sonraki Adım</button>
+            <!-- Son adımda çıkacak upload alanı -->
+            <div id="final-upload-area" class="upload-area" style="display:none;" onclick="document.getElementById('guide-file').click()">
+                <i class="fa-solid fa-camera" style="font-size:2rem; color:#ccc;"></i>
+                <p>Yaptığın eserin fotoğrafını çek!</p>
+                <img id="guide-upload-preview">
+            </div>
+            <input type="file" id="guide-file" style="display:none;" accept="image/*" onchange="handleGuideUpload(this)">
+
+            <div style="margin-top:40px; display:flex; gap:10px;">
+                <button class="btn-primary btn-secondary" style="flex:1;" onclick="prevGuideStep()">Geri</button>
+                <button class="btn-primary" style="flex:2;" onclick="nextGuideStep()" id="btn-guide-next">İleri</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- *** 6C. GUIDE SUMMARY (ÖZET) *** -->
+    <div id="s-guide-summary" class="screen">
+        <div class="scroll-content" style="text-align:center; padding-top:50px;">
+            <div style="width:100px; height:100px; background:#C1E1C1; border-radius:50%; margin:0 auto; display:flex; align-items:center; justify-content:center; font-size:3rem; color:white;">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h1 style="margin-top:20px;">Harika İş!</h1>
+            <p>Görevi başarıyla tamamladın.</p>
+            
+            <div class="summary-list">
+                <h3>Süreç Özeti:</h3>
+                <div id="summary-items">
+                    <!-- JS ile dolacak -->
+                </div>
+            </div>
+
+            <div style="background:#FFF3E0; padding:15px; border-radius:15px; margin-top:20px;">
+                <b style="color:orange;">+50 Puan Kazanıldı!</b>
+            </div>
+
+            <button class="btn-primary" onclick="nav('s-rewards')">Ödüllerimi Gör</button>
         </div>
     </div>
 
@@ -280,32 +385,31 @@
         <div class="header"><h3>İnşa Et & Öğren</h3></div>
         <div class="scroll-content">
             
-            <div class="card" onclick="openGuide('cake')">
+            <div class="card" onclick="setupGuide('cake')">
                 <div class="icon-box" style="background:#FFE5D9; color:#D68C6D;"><i class="fa-solid fa-cake-candles"></i></div>
                 <div><b>Pasta Yap</b><p>6 adım</p></div>
                 <button class="btn-action btn-peach">Aç</button>
             </div>
 
-            <div class="card" onclick="openGuide('car')">
+            <div class="card" onclick="setupGuide('car')">
                 <div class="icon-box" style="background:#D4EDDA; color:#3B6B3B;"><i class="fa-solid fa-car"></i></div>
                 <div><b>Araba Yap</b><p>8 adım</p></div>
                 <button class="btn-action btn-green">Aç</button>
             </div>
 
-            <!-- STUDY BUDDY UPLOAD -->
             <h3 style="margin-top:20px;">Çalışma Arkadaşı 🎓</h3>
             <p>Derslerin kilidini açmak için hamur karakterini yükle!</p>
             
-            <div class="upload-area" onclick="document.getElementById('file-inp').click()">
-                <div id="upload-placeholder">
+            <div class="upload-area" onclick="document.getElementById('buddy-file').click()">
+                <div id="buddy-placeholder">
                     <i class="fa-solid fa-camera" style="font-size:2rem; color:#ccc;"></i>
-                    <p>Fotoğraf yüklemek için dokun</p>
+                    <p>Karakterini Yükle</p>
                 </div>
-                <img id="buddy-preview">
+                <img id="buddy-main-preview" style="width:100%; max-height:150px; object-fit:contain; display:none; border-radius:10px;">
             </div>
-            <input type="file" id="file-inp" style="display:none;" accept="image/*" onchange="loadBuddy(this)">
+            <input type="file" id="buddy-file" style="display:none;" accept="image/*" onchange="loadMainBuddy(this)">
 
-            <!-- DERSLER (Yükleyince aktifleşir) -->
+            <!-- DERSLER -->
             <div id="lessons-area" style="display:none; margin-top:20px;">
                 <div class="card" onclick="startLesson('math')">
                     <div class="icon-box" style="background:var(--purple);"><i class="fa-solid fa-calculator"></i></div>
@@ -315,11 +419,6 @@
                 <div class="card" onclick="startLesson('colors')">
                     <div class="icon-box" style="background:var(--peach);"><i class="fa-solid fa-palette"></i></div>
                     <div><b>Renkler</b><p>Tanımla & Karıştır</p></div>
-                    <i class="fa-solid fa-chevron-right" style="margin-left:auto; color:#ccc;"></i>
-                </div>
-                <div class="card" onclick="startLesson('shapes')">
-                    <div class="icon-box" style="background:var(--mint);"><i class="fa-solid fa-shapes"></i></div>
-                    <div><b>Şekiller</b><p>Geometri Eğlencesi</p></div>
                     <i class="fa-solid fa-chevron-right" style="margin-left:auto; color:#ccc;"></i>
                 </div>
             </div>
@@ -333,24 +432,24 @@
         </div>
     </div>
 
-    <!-- *** 8. DERS MODU (QUIZ ŞABLONU) *** -->
-    <div id="s-lesson-template" class="screen" style="z-index:200; background:#F8F9FA;">
+    <!-- *** 8. DERS EKRANI (QUIZ) *** -->
+    <div id="s-lesson" class="screen" style="z-index:200; background:#F8F9FA;">
         <div style="padding:40px 20px 0 20px; display:flex; justify-content:space-between;">
             <i class="fa-solid fa-xmark" onclick="nav('s-build')" style="font-size:1.5rem; cursor:pointer;"></i>
             <span style="background:var(--purple); padding:5px 10px; border-radius:10px; font-weight:bold;" id="lesson-tag">Ders</span>
         </div>
         
         <div class="quiz-content">
-            <h1 class="quiz-question" id="quiz-q">Soru Buraya</h1>
+            <h1 class="quiz-question" id="quiz-q">?</h1>
             <div class="options-grid" id="quiz-opts">
                 <!-- Şıklar JS ile gelecek -->
             </div>
         </div>
 
-        <!-- Buddy Köşede -->
+        <!-- Buddy -->
         <div class="buddy-corner">
-            <img id="lesson-buddy" src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" class="buddy-avatar">
-            <div class="speech-bubble" id="buddy-bubble">Başarılar!</div>
+            <img id="lesson-buddy-img" src="logo.png" class="buddy-avatar">
+            <div class="speech-bubble" id="buddy-bubble">Hadi başlayalım!</div>
         </div>
     </div>
 
@@ -358,7 +457,7 @@
     <div id="s-rewards" class="screen">
         <div class="header"><h3>Ödüller</h3></div>
         <div class="scroll-content">
-            <div style="background:linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); padding:30px; border-radius:25px; text-align:center; color:white; margin-bottom:20px;">
+            <div class="points-banner">
                 <h1 id="total-score" style="font-size:3rem; margin:0; color:white;">0</h1>
                 <p style="color:white;">Toplam Puan</p>
             </div>
@@ -372,13 +471,13 @@
 
             <h3>Liderlik Tablosu</h3>
             <div class="card" style="flex-direction:column; align-items:stretch; gap:0; padding:0;">
-                <div style="display:flex; padding:15px; border-bottom:1px solid #eee;">
+                <div class="leaderboard-item">
                     <b style="color:gold; width:30px;">1</b> <span style="flex:1;">Ayşe</span> <b>1500</b>
                 </div>
-                <div style="display:flex; padding:15px; border-bottom:1px solid #eee;">
+                <div class="leaderboard-item">
                     <b style="color:silver; width:30px;">2</b> <span style="flex:1;">Mehmet</span> <b>1200</b>
                 </div>
-                <div style="display:flex; padding:15px; background:#f0f0f0;">
+                <div class="leaderboard-item" style="background:#f0f0f0;">
                     <b style="width:30px;">3</b> <span style="flex:1;">Sen</span> <b id="lb-score">0</b>
                 </div>
             </div>
@@ -396,70 +495,81 @@
 <script>
     /* --- 1. DEĞİŞKENLER --- */
     let score = 0;
-    let currentGuide = null;
-    let currentStepIndex = 0;
+    let activeGuideKey = null;
+    let guideStepIndex = 0;
     let lessonData = [];
     let qIndex = 0;
+    let uploadedGuidePhoto = false;
 
-    /* --- 2. VERİ: REHBER ADIMLARI (TÜRKÇE) --- */
-    const guides = {
+    /* --- 2. VERİLER --- */
+    const guideData = {
         flower: { 
-            title: "Çiçek Yap",
+            title: "Çiçek Yapımı", time: "10:00", icon: "🌸",
+            desc: "Renkli hamurlarla güzel bir çiçek tasarla.",
             steps: [
-                { t: "Top Yuvarla", d: "Turuncu merkez için yuvarlak bir top yap." },
-                { t: "Yaprak Yap", d: "5 tane küçük pembe daire oluştur." },
-                { t: "Birleştir", d: "Yaprakları merkeze yapıştır." },
-                { t: "Sap Ekle", d: "Yeşil bir çubuk yuvarlayıp sap yap." }
+                { t: "Merkezi Yuvarla", d: "Turuncu hamuru top haline getir." },
+                { t: "Yaprakları Hazırla", d: "5 küçük pembe top yap." },
+                { t: "Birleştir", d: "Yaprakları merkezin etrafına diz." },
+                { t: "Sap Ekle", d: "Yeşil hamurdan uzun bir sap yap." }
             ]
         },
         castle: { 
-            title: "Kale Yap",
+            title: "Kale Yapımı", time: "15:00", icon: "🏰",
+            desc: "Kendi krallığını inşa et.",
             steps: [
-                { t: "Taban", d: "Büyük kare bir taban yap." },
+                { t: "Zemin", d: "Büyük bir kare taban oluştur." },
                 { t: "Kuleler", d: "Köşelere 4 silindir ekle." },
-                { t: "Duvarlar", d: "Kuleleri duvarlarla birleştir." },
-                { t: "Bayrak", d: "En tepeye bir bayrak dik!" }
+                { t: "Duvarlar", d: "Kulelerin arasını doldur." },
+                { t: "Bayrak", d: "En tepeye bayrağını dik." }
             ]
         },
-        animal: { title: "Hayvan Yap", steps: [{t:"Vücut", d:"Oval bir vücut yap"}, {t:"Kafa", d:"Yuvarlak kafa ekle"}, {t:"Bacaklar", d:"4 bacak ekle"}] },
-        cake: { title: "Pasta Yap", steps: [{t:"Taban", d:"Yuvarlak taban"}, {t:"Katlar", d:"Katmanları üst üste koy"}, {t:"Mum", d:"Mum ekle"}] },
-        car: { title: "Araba Yap", steps: [{t:"Gövde", d:"Dikdörtgen gövde"}, {t:"Tekerlekler", d:"4 siyah tekerlek"}, {t:"Pencere", d:"Mavi kare"}] }
+        animal: { title: "Hayvan Yapımı", time: "12:00", icon: "🦁", desc:"Vahşi bir hayvan tasarla.", steps: [{t:"Gövde", d:"Büyük bir oval yap."}, {t:"Kafa", d:"Gövdeye kafayı ekle."}, {t:"Detaylar", d:"Göz, kulak ve kuyruk ekle."}]},
+        cake: { title: "Pasta Yapımı", time: "15:00", icon: "🎂", desc:"Lezzetli görünen bir pasta.", steps: [{t:"Taban", d:"Yuvarlak bir taban yap."}, {t:"Katlar", d:"Katmanları üst üste koy."}, {t:"Süsleme", d:"Üzerine mum ve krema ekle."}]},
+        car: { title: "Araba Yapımı", time: "20:00", icon: "🚗", desc:"Hızlı bir yarış arabası.", steps: [{t:"Gövde", d:"Dikdörtgen bir blok yap."}, {t:"Tekerlekler", d:"4 siyah tekerlek ekle."}, {t:"Camlar", d:"Mavi hamurdan camları yap."}]}
     };
 
-    /* --- 3. VERİ: QUIZ SORULARI (TÜRKÇE) --- */
-    const quizzes = {
+    const quizData = {
         math: [
-            { q:"2 + 2 = ?", opt:[3,4,5,6], ans:4 },
-            { q:"5 + 3 = ?", opt:[7,8,9,6], ans:8 },
-            { q:"10 - 2 = ?", opt:[5,6,7,8], ans:8 }
+            { q: "2 + 3 = ?", opt: [4, 5, 6, 1], ans: 5 },
+            { q: "5 + 5 = ?", opt: [10, 9, 11, 8], ans: 10 }
         ],
         colors: [
-            { q:"Hangisi KIRMIZI?", opt:["🔴","🔵","🟢","🟡"], ans:"🔴" },
-            { q:"Karıştır: 🔵 + 🟡", opt:["🟣","🟠","🟢","⚫"], ans:"🟢" }
-        ],
-        shapes: [
-            { q:"Daireyi Bul", opt:["⬛","🔺","🔵","⭐"], ans:"🔵" },
-            { q:"Kareyi Bul", opt:["⬛","🔺","🔵","⭐"], ans:"⬛" }
+            { q: "Hangisi KIRMIZI?", opt: ["🟥", "🟦", "🟨", "🟩"], ans: "🟥" },
+            { q: "Mavi + Sarı = ?", opt: ["Yeşil", "Mor", "Turuncu", "Siyah"], ans: "Yeşil" }
         ]
     };
 
-    /* --- 4. BAŞLANGIÇ --- */
+    /* --- 3. BAŞLATMA --- */
     setTimeout(() => nav('s-on1'), 2000);
 
-    /* --- 5. NAVİGASYON FONKSİYONU --- */
-    function nav(screenId) {
+    /* --- 4. NAVİGASYON & TOAST --- */
+    function nav(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
+        document.getElementById(id).classList.add('active');
         
-        // Bottom Nav güncelle
+        // Bottom Nav Highlight
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        if(screenId === 's-home') document.querySelectorAll('.nav-item')[0].classList.add('active');
-        if(screenId === 's-challenges') document.querySelectorAll('.nav-item')[1].classList.add('active');
-        if(screenId === 's-build') document.querySelectorAll('.nav-item')[2].classList.add('active');
-        if(screenId === 's-rewards') document.querySelectorAll('.nav-item')[3].classList.add('active');
+        if(id === 's-home') document.querySelectorAll('.nav-item')[0].classList.add('active');
+        if(id === 's-challenges') document.querySelectorAll('.nav-item')[1].classList.add('active');
+        if(id === 's-build') document.querySelectorAll('.nav-item')[2].classList.add('active');
+        if(id === 's-rewards') document.querySelectorAll('.nav-item')[3].classList.add('active');
     }
 
-    /* --- 6. PROFIL AYARLARI --- */
+    function showToast(msg, type = 'neutral') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = type === 'success' ? `<i class="fa-solid fa-check"></i> ${msg}` : msg;
+        container.appendChild(toast);
+        
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    /* --- 5. PROFIL --- */
     function pickColor(el, color) {
         document.querySelectorAll('.color-opt').forEach(c => c.classList.remove('selected'));
         el.classList.add('selected');
@@ -468,94 +578,138 @@
     function saveProfile() {
         const n = document.getElementById('inp-name').value;
         if(n) document.getElementById('display-name').innerText = n;
+        showToast('Profil Oluşturuldu!', 'success');
         nav('s-home');
     }
 
-    /* --- 7. ADIM ADIM REHBER MANTIĞI --- */
-    function openGuide(key) {
-        currentGuide = guides[key];
-        currentStepIndex = 0;
+    /* --- 6. BUILD GUIDE AKIŞI (YENİ) --- */
+    function setupGuide(key) {
+        activeGuideKey = key;
+        const g = guideData[key];
+        document.getElementById('intro-icon').innerText = g.icon;
+        document.getElementById('intro-title').innerText = g.title;
+        document.getElementById('intro-desc').innerText = g.desc;
+        document.getElementById('intro-time').innerText = g.time;
+        nav('s-guide-intro');
+    }
+
+    function startActualGuide() {
+        guideStepIndex = 0;
+        uploadedGuidePhoto = false;
+        document.getElementById('final-upload-area').style.display = 'none';
         renderGuideStep();
-        nav('s-guide-detail');
+        nav('s-guide-steps');
     }
 
     function renderGuideStep() {
-        const step = currentGuide.steps[currentStepIndex];
-        document.getElementById('guide-title').innerText = currentGuide.title;
-        document.getElementById('step-text').innerText = `Adım ${currentStepIndex+1}: ${step.t}`;
-        document.getElementById('step-desc').innerText = step.d;
+        const g = guideData[activeGuideKey];
+        const step = g.steps[guideStepIndex];
         
-        // İlerleme Noktaları
-        const dotsContainer = document.getElementById('guide-progress');
-        dotsContainer.innerHTML = "";
-        currentGuide.steps.forEach((_, i) => {
-            let activeClass = i <= currentStepIndex ? 'active' : '';
-            dotsContainer.innerHTML += `<div class="p-dot ${activeClass}"></div>`;
-        });
+        document.getElementById('step-header').innerText = `Adım ${guideStepIndex+1}/${g.steps.length}`;
+        document.getElementById('step-title-text').innerText = step.t;
+        document.getElementById('step-desc-text').innerText = step.d;
+        
+        // Progress Bar
+        const pct = ((guideStepIndex + 1) / g.steps.length) * 100;
+        document.getElementById('p-fill').style.width = `${pct}%`;
 
-        // Buton Metni
-        const btn = document.getElementById('btn-next-step');
-        btn.innerText = (currentStepIndex === currentGuide.steps.length - 1) ? "Tamamla & Bitir" : "Sonraki Adım";
-    }
-
-    function nextStep() {
-        if(currentStepIndex < currentGuide.steps.length - 1) {
-            currentStepIndex++;
-            renderGuideStep();
+        // Butonlar
+        const btnNext = document.getElementById('btn-guide-next');
+        if (guideStepIndex === g.steps.length - 1) {
+            btnNext.innerText = "Bitir";
+            document.getElementById('final-upload-area').style.display = 'block'; // Son adımda upload aç
         } else {
-            alert("Harika İş! +50 Puan");
-            addScore(50);
-            nav('s-rewards');
+            btnNext.innerText = "İleri";
+            document.getElementById('final-upload-area').style.display = 'none';
         }
     }
 
-    function prevStep() {
-        if(currentStepIndex > 0) {
-            currentStepIndex--;
+    function nextGuideStep() {
+        const g = guideData[activeGuideKey];
+        if (guideStepIndex < g.steps.length - 1) {
+            guideStepIndex++;
             renderGuideStep();
         } else {
-            nav('s-challenges'); // İlk adımdan geri basınca çık
+            // Bitirme anı
+            if(!uploadedGuidePhoto) {
+                showToast('Lütfen önce yaptığının fotoğrafını yükle!', 'error');
+                return;
+            }
+            finishGuideProcess();
         }
     }
 
-    /* --- 8. DOSYA YÜKLEME (STUDY BUDDY) --- */
-    function loadBuddy(input) {
-        const file = input.files[0];
-        if(file) {
+    function prevGuideStep() {
+        if(guideStepIndex > 0) {
+            guideStepIndex--;
+            renderGuideStep();
+        } else {
+            nav('s-guide-intro');
+        }
+    }
+
+    function handleGuideUpload(input) {
+        if(input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('upload-placeholder').style.display='none';
-                document.getElementById('buddy-preview').src = e.target.result;
-                document.getElementById('buddy-preview').style.display='block';
-                
-                // Ders modundaki buddy'i güncelle
-                document.getElementById('lesson-buddy').src = e.target.result;
-                
-                // Dersleri aktif et
-                document.getElementById('lessons-area').style.display='block';
-                alert("Karakter Yüklendi! Dersler Açıldı.");
+                const img = document.getElementById('guide-upload-preview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                uploadedGuidePhoto = true;
+                showToast('Fotoğraf eklendi!', 'success');
             }
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(input.files[0]);
         }
     }
 
-    /* --- 9. DERS MANTIĞI (QUIZ) --- */
-    function startLesson(type) {
-        lessonData = quizzes[type];
-        qIndex = 0;
-        document.getElementById('lesson-tag').innerText = type.toUpperCase();
+    function finishGuideProcess() {
+        const g = guideData[activeGuideKey];
+        const list = document.getElementById('summary-items');
+        list.innerHTML = "";
+        g.steps.forEach((s, i) => {
+            list.innerHTML += `<div class="summary-item"><i class="fa-solid fa-check-circle" style="color:green;"></i> Adım ${i+1}: ${s.t}</div>`;
+        });
+        list.innerHTML += `<div class="summary-item"><i class="fa-solid fa-camera" style="color:green;"></i> Fotoğraf Kanıtı Yüklendi</div>`;
         
-        // Ders şablonunu aç
-        nav('s-lesson-template');
-        loadQuiz();
+        addScore(50);
+        nav('s-guide-summary');
+        showToast('+50 Puan Kazanıldı!', 'success');
     }
 
-    function loadQuiz() {
+    /* --- 7. STUDY BUDDY & DERSLER --- */
+    function loadMainBuddy(input) {
+        if(input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('buddy-placeholder').style.display = 'none';
+                const img = document.getElementById('buddy-main-preview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                
+                // Ders içinde kullan
+                document.getElementById('lesson-buddy-img').src = e.target.result;
+                
+                document.getElementById('lessons-area').style.display = 'block';
+                showToast('Arkadaşın Yüklendi! Dersler Açık.', 'success');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function startLesson(type) {
+        lessonData = quizData[type];
+        if(!lessonData) return; // Hata önleyici
+        qIndex = 0;
+        document.getElementById('lesson-tag').innerText = type.toUpperCase();
+        nav('s-lesson');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
         const q = lessonData[qIndex];
         document.getElementById('quiz-q').innerText = q.q;
         const grid = document.getElementById('quiz-opts');
         grid.innerHTML = "";
-        
         q.opt.forEach(o => {
             const btn = document.createElement('div');
             btn.className = 'option-btn';
@@ -563,20 +717,20 @@
             btn.onclick = () => checkAns(o, q.ans, btn);
             grid.appendChild(btn);
         });
-        buddySay("Sıradaki soru!");
+        buddySay("Hadi yapalım!");
     }
 
     function checkAns(sel, corr, btn) {
         if(sel == corr) {
             btn.style.background = "#C1E1C1";
-            buddySay("Doğru bildin!");
+            buddySay("Doğru! Harikasın!");
             addScore(10);
             setTimeout(() => {
                 if(qIndex < lessonData.length - 1) {
                     qIndex++;
-                    loadQuiz();
+                    loadQuestion();
                 } else {
-                    alert("Ders Tamamlandı!");
+                    showToast('Ders Tamamlandı!', 'success');
                     nav('s-rewards');
                 }
             }, 1000);
@@ -589,20 +743,18 @@
     function buddySay(txt) {
         const b = document.getElementById('buddy-bubble');
         b.innerText = txt;
-        // Animasyon reset
         b.style.animation = 'none';
-        b.offsetHeight;
+        b.offsetHeight; 
         b.style.animation = 'popIn 0.3s ease';
     }
 
-    /* --- 10. PUANLAMA --- */
+    /* --- 8. GENEL --- */
     function addScore(n) {
         score += n;
         document.getElementById('home-score').innerText = score;
         document.getElementById('total-score').innerText = score;
         document.getElementById('lb-score').innerText = score;
     }
-
 </script>
 
 </body>
