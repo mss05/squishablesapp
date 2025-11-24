@@ -8,161 +8,102 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- CSS BAŞLANGIÇ: SABİT TASARIM --- */
+        /* --- TASARIM BAŞLANGIÇ --- */
         :root {
-            --primary-purple: #C8C6F7; /* Screenshot'taki Mor */
-            --primary-peach: #FNB5A7; /* Screenshot'taki Şeftali/Pembe */
-            --primary-green: #B8EAD7; /* Screenshot'taki Yeşil */
-            --bg-color: #F8F9FA;
-            --text-dark: #2D2D2D;
-            --text-light: #888888;
+            --purple: #DCD6F7; --dark-purple: #424874;
+            --peach: #FFD1BA; --dark-peach: #d68c6d;
+            --mint: #C4DFD9; --dark-mint: #3b6b3b;
+            --bg: #e0e5ec;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; padding: 0; font-family: 'Nunito', sans-serif; background-color: var(--bg); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-        body {
-            background-color: #e0e5ec; /* Masaüstü Arkaplanı */
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Nunito', sans-serif;
-            overflow: hidden; /* Masaüstü scroll'unu kapat */
-        }
-
-        /* --- TELEFON ÇERÇEVESİ (KAYMAYI ÖNLEYEN KISIM) --- */
+        /* TELEFON KASASI */
         #phone-frame {
-            width: 375px; /* iPhone genişliği */
-            height: 812px; /* iPhone yüksekliği */
-            background-color: white;
-            border-radius: 40px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden; /* İçerik taşmasın */
-            border: 8px solid #333; /* Telefon kasası */
+            width: 375px; height: 812px; background-color: white;
+            border-radius: 40px; position: relative; overflow: hidden;
+            border: 8px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
         }
-
-        /* Üst Çentik (Süs) */
         .notch {
             position: absolute; top: 0; left: 50%; transform: translateX(-50%);
             width: 150px; height: 30px; background: #333;
-            border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
-            z-index: 100;
+            border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 100;
         }
 
-        /* HEADER */
-        .header {
-            padding: 50px 20px 10px 20px; /* Çentik payı */
-            display: flex; justify-content: space-between; align-items: center;
-            background: white; z-index: 10;
+        /* EKRAN YÖNETİMİ */
+        .screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; display: none; flex-direction: column;
+            padding-top: 40px; /* Notch payı */
         }
-        .header-pill {
-            background: #DCD6F7; color: #5a4b8f; padding: 5px 15px;
-            border-radius: 20px; font-family: 'Fredoka'; font-weight: 600;
-        }
-        .notif-icon {
-            width: 40px; height: 40px; background: #FFE5D9; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: #d68c6d;
-            position: relative; cursor: pointer;
-        }
-        .red-dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: #FF5252; border-radius: 50%; }
+        .screen.active { display: flex; animation: fadeIn 0.4s ease; }
 
-        /* SCROLL ALANI */
-        .content {
-            height: calc(100% - 150px); /* Header ve Footer payı düşüldü */
-            overflow-y: auto;
-            padding: 10px 20px 20px 20px;
-        }
-        /* Scrollbar'ı gizle */
-        .content::-webkit-scrollbar { display: none; }
-
-        /* --- KART TASARIMLARI (SCREENSHOTLARA GÖRE) --- */
-        h2 { font-family: 'Fredoka'; color: var(--text-dark); margin: 15px 0; font-size: 1.4rem; }
-        
-        /* Challenges Filtreleri */
-        .filters { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
-        .filter-chip {
-            padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; white-space: nowrap; cursor: pointer;
-        }
-        .filter-chip.active { background: #DCD6F7; color: #5a4b8f; }
-        .filter-chip.inactive { background: #f0f0f0; color: #888; }
-
-        /* Görev Kartı */
-        .task-card {
-            background: white; border: 1px solid #f0f0f0; border-radius: 20px;
-            padding: 15px; margin-bottom: 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-        }
-        .task-info h3 { font-family: 'Fredoka'; font-size: 1.1rem; color: #333; margin-bottom: 5px; }
-        .task-info p { font-size: 0.85rem; color: #888; }
-        .btn-action {
-            padding: 8px 20px; border-radius: 15px; font-weight: bold; border: none; cursor: pointer; font-size: 0.9rem;
-        }
-        .btn-green { background: #C1E1C1; color: #2d5a2d; }
-        .btn-peach { background: #FFD1BA; color: #8f5e41; }
-
-        /* Build Guide Kartı */
-        .guide-card {
-            display: flex; align-items: center; background: white;
-            padding: 15px; border-radius: 20px; margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #f0f0f0;
-        }
-        .icon-box {
-            width: 50px; height: 50px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; margin-right: 15px;
-        }
-        .btn-open { background: #EAE6FF; color: #6C63FF; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
-
-        /* Rewards Kartı */
-        .reward-banner {
-            background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
-            padding: 30px; border-radius: 25px; text-align: center; color: white; margin-bottom: 25px;
-        }
-
-        /* --- WELCOME SCREEN (SCREENSHOT 1) --- */
-        #screen-welcome {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            height: 100%; text-align: center; padding: 40px; background: white;
-        }
-        .welcome-circle {
-            width: 140px; height: 140px; background: #C4DFD9; border-radius: 50%;
+        /* WELCOME SCREEN */
+        #screen-welcome { align-items: center; justify-content: center; text-align: center; padding: 30px; z-index: 50; }
+        .logo-circle {
+            width: 140px; height: 140px; background: var(--mint); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-size: 4rem; color: white; margin-bottom: 30px;
         }
-        .btn-big-peach {
-            width: 100%; background: #FFB5A7; color: white; padding: 18px;
-            border: none; border-radius: 30px; font-size: 1.2rem; font-weight: bold;
-            margin-top: 40px; cursor: pointer; box-shadow: 0 10px 20px rgba(255, 181, 167, 0.4);
+
+        /* APP HEADER */
+        .app-header {
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            background: white; border-bottom: 1px solid #f0f0f0;
+        }
+        .points-badge {
+            background: #FFF3E0; color: orange; padding: 5px 12px; border-radius: 15px;
+            font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 5px;
         }
 
-        /* --- BOTTOM NAVIGATION --- */
+        /* İÇERİK ALANI */
+        .content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 90px; }
+        .content::-webkit-scrollbar { display: none; }
+
+        /* KARTLAR VE BUTONLAR */
+        h2 { font-family: 'Fredoka'; color: var(--dark-purple); margin-bottom: 15px; }
+        
+        .lesson-card {
+            background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #f0f0f0;
+            display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s;
+        }
+        .lesson-card:active { transform: scale(0.98); background: #fafafa; }
+        .lesson-icon {
+            width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; color: white;
+        }
+
+        .btn-primary {
+            background: #FFB5A7; color: white; padding: 18px 50px; border-radius: 30px;
+            font-size: 1.2rem; border: none; font-weight: bold; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 181, 167, 0.4); margin-top: 30px; display: block; width: 100%;
+        }
+        .btn-primary:active { transform: scale(0.95); }
+
+        /* QUIZ ALANI */
+        .quiz-container { text-align: center; display: none; animation: slideUp 0.3s; }
+        .question-box { font-size: 2.5rem; font-family: 'Fredoka'; color: var(--dark-purple); margin: 30px 0; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .option-btn {
+            background: white; border: 2px solid #eee; padding: 20px; border-radius: 15px;
+            font-size: 1.2rem; font-weight: bold; color: var(--dark-purple); cursor: pointer;
+        }
+
+        /* BOTTOM NAV */
         .bottom-nav {
-            position: absolute; bottom: 0; width: 100%; height: 80px;
-            background: white; display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid #f0f0f0; padding-bottom: 20px;
+            position: absolute; bottom: 0; width: 100%; height: 80px; background: white;
+            display: flex; justify-content: space-around; align-items: center;
+            border-top: 1px solid #f0f0f0; padding-bottom: 15px; z-index: 20;
         }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            color: #ccc; font-size: 0.75rem; cursor: pointer; width: 25%;
-        }
-        .nav-item i { font-size: 1.4rem; transition: 0.2s; }
-        .nav-item.active { color: #333; font-weight: bold; }
-        .nav-item.active i { transform: translateY(-3px); color: #FF8C42; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #ccc; font-size: 0.75rem; cursor: pointer; }
+        .nav-item.active { color: var(--dark-purple); font-weight: bold; }
+        .nav-item i { font-size: 1.4rem; }
 
-        /* EKRAN GEÇİŞLERİ */
-        .screen { display: none; height: 100%; }
-        .screen.active { display: block; animation: fadeIn 0.4s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* UPLOAD AREA */
-        .upload-box {
-            border: 2px dashed #ccc; border-radius: 20px; padding: 30px;
-            text-align: center; margin: 20px 0; cursor: pointer; background: #fafafa;
-        }
-        .upload-preview { width: 100%; height: 200px; object-fit: contain; display: none; }
-
+        /* ANIMASYONLAR */
+        @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+        @keyframes slideUp { from {transform:translateY(20px); opacity:0;} to {transform:translateY(0); opacity:1;} }
     </style>
 </head>
 <body>
@@ -171,217 +112,173 @@
         <div class="notch"></div>
 
         <div id="screen-welcome" class="screen active">
-            <div class="welcome-circle">
-                <i class="fa-solid fa-palette"></i>
+            <div style="margin-top: 50px;">
+                <div class="logo-circle"><i class="fa-solid fa-palette"></i></div>
+                <h1 style="font-family:'Fredoka'; font-size: 2.2rem; color:#333;">Hands On,<br>Screens Off.</h1>
+                <p style="color:#888; padding: 20px; line-height: 1.6;">
+                    Welcome to Squishables!<br>Learn Math, Colors, and Nature with your dough buddy.
+                </p>
+                <button class="btn-primary" onclick="startApp()">Next</button>
+                <p style="margin-top: 20px; color: #ccc; font-size: 0.9rem; cursor: pointer;">Skip</p>
             </div>
-            <h1 style="font-family:'Fredoka'; font-size:2rem; color:#333; margin-bottom:10px;">Hands On,<br>Screens Off.</h1>
-            <p style="color:#888; line-height:1.5;">Welcome to screen-free sensory play with natural dough that sparks creativity!</p>
-            
-            <button class="btn-big-peach" onclick="goToApp()">Next</button>
-            <p style="margin-top:20px; color:#bbb; cursor:pointer;">Skip</p>
         </div>
 
         <div id="screen-app" class="screen">
-            
-            <div class="header">
-                <div class="header-pill">Squishables</div>
-                <div class="notif-icon">
-                    <i class="fa-regular fa-bell"></i>
-                    <div class="red-dot"></div>
+            <div class="app-header">
+                <div>
+                    <h3 style="font-family:'Fredoka'; margin:0; color:var(--dark-purple);">Hi, Student! 👋</h3>
+                    <p style="font-size:0.75rem; color:#888; margin:0;">Let's learn together</p>
+                </div>
+                <div class="points-badge">
+                    <i class="fa-solid fa-star"></i> <span id="score-display">0</span> Pts
                 </div>
             </div>
 
-            <div class="content" id="main-content">
+            <div class="content" id="main-scroll">
                 
-                <div id="tab-challenges" class="sub-screen active">
-                    <h2>Challenges</h2>
-                    <div class="filters">
-                        <div class="filter-chip active">All</div>
-                        <div class="filter-chip inactive">Today</div>
-                        <div class="filter-chip inactive">This Week</div>
-                        <div class="filter-chip inactive">Completed</div>
+                <div id="view-home">
+                    <h2>Your Subjects 📚</h2>
+
+                    <div class="lesson-card" onclick="openQuiz('math')">
+                        <div class="lesson-icon" style="background:#DCD6F7;"><i class="fa-solid fa-calculator"></i></div>
+                        <div>
+                            <h3 style="font-family:'Fredoka'; margin:0;">Math Fun</h3>
+                            <p style="font-size:0.8rem; color:#888;">Addition & Counting</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="margin-left:auto; color:#ccc;"></i>
                     </div>
 
-                    <div class="task-card">
-                        <div class="task-info">
-                            <h3>Make a Flower</h3>
-                            <p>10 minutes • <span style="color:#FFB5A7;">Easy</span></p>
+                    <div class="lesson-card" onclick="openQuiz('colors')">
+                        <div class="lesson-icon" style="background:#FFD1BA;"><i class="fa-solid fa-palette"></i></div>
+                        <div>
+                            <h3 style="font-family:'Fredoka'; margin:0;">Colors</h3>
+                            <p style="font-size:0.8rem; color:#888;">Mix & Match</p>
                         </div>
-                        <button class="btn-action btn-green" onclick="openDetail('flower')">Start</button>
+                        <i class="fa-solid fa-chevron-right" style="margin-left:auto; color:#ccc;"></i>
                     </div>
 
-                    <div class="task-card">
-                        <div class="task-info">
-                            <h3>Build a Castle</h3>
-                            <p>15 minutes • <span style="color:orange;">Medium</span></p>
+                    <div class="lesson-card" onclick="openQuiz('nature')">
+                        <div class="lesson-icon" style="background:#C4DFD9;"><i class="fa-solid fa-leaf"></i></div>
+                        <div>
+                            <h3 style="font-family:'Fredoka'; margin:0;">Nature</h3>
+                            <p style="font-size:0.8rem; color:#888;">Animals & Plants</p>
                         </div>
-                        <button class="btn-action btn-peach">Resume</button>
+                        <i class="fa-solid fa-chevron-right" style="margin-left:auto; color:#ccc;"></i>
                     </div>
 
-                    <div class="task-card">
-                        <div class="task-info">
-                            <h3>Create Animals</h3>
-                            <p>12 minutes • <span style="color:#FFB5A7;">Easy</span></p>
-                        </div>
-                        <button class="btn-action btn-green">Start</button>
+                    <h2 style="margin-top:30px;">Study Buddy 🧸</h2>
+                    <div style="background:#fafafa; border:2px dashed #ccc; border-radius:20px; padding:30px; text-align:center; cursor:pointer;" onclick="uploadBuddy()">
+                        <i class="fa-solid fa-camera" style="font-size:2rem; color:#ccc;"></i>
+                        <p style="color:#666; margin-top:10px;">Tap to upload your character</p>
+                        <img id="buddy-preview" src="bestfriend.png" style="display:none; width:100px; margin:10px auto;">
                     </div>
                 </div>
 
-                <div id="tab-build" class="sub-screen" style="display:none;">
-                    <h2>Build Guides</h2>
-                    
-                    <div class="guide-card">
-                        <div class="icon-box" style="background:#FFE5D9; color:#D68C6D;">
-                            <i class="fa-solid fa-cake-candles"></i>
-                        </div>
-                        <div style="flex:1;">
-                            <h3 style="font-size:1rem; margin:0;">Make a Cake</h3>
-                            <p style="font-size:0.8rem; color:#888;">6 steps • 15 mins</p>
-                        </div>
-                        <button class="btn-open">Open</button>
-                    </div>
-
-                    <div class="guide-card">
-                        <div class="icon-box" style="background:#D4EDDA; color:#3B6B3B;">
-                            <i class="fa-solid fa-car"></i>
-                        </div>
-                        <div style="flex:1;">
-                            <h3 style="font-size:1rem; margin:0;">Make a Car</h3>
-                            <p style="font-size:0.8rem; color:#888;">8 steps • 20 mins</p>
-                        </div>
-                        <button class="btn-open">Open</button>
+                <div id="quiz-math" class="quiz-container">
+                    <div style="text-align:left; cursor:pointer; margin-bottom:20px;" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</div>
+                    <span style="background:#DCD6F7; color:#424874; padding:5px 15px; border-radius:15px; font-weight:bold;">Math Quiz</span>
+                    <div class="question-box">3 + 2 = ?</div>
+                    <div class="options-grid">
+                        <div class="option-btn" onclick="wrong(this)">4</div>
+                        <div class="option-btn" onclick="correct(this)">5</div>
+                        <div class="option-btn" onclick="wrong(this)">6</div>
+                        <div class="option-btn" onclick="wrong(this)">1</div>
                     </div>
                 </div>
 
-                 <div id="tab-rewards" class="sub-screen" style="display:none;">
-                    <h2>Rewards</h2>
-                    <div class="reward-banner">
-                        <h1 style="font-family:'Fredoka'; font-size:3rem; margin:0;">1,250</h1>
-                        <p>Total Points</p>
-                    </div>
-                    <h3>Achievements</h3>
-                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
-                        <div style="background:white; padding:15px; border-radius:15px; text-align:center; box-shadow:0 3px 5px rgba(0,0,0,0.05);">
-                            <div style="font-size:2rem;">🥇</div>
-                            <p style="font-size:0.7rem; font-weight:bold; margin-top:5px;">First Win</p>
-                        </div>
-                        <div style="background:white; padding:15px; border-radius:15px; text-align:center; box-shadow:0 3px 5px rgba(0,0,0,0.05);">
-                            <div style="font-size:2rem;">🔥</div>
-                            <p style="font-size:0.7rem; font-weight:bold; margin-top:5px;">Streak</p>
-                        </div>
-                        <div style="background:white; padding:15px; border-radius:15px; text-align:center; box-shadow:0 3px 5px rgba(0,0,0,0.05);">
-                            <div style="font-size:2rem;">🎨</div>
-                            <p style="font-size:0.7rem; font-weight:bold; margin-top:5px;">Artist</p>
-                        </div>
+                <div id="quiz-colors" class="quiz-container">
+                    <div style="text-align:left; cursor:pointer; margin-bottom:20px;" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</div>
+                    <span style="background:#FFD1BA; color:#d68c6d; padding:5px 15px; border-radius:15px; font-weight:bold;">Color Quiz</span>
+                    <h2 style="margin-top:30px;">Which one is RED?</h2>
+                    <div class="options-grid">
+                        <div class="option-btn" style="background:#FF5252; color:white;" onclick="correct(this)">RED</div>
+                        <div class="option-btn" style="background:#448AFF; color:white;" onclick="wrong(this)">BLUE</div>
+                        <div class="option-btn" style="background:#69F0AE; color:white;" onclick="wrong(this)">GREEN</div>
+                        <div class="option-btn" style="background:#FFD740; color:white;" onclick="wrong(this)">YELLOW</div>
                     </div>
                 </div>
 
-                <div id="tab-buddy" class="sub-screen" style="display:none;">
-                    <h2>Study Buddy</h2>
-                    <p style="color:#666; margin-bottom:20px;">Upload your creation to study math together!</p>
-                    
-                    <div class="upload-box" onclick="uploadSim()">
-                        <div id="upload-txt">
-                            <i class="fa-solid fa-camera" style="font-size:2rem; color:#ccc; margin-bottom:10px;"></i>
-                            <p>Tap to Upload Character</p>
-                        </div>
-                        <img id="buddy-img" src="bestfriend.png" class="upload-preview" alt="Buddy">
+                <div id="quiz-nature" class="quiz-container">
+                    <div style="text-align:left; cursor:pointer; margin-bottom:20px;" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</div>
+                    <span style="background:#C4DFD9; color:#3b6b3b; padding:5px 15px; border-radius:15px; font-weight:bold;">Nature Quiz</span>
+                    <h2 style="margin-top:30px;">Who says "Meow"?</h2>
+                    <div class="options-grid">
+                        <div class="option-btn" onclick="wrong(this)">Dog 🐶</div>
+                        <div class="option-btn" onclick="wrong(this)">Lion 🦁</div>
+                        <div class="option-btn" onclick="correct(this)">Cat 🐱</div>
+                        <div class="option-btn" onclick="wrong(this)">Bird 🐦</div>
                     </div>
-
-                    <div id="math-area" style="display:none; text-align:center;">
-                        <h1 style="font-family:'Fredoka'; font-size:3rem; margin:20px 0; color:#424874;">3 + 2 = ?</h1>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                            <button class="btn-action" style="background:white; border:1px solid #ddd; font-size:1.2rem; padding:15px;" onclick="wrong(this)">4</button>
-                            <button class="btn-action" style="background:white; border:1px solid #ddd; font-size:1.2rem; padding:15px;" onclick="correct(this)">5</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="detail-flower" class="sub-screen" style="display:none;">
-                    <div style="display:flex; align-items:center; margin-bottom:20px; cursor:pointer;" onclick="switchTab('challenges')">
-                        <i class="fa-solid fa-arrow-left" style="margin-right:10px;"></i> Back
-                    </div>
-                    <div style="background:#FFB5A7; height:200px; border-radius:20px; display:flex; align-items:center; justify-content:center; color:white; font-size:4rem; margin-bottom:20px;">
-                        🌸
-                    </div>
-                    <h2>Step 1: Roll the Center</h2>
-                    <p style="color:#666; line-height:1.6;">Take a small piece of orange dough and roll it into a smooth ball. Place it on the table.</p>
-                    <div style="margin-top:30px; font-family:'Fredoka'; font-size:2rem; text-align:center; color:#333;">10:00</div>
-                    <button class="btn-big-peach" style="margin-top:20px;">Next Step</button>
                 </div>
 
             </div>
 
             <div class="bottom-nav">
-                <div class="nav-item active" onclick="switchTab('challenges', this)">
-                    <i class="fa-solid fa-house"></i>
-                    <span>Home</span>
-                </div>
-                <div class="nav-item" onclick="switchTab('build', this)">
-                    <i class="fa-solid fa-hammer"></i>
-                    <span>Build</span>
-                </div>
-                <div class="nav-item" onclick="switchTab('buddy', this)">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                    <span>Learn</span>
-                </div>
-                <div class="nav-item" onclick="switchTab('rewards', this)">
-                    <i class="fa-solid fa-trophy"></i>
-                    <span>Rewards</span>
-                </div>
+                <div class="nav-item active"><i class="fa-solid fa-house"></i><span>Home</span></div>
+                <div class="nav-item"><i class="fa-solid fa-shapes"></i><span>Build</span></div>
+                <div class="nav-item"><i class="fa-solid fa-graduation-cap"></i><span>Learn</span></div>
+                <div class="nav-item"><i class="fa-solid fa-trophy"></i><span>Rewards</span></div>
             </div>
-
         </div>
     </div>
 
     <script>
-        // Sayfa Geçişleri
-        function goToApp() {
-            document.getElementById('screen-welcome').classList.remove('active');
-            document.getElementById('screen-app').classList.add('active');
+        let score = 0;
+
+        // 1. Hoşgeldin Ekranından Ana Ekrana Geçiş
+        function startApp() {
+            document.getElementById('screen-welcome').style.display = 'none';
+            document.getElementById('screen-app').style.display = 'flex';
         }
 
-        // Tab Değiştirme
-        function switchTab(tabName, element) {
-            // Tüm içerikleri gizle
-            document.querySelectorAll('.sub-screen').forEach(el => el.style.display = 'none');
-            // İstenen içeriği göster
-            document.getElementById('tab-' + tabName).style.display = 'block';
-            document.getElementById('tab-' + tabName).classList.add('active');
-
-            // Nav ikonlarını güncelle
-            if(element) {
-                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-                element.classList.add('active');
-            }
-        }
-
-        // Detay Sayfası
-        function openDetail(id) {
-            document.querySelectorAll('.sub-screen').forEach(el => el.style.display = 'none');
-            document.getElementById('detail-' + id).style.display = 'block';
-        }
-
-        // Fotoğraf Yükleme Simülasyonu
-        function uploadSim() {
-            document.getElementById('upload-txt').style.display = 'none';
-            // Eğer bestfriend.png yoksa bile kutu açılır, varsa resim görünür
-            const img = document.getElementById('buddy-img');
-            img.style.display = 'block';
+        // 2. Quiz Açma
+        function openQuiz(type) {
+            document.getElementById('view-home').style.display = 'none';
             
+            // Tüm quizleri gizle
+            document.querySelectorAll('.quiz-container').forEach(el => el.style.display = 'none');
+            
+            // Seçileni aç
+            document.getElementById('quiz-' + type).style.display = 'block';
+        }
+
+        // 3. Geri Dönme
+        function goBack() {
+            document.querySelectorAll('.quiz-container').forEach(el => el.style.display = 'none');
+            document.getElementById('view-home').style.display = 'block';
+        }
+
+        // 4. Cevap Kontrolü ve Puan
+        function correct(btn) {
+            btn.style.backgroundColor = '#C1E1C1'; // Yeşil
+            btn.innerHTML = 'Correct! <i class="fa-solid fa-check"></i>';
+            
+            // Puanı Arttır
+            score += 50;
+            document.getElementById('score-display').innerText = score;
+            
+            // Konfeti veya ses efekti buraya eklenebilir
             setTimeout(() => {
-                alert("Character Uploaded Successfully!");
-                document.getElementById('math-area').style.display = 'block';
+                alert("Awesome! +50 Points earned.");
+                goBack();
+                // Butonu eski haline getir
+                btn.style.backgroundColor = 'white';
             }, 500);
         }
 
-        // Matematik Cevapları
-        function correct(btn) {
-            btn.style.background = '#C1E1C1';
-            btn.innerText = 'Correct!';
-        }
         function wrong(btn) {
-            btn.style.background = '#FFD1BA';
+            btn.style.backgroundColor = '#FFD1BA'; // Kırmızımsı
+            btn.innerText = 'Try Again';
+            setTimeout(() => {
+                 btn.style.backgroundColor = 'white';
+            }, 1000);
+        }
+
+        // 5. Buddy Upload Simülasyonu
+        function uploadBuddy() {
+            const img = document.getElementById('buddy-preview');
+            // Eğer resim dosyası varsa gösterir, yoksa simülasyon yapar
+            img.style.display = 'block';
+            alert("Scanning your character... Success! Ready to learn.");
         }
     </script>
 </body>
