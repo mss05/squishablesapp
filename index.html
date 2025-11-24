@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squishables App</title>
+    <link rel="stylesheet" href="app_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div id="mobile-screen">
+        
+        <div class="app-header">
+            <img src="logo.png" alt="Squishables" class="app-logo">
+            <div class="streak-pill"><i class="fa-solid fa-fire"></i> 12 Days</div>
+        </div>
+
+        <div class="content-area">
+
+            <div id="home" class="tab-content">
+                <h2>Hello, Burak! 👋</h2>
+                <div class="card" style="background:linear-gradient(135deg, #DCD6F7 0%, #F4F7F6 100%);">
+                    <div class="card-col">
+                        <h3>Daily Challenge</h3>
+                        <p>Make a "Happy Flower"</p>
+                    </div>
+                    <div style="background:white; padding:10px; border-radius:50%; width:50px; height:50px; display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-play" style="color:var(--dark-purple)"></i>
+                    </div>
+                </div>
+
+                <h3>Your Creations</h3>
+                <div style="display:flex; gap:15px; overflow-x:auto; padding-bottom:10px;">
+                    <img src="product1.jpg" style="width:100px; height:100px; border-radius:15px; object-fit:cover;">
+                    <img src="product2.jpg" style="width:100px; height:100px; border-radius:15px; object-fit:cover;">
+                    <div style="width:100px; height:100px; border-radius:15px; background:#eee; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                </div>
+
+                <h3 style="margin-top:20px;">Subjects</h3>
+                <div class="card" onclick="switchTab('buddy')"> <div class="card-col">
+                        <h3><i class="fa-solid fa-calculator"></i> Math with Buddy</h3>
+                        <p>Level 2 • Addition</p>
+                    </div>
+                    <button class="btn btn-purple">Play</button>
+                </div>
+            </div>
+
+            <div id="buddy" class="tab-content">
+                <div id="buddy-home">
+                    <h2 style="text-align:center;">Meet Your Study Buddy</h2>
+                    <p style="text-align:center; margin-bottom:20px;">Upload your dough creation to unlock Learning Mode!</p>
+                    
+                    <div class="upload-area" onclick="uploadBuddy()">
+                        <div id="upload-text">
+                            <i class="fa-solid fa-camera upload-icon"></i>
+                            <h3>Take Photo</h3>
+                            <p>or upload from gallery</p>
+                        </div>
+                        <div id="upload-loading" style="display:none; color:orange; font-weight:bold;"></div>
+                        
+                        <img src="bestfriend.png" id="my-buddy-img" alt="My Dough Buddy">
+                    </div>
+
+                    <button id="buddy-action-btn" class="btn-big" onclick="uploadBuddy()">Upload Character</button>
+                </div>
+
+                <div id="lesson-mode" class="lesson-screen">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <i class="fa-solid fa-xmark" onclick="goBack('home')" style="font-size:1.5rem; cursor:pointer;"></i>
+                        <span class="streak-pill">Math Quiz</span>
+                        <span>10:00</span>
+                    </div>
+
+                    <div class="math-problem">
+                        4 + 3 = ?
+                    </div>
+
+                    <div class="options-grid">
+                        <div class="option-btn" onclick="checkAnswer(this, false)">6</div>
+                        <div class="option-btn" onclick="checkAnswer(this, true)">7</div>
+                        <div class="option-btn" onclick="checkAnswer(this, false)">8</div>
+                        <div class="option-btn" onclick="checkAnswer(this, false)">5</div>
+                    </div>
+
+                    <img src="bestfriend.png" class="buddy-corner" alt="Buddy">
+                    <p style="margin-top:30px; color:#888;">"You can do it!" - Doughy</p>
+                </div>
+            </div>
+
+            <div id="build" class="tab-content">
+                <h2>Build Guides</h2>
+                <div class="card">
+                    <div class="card-col">
+                        <h3>Dino Rex</h3>
+                        <p>Intermediate • 20 mins</p>
+                    </div>
+                    <button class="btn btn-green" onclick="openPage('guide-detail')">Build</button>
+                </div>
+                <div class="card">
+                    <div class="card-col">
+                        <h3>Space Rocket</h3>
+                        <p>Easy • 10 mins</p>
+                    </div>
+                    <button class="btn btn-green">Build</button>
+                </div>
+            </div>
+
+            <div id="rewards" class="tab-content">
+                <div style="text-align:center; padding:30px 0; background:var(--purple); border-radius:20px; color:var(--dark-purple);">
+                    <h1 style="margin:0; font-size:3rem;">1,250</h1>
+                    <p>Total Points</p>
+                </div>
+                <h3>Badges</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:15px;">
+                    <div style="background:white; padding:15px; border-radius:15px; text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.05);">
+                        <div style="font-size:2rem;">🎨</div>
+                        <p style="font-size:0.8rem; font-weight:bold;">Artist</p>
+                    </div>
+                    <div style="background:white; padding:15px; border-radius:15px; text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.05);">
+                        <div style="font-size:2rem;">🧠</div>
+                        <p style="font-size:0.8rem; font-weight:bold;">Genius</p>
+                    </div>
+                    <div style="background:white; padding:15px; border-radius:15px; text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.05);">
+                        <div style="font-size:2rem;">🚀</div>
+                        <p style="font-size:0.8rem; font-weight:bold;">Rocket</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="guide-detail" class="tab-content">
+                <i class="fa-solid fa-arrow-left" onclick="goBack('build')" style="font-size:1.5rem; margin-bottom:20px; cursor:pointer;"></i>
+                <h2>Making Dino Rex</h2>
+                <img src="guide1.jpg" style="width:100%; border-radius:15px; margin-bottom:20px;">
+                <button class="btn-big" onclick="alert('Step 1 Completed!')">Next Step</button>
+            </div>
+
+        </div> <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('home')">
+                <i class="fa-solid fa-house"></i><span>Home</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('build')">
+                <i class="fa-solid fa-shapes"></i><span>Build</span>
+            </div>
+            
+            <div class="nav-center" onclick="switchTab('buddy')">
+                <i class="fa-solid fa-camera"></i>
+            </div>
+            
+            <div class="nav-item" onclick="switchTab('buddy')">
+                <i class="fa-solid fa-graduation-cap"></i><span>Learn</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('rewards')">
+                <i class="fa-solid fa-trophy"></i><span>Rewards</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="app_script.js"></script>
+</body>
+</html>
