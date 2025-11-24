@@ -3,290 +3,490 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Squishables App</title>
+    <title>Squishables App - Full Version</title>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- İkonlar -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- CSS: PASTEL TEMA --- */
+        /* --- 1. TEMEL AYARLAR VE RENKLER --- */
         :root {
-            --purple: #DCD6F7; --dark-purple: #424874;
-            --peach: #FFD1BA; --dark-peach: #d68c6d;
             --mint: #C4DFD9; --dark-mint: #3b6b3b;
-            --bg: #e0e5ec;
+            --peach: #FFD1BA; --dark-peach: #d68c6d;
+            --purple: #DCD6F7; --dark-purple: #424874;
+            --cream: #FFF5E6;
+            --text-dark: #2D2D2D;
+            --text-light: #888;
+            --bg-color: #eef2f5;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; padding: 0; font-family: 'Nunito', sans-serif; background-color: var(--bg); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        body { margin: 0; padding: 0; font-family: 'Nunito', sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-        /* TELEFON KASASI */
-        #phone-frame {
+        /* --- 2. TELEFON ÇERÇEVESİ --- */
+        #app-frame {
             width: 375px; height: 812px; background-color: white;
             border-radius: 40px; position: relative; overflow: hidden;
-            border: 8px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3); border: 8px solid #222;
         }
         .notch {
             position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 150px; height: 30px; background: #333;
-            border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 100;
+            width: 150px; height: 30px; background: #222;
+            border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 999;
         }
 
-        /* EKRANLAR */
-        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white; display: none; flex-direction: column; padding-top: 40px; }
-        .screen.active { display: flex; animation: fadeIn 0.4s ease; }
+        /* --- 3. EKRAN YÖNETİMİ --- */
+        .screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; display: none; flex-direction: column;
+            padding-top: 40px; /* Notch payı */
+            animation: fadeIn 0.4s ease;
+        }
+        .screen.active { display: flex; }
+        .scroll-content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 90px; }
+        .scroll-content::-webkit-scrollbar { display: none; }
 
-        /* WELCOME SCREEN */
-        #screen-welcome { align-items: center; justify-content: center; text-align: center; padding: 30px; z-index: 50; }
-        .logo-circle { width: 140px; height: 140px; background: var(--mint); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white; margin-bottom: 30px; }
-
-        /* APP HEADER */
-        .app-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: white; border-bottom: 1px solid #f0f0f0; }
-        .points-badge { background: #FFF3E0; color: orange; padding: 5px 12px; border-radius: 15px; font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
-
-        /* İÇERİK ALANI */
-        .content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 90px; }
-        .content::-webkit-scrollbar { display: none; }
-
-        /* COMPONENTS */
-        h2 { font-family: 'Fredoka'; color: var(--dark-purple); margin-bottom: 15px; font-size:1.3rem; }
+        /* --- 4. ORTAK BİLEŞENLER --- */
+        h1, h2, h3 { font-family: 'Fredoka', sans-serif; color: var(--text-dark); margin-bottom: 10px; }
+        p { color: var(--text-light); font-size: 0.95rem; line-height: 1.5; }
         
-        /* Kartlar */
-        .card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
-        .card:active { transform: scale(0.98); }
-        .icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; flex-shrink: 0; }
-        
-        .btn-action { padding: 8px 15px; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; font-size: 0.8rem; margin-left: auto; }
-        .btn-green { background: #C1E1C1; color: #2d5a2d; }
-        .btn-peach { background: #FFD1BA; color: #8f5e41; }
+        .btn-primary {
+            background: #FFB5A7; color: white; border: none; padding: 18px; width: 100%;
+            border-radius: 30px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 181, 167, 0.4); margin-top: auto; margin-bottom: 20px;
+        }
+        .btn-primary:active { transform: scale(0.98); }
 
-        .btn-primary { background: #FFB5A7; color: white; padding: 18px 50px; border-radius: 30px; font-size: 1.2rem; border: none; font-weight: bold; cursor: pointer; box-shadow: 0 10px 20px rgba(255, 181, 167, 0.4); margin-top: 30px; display: block; width: 100%; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; }
+        .profile-icon { width: 40px; height: 40px; background: var(--mint); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
 
-        /* DOSYA YÜKLEME (Gerçek Input) */
-        .upload-wrapper { position: relative; overflow: hidden; margin-top: 20px; }
-        .upload-box { background: #fafafa; border: 2px dashed #ccc; border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; }
-        #real-file-input { display: none; } /* Gizli input */
-        #buddy-preview { width: 100%; max-height: 200px; object-fit: contain; margin-top: 15px; display: none; border-radius: 10px; }
+        /* --- 5. ONBOARDING (S1, S2, S3) --- */
+        .onboarding-img { width: 120px; height: 120px; background: var(--mint); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white; margin: 40px auto; }
+        .dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        .dot { width: 10px; height: 10px; background: #eee; border-radius: 50%; }
+        .dot.active { background: var(--dark-peach); }
 
-        /* QUIZ ALANI */
-        .full-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 60; display: none; flex-direction: column; padding: 50px 20px; animation: slideUp 0.3s; }
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .option-btn { background: white; border: 2px solid #eee; padding: 20px; border-radius: 15px; font-size: 1.2rem; font-weight: bold; color: var(--dark-purple); cursor: pointer; text-align: center; }
+        /* --- 6. PROFILE SETUP (S4) --- */
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
+        .custom-input { width: 100%; padding: 15px; background: #f9f9f9; border: 1px solid #eee; border-radius: 15px; font-family: 'Nunito'; font-size: 1rem; }
+        .color-picker { display: flex; gap: 15px; margin-top: 10px; }
+        .color-option { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; }
+        .color-option.selected { border-color: #333; transform: scale(1.1); }
 
-        /* BOTTOM NAV */
-        .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 80px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #f0f0f0; padding-bottom: 15px; z-index: 20; }
+        /* --- 7. HOME DASHBOARD (S5) --- */
+        .big-circle-btn {
+            width: 180px; height: 180px; background: var(--mint); border-radius: 50%;
+            margin: 20px auto; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; color: var(--dark-mint); cursor: pointer; box-shadow: 0 10px 30px rgba(196, 223, 217, 0.5);
+            transition: 0.3s;
+        }
+        .big-circle-btn:active { transform: scale(0.95); }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .dash-card { background: white; padding: 20px; border-radius: 20px; text-align: center; border: 1px solid #f0f0f0; box-shadow: 0 4px 10px rgba(0,0,0,0.03); cursor: pointer; }
+        .dash-card i { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+
+        /* --- 8. LISTELER VE KARTLAR (S6, S7) --- */
+        .list-card {
+            background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 15px; border: 1px solid #f0f0f0; box-shadow: 0 3px 8px rgba(0,0,0,0.03);
+        }
+        .card-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; flex-shrink: 0; }
+        .status-btn { margin-left: auto; padding: 8px 15px; border-radius: 12px; font-weight: bold; font-size: 0.8rem; border: none; cursor: pointer; }
+
+        /* --- 9. EDUCATION & UPLOAD --- */
+        .upload-area {
+            border: 2px dashed #ccc; background: #fafafa; border-radius: 20px; padding: 30px;
+            text-align: center; cursor: pointer; margin: 20px 0;
+        }
+        #buddy-preview { width: 100%; max-height: 200px; object-fit: contain; display: none; margin-top: 15px; border-radius: 10px; }
+        .hidden-input { display: none; }
+
+        /* --- 10. REWARDS (S8) --- */
+        .points-banner {
+            background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
+            padding: 30px; border-radius: 25px; text-align: center; color: white; margin-bottom: 25px;
+        }
+        .badge-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .badge { background: white; padding: 10px; border-radius: 15px; text-align: center; border: 1px solid #eee; }
+
+        /* --- 11. BOTTOM NAV --- */
+        .bottom-nav {
+            position: absolute; bottom: 0; width: 100%; height: 85px; background: white;
+            display: flex; justify-content: space-around; align-items: center;
+            border-top: 1px solid #f0f0f0; padding-bottom: 15px; z-index: 100;
+        }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #ccc; font-size: 0.75rem; cursor: pointer; }
         .nav-item.active { color: var(--dark-purple); font-weight: bold; }
         .nav-item i { font-size: 1.4rem; }
 
-        @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+        /* --- 12. OVERLAYS (QUIZ/DETAIL) --- */
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white;
+            z-index: 200; display: none; flex-direction: column; padding-top: 50px;
+            animation: slideUp 0.3s;
+        }
+        .overlay-content { padding: 20px; overflow-y: auto; }
         @keyframes slideUp { from {transform:translateY(100%);} to {transform:translateY(0);} }
+        @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+
     </style>
 </head>
 <body>
 
-    <div id="phone-frame">
-        <div class="notch"></div>
+<div id="app-frame">
+    <div class="notch"></div>
 
-        <div id="screen-welcome" class="screen active">
-            <div style="margin-top: 50px;">
-                <div class="logo-circle"><i class="fa-solid fa-palette"></i></div>
-                <h1 style="font-family:'Fredoka'; font-size: 2.2rem; color:#333;">Hands On,<br>Screens Off.</h1>
-                <p style="color:#888; padding: 20px; line-height: 1.6;">Welcome to Squishables!</p>
-                <button class="btn-primary" onclick="startApp()">Start App</button>
-            </div>
-        </div>
-
-        <div id="screen-app" class="screen">
-            <div class="app-header">
-                <div>
-                    <h3 style="font-family:'Fredoka'; margin:0; color:var(--dark-purple);">Hi, Student! 👋</h3>
-                </div>
-                <div class="points-badge">
-                    <i class="fa-solid fa-star"></i> <span id="score-display">0</span> Pts
-                </div>
-            </div>
-
-            <div class="content">
-
-                <div id="tab-home" class="tab-view">
-                    <h2>Daily Challenges 🌟</h2>
-                    <div class="card">
-                        <div class="icon-box" style="background:var(--mint);"><i class="fa-solid fa-seedling"></i></div>
-                        <div style="flex:1;">
-                            <h3 style="font-size:1rem; margin:0;">Make a Flower</h3>
-                            <p style="font-size:0.8rem; color:#888;">10 min • Easy</p>
-                        </div>
-                        <button class="btn-action btn-green">Start</button>
-                    </div>
-                    <div class="card">
-                        <div class="icon-box" style="background:var(--peach);"><i class="fa-solid fa-chess-rook"></i></div>
-                        <div style="flex:1;">
-                            <h3 style="font-size:1rem; margin:0;">Build a Castle</h3>
-                            <p style="font-size:0.8rem; color:#888;">15 min • Medium</p>
-                        </div>
-                        <button class="btn-action btn-peach">Resume</button>
-                    </div>
-                </div>
-
-                <div id="tab-build" class="tab-view" style="display:none;">
-                    <h2>Build Guides 🛠️</h2>
-                    <div class="card">
-                        <div class="icon-box" style="background:#FFE5D9; color:#D68C6D;"><i class="fa-solid fa-cake-candles"></i></div>
-                        <div>
-                            <h3 style="font-size:1rem; margin:0;">Make a Cake</h3>
-                            <p style="font-size:0.8rem; color:#888;">6 steps • 15 mins</p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="icon-box" style="background:#D4EDDA; color:#3B6B3B;"><i class="fa-solid fa-car"></i></div>
-                        <div>
-                            <h3 style="font-size:1rem; margin:0;">Make a Car</h3>
-                            <p style="font-size:0.8rem; color:#888;">8 steps • 20 mins</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="tab-learn" class="tab-view" style="display:none;">
-                    <h2>Your Subjects 📚</h2>
-                    
-                    <div class="card" onclick="openOverlay('quiz-math')">
-                        <div class="icon-box" style="background:#DCD6F7;"><i class="fa-solid fa-calculator"></i></div>
-                        <div><h3 style="font-size:1rem; margin:0;">Math Fun</h3><p style="font-size:0.8rem; color:#888;">Addition</p></div>
-                        <i class="fa-solid fa-chevron-right" style="margin-left:auto; color:#ccc;"></i>
-                    </div>
-                    
-                    <div class="card" onclick="openOverlay('quiz-colors')">
-                        <div class="icon-box" style="background:#FFD1BA;"><i class="fa-solid fa-palette"></i></div>
-                        <div><h3 style="font-size:1rem; margin:0;">Colors</h3><p style="font-size:0.8rem; color:#888;">Mix & Match</p></div>
-                        <i class="fa-solid fa-chevron-right" style="margin-left:auto; color:#ccc;"></i>
-                    </div>
-
-                    <h2 style="margin-top:30px;">Study Buddy 🧸</h2>
-                    <div class="upload-wrapper">
-                        <input type="file" id="real-file-input" accept="image/*">
-                        
-                        <div class="upload-box" onclick="document.getElementById('real-file-input').click()">
-                            <i class="fa-solid fa-camera" style="font-size:2rem; color:#ccc;"></i>
-                            <p style="color:#666; margin-top:10px;">Tap here to upload Photo</p>
-                            <img id="buddy-preview" alt="Buddy Preview">
-                        </div>
-                    </div>
-                    
-                    <div id="buddy-status" style="display:none; text-align:center; color:green; margin-top:10px;">
-                        <i class="fa-solid fa-check-circle"></i> Character Uploaded!
-                    </div>
-                </div>
-
-                <div id="tab-rewards" class="tab-view" style="display:none;">
-                    <h2>Rewards 🏆</h2>
-                    <div style="background:linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); padding:30px; border-radius:25px; text-align:center; color:white; margin-bottom:20px;">
-                        <h1 id="big-score" style="font-family:'Fredoka'; font-size:3rem; margin:0;">0</h1>
-                        <p>Total Points</p>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                        <div class="card" style="flex-direction:column; text-align:center;">
-                            <div style="font-size:2rem;">🎨</div>
-                            <b>Artist</b>
-                        </div>
-                        <div class="card" style="flex-direction:column; text-align:center;">
-                            <div style="font-size:2rem;">🚀</div>
-                            <b>Rocket</b>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="bottom-nav">
-                <div class="nav-item active" onclick="switchTab('home', this)"><i class="fa-solid fa-house"></i><span>Home</span></div>
-                <div class="nav-item" onclick="switchTab('build', this)"><i class="fa-solid fa-shapes"></i><span>Build</span></div>
-                <div class="nav-item" onclick="switchTab('learn', this)"><i class="fa-solid fa-graduation-cap"></i><span>Learn</span></div>
-                <div class="nav-item" onclick="switchTab('rewards', this)"><i class="fa-solid fa-trophy"></i><span>Rewards</span></div>
-            </div>
-        </div>
-
-        <div id="quiz-math" class="full-overlay">
-            <div onclick="closeOverlay('quiz-math')" style="cursor:pointer; margin-bottom:20px;"><i class="fa-solid fa-arrow-left"></i> Back</div>
-            <h2>Math Quiz</h2>
-            <div style="font-size:3rem; font-family:'Fredoka'; text-align:center; margin:40px 0; color:var(--dark-purple);">3 + 2 = ?</div>
-            <div class="options-grid">
-                <div class="option-btn" onclick="wrong(this)">4</div>
-                <div class="option-btn" onclick="correct(this)">5</div>
-                <div class="option-btn" onclick="wrong(this)">6</div>
-                <div class="option-btn" onclick="wrong(this)">1</div>
-            </div>
-        </div>
-
-        <div id="quiz-colors" class="full-overlay">
-            <div onclick="closeOverlay('quiz-colors')" style="cursor:pointer; margin-bottom:20px;"><i class="fa-solid fa-arrow-left"></i> Back</div>
-            <h2>Color Quiz</h2>
-            <h3 style="text-align:center; margin-top:30px;">Which one is RED?</h3>
-            <div class="options-grid">
-                <div class="option-btn" style="background:#FF5252; color:white;" onclick="correct(this)">RED</div>
-                <div class="option-btn" style="background:#448AFF; color:white;" onclick="wrong(this)">BLUE</div>
-            </div>
-        </div>
-
+    <!-- *** ONBOARDING EKRANLARI (S1, S2, S3) *** -->
+    
+    <!-- Ekran 1 -->
+    <div id="screen-onboard1" class="screen active" style="padding: 30px; text-align: center;">
+        <div class="onboarding-img" style="background:var(--mint);"><i class="fa-solid fa-palette"></i></div>
+        <h1>Hands On,<br>Screens Off.</h1>
+        <p>Welcome to screen-free sensory play with natural dough that sparks creativity!</p>
+        <div class="dots" style="margin-top:auto;"><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+        <button class="btn-primary" onclick="navTo('screen-onboard2')">Next</button>
+        <p onclick="navTo('screen-profile')" style="cursor:pointer; color:#ccc;">Skip</p>
     </div>
 
-    <script>
-        let score = 0;
+    <!-- Ekran 2 -->
+    <div id="screen-onboard2" class="screen" style="padding: 30px; text-align: center;">
+        <div class="onboarding-img" style="background:var(--peach);"><i class="fa-regular fa-clock"></i></div>
+        <h1>Daily 10-Minute<br>Challenges</h1>
+        <p>Fun activities to reduce screen time and boost creativity everyday.</p>
+        <div class="dots" style="margin-top:auto;"><div class="dot"></div><div class="dot active"></div><div class="dot"></div></div>
+        <button class="btn-primary" onclick="navTo('screen-onboard3')">Next</button>
+        <p onclick="navTo('screen-profile')" style="cursor:pointer; color:#ccc;">Skip</p>
+    </div>
 
-        function startApp() {
-            document.getElementById('screen-welcome').style.display = 'none';
-            document.getElementById('screen-app').style.display = 'flex';
-        }
+    <!-- Ekran 3 -->
+    <div id="screen-onboard3" class="screen" style="padding: 30px; text-align: center;">
+        <div class="onboarding-img" style="background:var(--purple);"><i class="fa-solid fa-trophy"></i></div>
+        <h1>Earn Rewards</h1>
+        <p>Collect badges and points for every screen-free moment you create.</p>
+        <div class="dots" style="margin-top:auto;"><div class="dot"></div><div class="dot"></div><div class="dot active"></div></div>
+        <button class="btn-primary" onclick="navTo('screen-profile')">Get Started</button>
+    </div>
 
-        // Tab Değiştirme
-        function switchTab(tabName, el) {
-            // Hepsini gizle
-            document.querySelectorAll('.tab-view').forEach(x => x.style.display = 'none');
-            // Seçileni aç
-            document.getElementById('tab-' + tabName).style.display = 'block';
+
+    <!-- *** PROFIL KURULUMU (S4) *** -->
+    <div id="screen-profile" class="screen">
+        <div class="header">
+            <i class="fa-solid fa-arrow-left" onclick="navTo('screen-onboard3')" style="cursor:pointer;"></i>
+            <h3>Profile Setup</h3>
+            <div></div>
+        </div>
+        <div class="scroll-content">
+            <div class="input-group">
+                <label>Child Profile Name</label>
+                <input type="text" id="child-name" class="custom-input" placeholder="Little Creator">
+            </div>
+            <div class="input-group">
+                <label>Age</label>
+                <input type="number" id="child-age" class="custom-input" placeholder="e.g. 5">
+            </div>
+            <div class="input-group">
+                <label>Favorite Color</label>
+                <div class="color-picker">
+                    <div class="color-option selected" style="background:#FFD1BA;" onclick="setColor(this, '#FFD1BA')"></div>
+                    <div class="color-option" style="background:#C4DFD9;" onclick="setColor(this, '#C4DFD9')"></div>
+                    <div class="color-option" style="background:#DCD6F7;" onclick="setColor(this, '#DCD6F7')"></div>
+                    <div class="color-option" style="background:#FFF5E6;" onclick="setColor(this, '#FFF5E6')"></div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Parent Name</label>
+                <input type="text" class="custom-input" placeholder="Parent Name">
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+                <label style="margin:0;">Daily Reminders</label>
+                <i class="fa-solid fa-toggle-on" style="font-size:2rem; color:var(--mint);"></i>
+            </div>
+        </div>
+        <div style="padding:20px;">
+            <button class="btn-primary" onclick="saveProfileAndGo()">Create Profile</button>
+        </div>
+    </div>
+
+
+    <!-- *** ANA DASHBOARD (S5) *** -->
+    <div id="screen-home" class="screen">
+        <div class="header">
+            <div>
+                <p style="margin:0; font-size:0.8rem;">Welcome back,</p>
+                <h2 style="margin:0;" id="display-name">Creator!</h2>
+            </div>
+            <div class="profile-icon" id="profile-bg-icon">LC</div>
+        </div>
+
+        <div class="scroll-content">
+            <p style="text-align:center; margin-top:10px;">Ready for today's screen-free moment?</p>
             
-            // İkonları güncelle
-            document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
-            if(el) el.classList.add('active');
-        }
+            <div class="big-circle-btn" onclick="navTo('screen-challenges')">
+                <h2 style="margin:0; font-size:1.5rem;">Start</h2>
+                <h3 style="margin:0; font-size:1.1rem;">10-Minute</h3>
+                <p style="margin:0; color:#2d5a2d;">Challenge</p>
+            </div>
 
-        // Overlay Açma/Kapama (Quizler için)
-        function openOverlay(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeOverlay(id) { document.getElementById(id).style.display = 'none'; }
+            <div class="dashboard-grid">
+                <div class="dash-card" onclick="navTo('screen-challenges')">
+                    <i class="fa-regular fa-calendar" style="color:#d68c6d;"></i>
+                    <b>Today's Challenge</b>
+                </div>
+                <div class="dash-card" onclick="navTo('screen-build')">
+                    <i class="fa-solid fa-hammer" style="color:#3b6b3b;"></i>
+                    <b>Build Guides</b>
+                </div>
+                <div class="dash-card" onclick="navTo('screen-rewards')">
+                    <i class="fa-solid fa-trophy" style="color:#5a4b8f;"></i>
+                    <b>Rewards</b>
+                </div>
+                <div class="dash-card">
+                    <i class="fa-solid fa-users" style="color:#orange;"></i>
+                    <b>Parent Tips</b>
+                </div>
+            </div>
 
-        // GERÇEK DOSYA YÜKLEME KODU
-        const fileInput = document.getElementById('real-file-input');
-        fileInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    // Resmi göster
-                    const img = document.getElementById('buddy-preview');
-                    img.src = e.target.result;
-                    img.style.display = 'block';
-                    document.getElementById('buddy-status').style.display = 'block';
-                }
-                reader.readAsDataURL(file);
+            <h3 style="margin-top:20px;">Recent Activity</h3>
+            <div style="display:flex; gap:10px; overflow-x:auto;">
+                <div class="dash-card" style="min-width:80px; padding:10px;">🌸<br><small>Flower</small></div>
+                <div class="dash-card" style="min-width:80px; padding:10px;">🎂<br><small>Cake</small></div>
+                <div class="dash-card" style="min-width:80px; padding:10px;">🚗<br><small>Car</small></div>
+            </div>
+        </div>
+        
+        <!-- Bottom Nav -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="navTo('screen-home')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+            <div class="nav-item" onclick="navTo('screen-challenges')"><i class="fa-solid fa-bullseye"></i><span>Challenge</span></div>
+            <div class="nav-item" onclick="navTo('screen-build')"><i class="fa-solid fa-shapes"></i><span>Build</span></div>
+            <div class="nav-item" onclick="navTo('screen-rewards')"><i class="fa-solid fa-trophy"></i><span>Rewards</span></div>
+        </div>
+    </div>
+
+
+    <!-- *** CHALLENGES (S6) *** -->
+    <div id="screen-challenges" class="screen">
+        <div class="header"><h3>Challenges</h3></div>
+        <div style="padding:0 20px; display:flex; gap:10px; overflow-x:auto;">
+            <span style="background:var(--purple); padding:5px 15px; border-radius:15px; font-weight:bold; color:var(--dark-purple);">All</span>
+            <span style="background:#eee; padding:5px 15px; border-radius:15px; color:#888;">Today</span>
+            <span style="background:#eee; padding:5px 15px; border-radius:15px; color:#888;">Completed</span>
+        </div>
+        
+        <div class="scroll-content">
+            <div class="list-card">
+                <div class="card-icon" style="background:var(--mint);">🌸</div>
+                <div><b>Make a Flower</b><p>10 minutes</p></div>
+                <button class="status-btn" style="background:#C1E1C1; color:#2d5a2d;">Start</button>
+            </div>
+            <div class="list-card">
+                <div class="card-icon" style="background:var(--peach);">🏰</div>
+                <div><b>Build a Castle</b><p>15 minutes</p></div>
+                <button class="status-btn" style="background:#FFD1BA; color:#8f5e41;">Resume</button>
+            </div>
+            <div class="list-card">
+                <div class="card-icon" style="background:var(--purple);">🦁</div>
+                <div><b>Create Animals</b><p>12 minutes</p></div>
+                <button class="status-btn" style="background:#DCD6F7; color:#5a4b8f;">Start</button>
+            </div>
+        </div>
+        
+        <!-- Bottom Nav (Aynı) -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="navTo('screen-home')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+            <div class="nav-item active" onclick="navTo('screen-challenges')"><i class="fa-solid fa-bullseye"></i><span>Challenge</span></div>
+            <div class="nav-item" onclick="navTo('screen-build')"><i class="fa-solid fa-shapes"></i><span>Build</span></div>
+            <div class="nav-item" onclick="navTo('screen-rewards')"><i class="fa-solid fa-trophy"></i><span>Rewards</span></div>
+        </div>
+    </div>
+
+
+    <!-- *** BUILD GUIDES & LEARN (S7 + STUDY BUDDY) *** -->
+    <div id="screen-build" class="screen">
+        <div class="header"><h3>Build & Learn</h3></div>
+        
+        <div class="scroll-content">
+            <!-- Normal Rehberler -->
+            <div class="list-card">
+                <div class="card-icon" style="background:#FFE5D9; color:#D68C6D;"><i class="fa-solid fa-cake-candles"></i></div>
+                <div><b>Make a Cake</b><p>6 steps • 15 mins</p></div>
+                <button class="status-btn" style="background:#eee;">Open</button>
+            </div>
+            <div class="list-card">
+                <div class="card-icon" style="background:#D4EDDA; color:#3B6B3B;"><i class="fa-solid fa-car"></i></div>
+                <div><b>Make a Car</b><p>8 steps • 20 mins</p></div>
+                <button class="status-btn" style="background:#eee;">Open</button>
+            </div>
+
+            <!-- GERÇEK DOSYA YÜKLEME / STUDY BUDDY -->
+            <h3 style="margin-top:20px;">Study Buddy 🎓</h3>
+            <p>Upload your dough character to learn Math & Colors!</p>
+            
+            <div class="upload-area" onclick="document.getElementById('real-file').click()">
+                <i class="fa-solid fa-camera" style="font-size:2rem; color:#ccc;"></i>
+                <p>Tap to upload photo</p>
+                <img id="buddy-preview">
+            </div>
+            <input type="file" id="real-file" class="hidden-input" accept="image/*" onchange="handleFile(this)">
+            
+            <!-- Ders Butonları (Yüklemeden sonra açılır) -->
+            <div id="lesson-buttons" style="display:none; margin-top:10px;">
+                <div class="list-card" onclick="openOverlay('overlay-math')">
+                    <div class="card-icon" style="background:#DCD6F7;"><i class="fa-solid fa-calculator"></i></div>
+                    <div><b>Math Quiz</b><p>Level 1</p></div>
+                    <i class="fa-solid fa-chevron-right" style="margin-left:auto; color:#ccc;"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="navTo('screen-home')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+            <div class="nav-item" onclick="navTo('screen-challenges')"><i class="fa-solid fa-bullseye"></i><span>Challenge</span></div>
+            <div class="nav-item active" onclick="navTo('screen-build')"><i class="fa-solid fa-shapes"></i><span>Build</span></div>
+            <div class="nav-item" onclick="navTo('screen-rewards')"><i class="fa-solid fa-trophy"></i><span>Rewards</span></div>
+        </div>
+    </div>
+
+
+    <!-- *** REWARDS (S8) *** -->
+    <div id="screen-rewards" class="screen">
+        <div class="header"><h3>Rewards</h3></div>
+        <div class="scroll-content">
+            <div class="points-banner">
+                <h1 style="font-size:3rem; margin:0; color:white;" id="total-points">0</h1>
+                <p style="color:rgba(255,255,255,0.8);">Total Points</p>
+                <small>Keep creating to earn more!</small>
+            </div>
+
+            <h3>Achievements</h3>
+            <div class="badge-grid">
+                <div class="badge"><i class="fa-solid fa-medal" style="font-size:1.5rem; color:gold;"></i><br><small>First Win</small></div>
+                <div class="badge"><i class="fa-solid fa-fire" style="font-size:1.5rem; color:orange;"></i><br><small>7 Day Streak</small></div>
+                <div class="badge"><i class="fa-solid fa-palette" style="font-size:1.5rem; color:purple;"></i><br><small>Creative</small></div>
+                <div class="badge"><i class="fa-solid fa-crown" style="font-size:1.5rem; color:gold;"></i><br><small>Master</small></div>
+                <div class="badge"><i class="fa-solid fa-user-group" style="font-size:1.5rem; color:blue;"></i><br><small>Friendly</small></div>
+                <div class="badge"><i class="fa-regular fa-star" style="font-size:1.5rem; color:#aaa;"></i><br><small>Expert</small></div>
+            </div>
+
+            <h3 style="margin-top:20px;">Redeem Points</h3>
+            <div class="list-card">
+                <div class="card-icon" style="background:#eee; color:#333;">📄</div>
+                <div><b>Achievement Certificate</b><p>Printable</p></div>
+                <span style="background:#DCD6F7; padding:5px 10px; border-radius:10px; color:#5a4b8f; font-size:0.8rem;">100 pts</span>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="navTo('screen-home')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+            <div class="nav-item" onclick="navTo('screen-challenges')"><i class="fa-solid fa-bullseye"></i><span>Challenge</span></div>
+            <div class="nav-item" onclick="navTo('screen-build')"><i class="fa-solid fa-shapes"></i><span>Build</span></div>
+            <div class="nav-item active" onclick="navTo('screen-rewards')"><i class="fa-solid fa-trophy"></i><span>Rewards</span></div>
+        </div>
+    </div>
+
+    <!-- *** OVERLAY: MATH QUIZ (Çalışan Özellik) *** -->
+    <div id="overlay-math" class="overlay">
+        <div style="padding:20px; text-align:center;">
+            <div style="text-align:left; cursor:pointer;" onclick="closeOverlay('overlay-math')">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </div>
+            
+            <h2 style="margin-top:30px;">Math with Buddy</h2>
+            <!-- Yüklenen resim burada da gözükecek -->
+            <img id="quiz-buddy-img" style="width:100px; height:100px; object-fit:contain; border-radius:10px; margin-bottom:20px;">
+            
+            <div style="font-size:3rem; font-family:'Fredoka'; color:var(--dark-purple); margin:20px 0;">3 + 2 = ?</div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                <button class="status-btn" style="width:100%; padding:20px; font-size:1.2rem; background:white; border:1px solid #ccc;" onclick="wrong(this)">4</button>
+                <button class="status-btn" style="width:100%; padding:20px; font-size:1.2rem; background:white; border:1px solid #ccc;" onclick="correct(this)">5</button>
+                <button class="status-btn" style="width:100%; padding:20px; font-size:1.2rem; background:white; border:1px solid #ccc;" onclick="wrong(this)">6</button>
+                <button class="status-btn" style="width:100%; padding:20px; font-size:1.2rem; background:white; border:1px solid #ccc;" onclick="wrong(this)">1</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- 1. STATE MANAGEMENT ---
+    let userProfile = { name: "Creator", color: "#C4DFD9", points: 0 };
+    
+    // --- 2. NAVIGASYON ---
+    function navTo(screenId) {
+        // Tüm ekranları kapat
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        // Hedef ekranı aç
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    // --- 3. PROFILE SETTINGS ---
+    function setColor(el, color) {
+        document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        userProfile.color = color;
+    }
+
+    function saveProfileAndGo() {
+        const nameInput = document.getElementById('child-name').value;
+        if(nameInput) userProfile.name = nameInput;
+        
+        // İsmi güncelle
+        document.getElementById('display-name').innerText = userProfile.name + "!";
+        document.getElementById('profile-bg-icon').style.background = userProfile.color;
+        
+        // Home'a git
+        navTo('screen-home');
+    }
+
+    // --- 4. FILE UPLOAD (GERÇEK) ---
+    function handleFile(input) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Önizlemeye koy
+                const img = document.getElementById('buddy-preview');
+                img.src = e.target.result;
+                img.style.display = "block";
+                
+                // Quiz ekranına da koy (birlikte ders çalışma hissi)
+                document.getElementById('quiz-buddy-img').src = e.target.result;
+                
+                // Ders butonlarını aç
+                document.getElementById('lesson-buttons').style.display = "block";
+                
+                alert("Buddy Uploaded! You can now start Math Quiz.");
             }
-        });
+            reader.readAsDataURL(file);
+        }
+    }
 
-        // Quiz Mantığı
-        function correct(btn) {
-            btn.style.background = '#C1E1C1';
-            btn.innerHTML = 'Correct! <i class="fa-solid fa-check"></i>';
-            score += 50;
-            updateScore();
-            setTimeout(() => { alert("Great Job! +50 Points"); closeOverlay(btn.closest('.full-overlay').id); btn.style.background = 'white'; }, 500);
-        }
-        function wrong(btn) {
-            btn.style.background = '#FFD1BA';
-            btn.innerText = 'Try Again';
-            setTimeout(() => { btn.style.background = 'white'; }, 1000);
-        }
-        function updateScore() {
-            document.getElementById('score-display').innerText = score;
-            document.getElementById('big-score').innerText = score;
-        }
-    </script>
+    // --- 5. OVERLAYS & QUIZ ---
+    function openOverlay(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeOverlay(id) { document.getElementById(id).style.display = 'none'; }
+
+    function correct(btn) {
+        btn.style.background = "#C1E1C1";
+        btn.innerHTML = "Correct!";
+        userProfile.points += 50;
+        document.getElementById('total-points').innerText = userProfile.points;
+        setTimeout(() => {
+            alert("Awesome! +50 Points");
+            closeOverlay('overlay-math');
+            btn.style.background = "white"; // Reset
+            btn.innerText = "5";
+            navTo('screen-rewards'); // Ödül ekranına götür
+        }, 800);
+    }
+
+    function wrong(btn) {
+        btn.style.background = "#FFD1BA";
+        setTimeout(() => { btn.style.background = "white"; }, 500);
+    }
+</script>
+
 </body>
 </html>
