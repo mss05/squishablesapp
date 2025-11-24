@@ -3,85 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Squishables Learning App</title>
+    <title>Squishables App</title>
     
-    <!-- PWA Ayarları -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#DCD6F7">
     <link rel="apple-touch-icon" href="logo.png">
 
-    <!-- Fontlar ve İkonlar -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- 1. CSS DEĞİŞKENLERİ VE TEMEL AYARLAR --- */
+        /* --- CSS AYARLARI --- */
         :root {
-            --primary-color: #C4DFD9; /* Kullanıcı seçimine göre değişecek */
+            --theme-color: #C4DFD9;
             --mint: #C4DFD9; --dark-mint: #2e5c4d;
             --peach: #FFD1BA; --dark-peach: #d68c6d;
             --purple: #DCD6F7; --dark-purple: #424874;
-            --text-dark: #2D2D2D;
-            --text-light: #888;
             --bg-color: #eef2f5;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
         body { margin: 0; padding: 0; font-family: 'Nunito', sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-        /* --- 2. TELEFON ÇERÇEVESİ --- */
         #app-frame {
             width: 375px; height: 812px; background-color: white;
             border-radius: 40px; position: relative; overflow: hidden;
             box-shadow: 0 30px 60px rgba(0,0,0,0.3); border: 8px solid #222;
         }
-        .notch {
-            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 150px; height: 30px; background: #222;
-            border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 999;
-        }
+        .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 30px; background: #222; border-radius: 0 0 20px 20px; z-index: 999; }
 
-        /* --- 3. EKRAN YÖNETİMİ --- */
+        /* EKRANLAR */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: white; display: none; flex-direction: column;
-            padding-top: 40px; /* Notch payı */
-            animation: fadeIn 0.4s ease;
+            padding-top: 40px; animation: fadeIn 0.3s ease; z-index: 10;
         }
         .screen.active { display: flex; }
+        
+        /* İçerik Alanı */
         .scroll-content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 90px; }
         .scroll-content::-webkit-scrollbar { display: none; }
 
-        /* --- 4. ORTAK BİLEŞENLER --- */
-        h1, h2, h3 { font-family: 'Fredoka', sans-serif; color: var(--text-dark); margin-bottom: 10px; margin-top: 0; }
-        p { color: var(--text-light); font-size: 0.9rem; line-height: 1.5; margin-top: 0; }
+        h1, h2, h3 { font-family: 'Fredoka', sans-serif; color: #333; margin: 10px 0; }
+        p { color: #888; font-size: 0.9rem; line-height: 1.5; margin-top: 0; }
 
+        /* Butonlar */
         .btn-primary {
-            background: #FFB5A7; color: white; border: none; padding: 15px; width: 100%;
+            background: var(--theme-color); color: #333; border: none; padding: 18px; width: 100%;
             border-radius: 30px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
-            box-shadow: 0 10px 20px rgba(255, 181, 167, 0.4); margin-top: auto; transition: 0.2s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-top: auto; transition: 0.2s;
         }
         .btn-primary:active { transform: scale(0.98); }
 
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; z-index: 10; }
-        
-        /* KARTLAR */
+        .btn-action { padding: 8px 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; font-size: 0.8rem; margin-left: auto; }
+        .btn-green { background: #C1E1C1; color: #2d5a2d; }
+        .btn-peach { background: #FFD1BA; color: #8f5e41; }
+        .btn-purple { background: #DCD6F7; color: #5a4b8f; }
+
+        /* Kartlar */
         .card {
             background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px;
             display: flex; align-items: center; gap: 15px; border: 1px solid #f0f0f0;
             box-shadow: 0 3px 8px rgba(0,0,0,0.03); cursor: pointer; transition: 0.2s;
         }
         .card:active { transform: scale(0.98); background: #fafafa; }
-        
         .icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; flex-shrink: 0; }
-        
-        .btn-action { padding: 8px 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; font-size: 0.8rem; margin-left: auto; }
-        .btn-green { background: #C1E1C1; color: #2d5a2d; }
-        .btn-peach { background: #FFD1BA; color: #8f5e41; }
-        .btn-purple { background: #DCD6F7; color: #5a4b8f; }
 
-        /* --- 5. ÖZEL EKRAN STİLLERİ --- */
-        
+        /* Header */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background:white; }
+
         /* Onboarding */
         .onboard-img { width: 140px; height: 140px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white; margin: 40px auto; }
         .dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
@@ -89,57 +79,48 @@
         .dot.active { background: #333; }
 
         /* Profil */
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; font-size: 0.9rem; }
-        .custom-input { width: 100%; padding: 12px; background: #f9f9f9; border: 1px solid #eee; border-radius: 12px; font-family: 'Nunito'; font-size: 1rem; }
-        .color-picker { display: flex; gap: 10px; margin-top: 5px; }
-        .color-opt { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; }
+        .input-group { margin-bottom: 15px; }
+        .custom-input { width: 100%; padding: 15px; background: #f9f9f9; border: 1px solid #eee; border-radius: 15px; margin-bottom: 10px; font-family: 'Nunito'; font-size: 1rem; }
+        .color-picker { display: flex; gap: 15px; margin-top: 5px; }
+        .color-opt { width: 50px; height: 50px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; }
         .color-opt.selected { border-color: #333; transform: scale(1.1); }
-        .toggle-switch { width: 50px; height: 26px; background: #eee; border-radius: 13px; position: relative; cursor: pointer; }
-        .toggle-switch.active { background: var(--mint); }
-        .toggle-knob { width: 22px; height: 22px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .toggle-switch.active .toggle-knob { left: 26px; }
 
         /* Home Dashboard */
         .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .dash-item { background: white; padding: 15px; border-radius: 20px; text-align: center; border: 1px solid #f0f0f0; box-shadow: 0 3px 8px rgba(0,0,0,0.03); cursor: pointer; }
         .recent-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-top: 10px; }
-        .recent-item { min-width: 80px; background: white; border-radius: 15px; padding: 10px; text-align: center; border: 1px solid #eee; }
+        .recent-item { min-width: 80px; background: white; border-radius: 15px; padding: 10px; text-align: center; border: 1px solid #eee; cursor: pointer; }
 
-        /* Timer & Guide Detail */
-        .timer-circle {
-            width: 200px; height: 200px; border-radius: 50%; border: 12px solid var(--mint);
-            margin: 20px auto; display: flex; align-items: center; justify-content: center;
-            font-size: 3.5rem; font-family: 'Fredoka'; color: var(--dark-mint);
+        /* Guide Detail (Adım Adım) */
+        .step-container { text-align: center; margin-top: 20px; }
+        .step-image-box { 
+            width: 100%; height: 200px; background: #f9f9f9; border-radius: 20px; margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #ccc; border: 2px dashed #eee;
         }
-        .step-list { text-align: left; margin-top: 20px; }
-        .step-item { display: flex; gap: 15px; margin-bottom: 15px; opacity: 0.5; align-items: center; }
-        .step-item.active { opacity: 1; font-weight: bold; }
-        .step-num { width: 25px; height: 25px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
-        .step-item.active .step-num { background: var(--primary-color); color: white; }
+        .progress-dots { display: flex; justify-content: center; gap: 5px; margin-bottom: 20px; }
+        .p-dot { width: 30px; height: 5px; background: #eee; border-radius: 5px; }
+        .p-dot.active { background: var(--theme-color); }
 
         /* Study Buddy & Upload */
-        .upload-area { border: 2px dashed #ccc; background: #fafafa; border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; margin-top: 20px; }
-        #buddy-preview-menu { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; display: none; margin: 10px auto; border: 4px solid var(--purple); }
+        .upload-area { border: 2px dashed #ccc; padding: 30px; border-radius: 20px; text-align: center; cursor: pointer; margin-top: 20px; background: #fafafa; }
+        #buddy-preview { width: 100%; max-height: 150px; object-fit: contain; display: none; margin-top: 10px; border-radius: 10px; }
 
-        /* Ders Modu (Quiz) */
-        .quiz-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #F8F9FA; z-index: 200; display: none; flex-direction: column; }
+        /* DERS MODU (Özel Tasarım) */
+        .quiz-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .quiz-question { font-size: 3.5rem; color: var(--dark-purple); margin: 20px 0; text-align: center; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
+        .option-btn { background: white; border: 2px solid #eee; padding: 20px; border-radius: 15px; font-size: 1.5rem; font-weight: bold; color: var(--dark-purple); cursor: pointer; text-align: center; transition: 0.2s; }
+        .option-btn:active { transform: scale(0.95); }
+
+        /* Buddy Avatar (Ders İçi) */
+        .buddy-corner { position: absolute; bottom: 20px; left: 20px; display: flex; align-items: flex-end; width: 100%; z-index: 20; }
         .buddy-avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); background: white; object-fit: cover; }
-        .speech-bubble { background: white; padding: 12px; border-radius: 15px 15px 15px 0; box-shadow: 0 5px 10px rgba(0,0,0,0.05); font-size: 0.9rem; color: var(--dark-purple); max-width: 220px; margin-bottom: 10px; animation: popIn 0.3s ease; }
-        .option-btn { background: white; border: 2px solid #eee; padding: 20px; border-radius: 15px; font-size: 1.5rem; font-weight: bold; color: var(--dark-purple); cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center;}
-
-        /* Rewards & Leaderboard */
-        .points-banner { background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); padding: 30px; border-radius: 25px; text-align: center; color: white; margin-bottom: 20px; }
-        .badge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .badge { background: white; padding: 10px; border-radius: 15px; text-align: center; border: 1px solid #eee; opacity: 0.5; }
-        .badge.unlocked { opacity: 1; border-color: gold; box-shadow: 0 3px 8px rgba(0,0,0,0.05); }
-        .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
-        .rank { font-weight: bold; width: 30px; }
+        .speech-bubble { background: white; padding: 12px; border-radius: 15px 15px 15px 0; box-shadow: 0 5px 10px rgba(0,0,0,0.05); font-size: 0.9rem; color: var(--dark-purple); max-width: 200px; margin-bottom: 10px; margin-left: 10px; animation: popIn 0.3s ease; }
 
         /* Bottom Nav */
-        .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 85px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #f0f0f0; padding-bottom: 15px; z-index: 100; }
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 80px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #f0f0f0; padding-bottom: 15px; z-index: 100; }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #ccc; font-size: 0.75rem; cursor: pointer; width: 25%; }
-        .nav-item.active { color: var(--primary-color); font-weight: bold; filter: brightness(0.7); }
+        .nav-item.active { color: var(--theme-color); font-weight: bold; filter: brightness(0.7); }
         .nav-item i { font-size: 1.4rem; }
 
         @keyframes popIn { from {transform: scale(0);} to {transform: scale(1);} }
@@ -151,72 +132,43 @@
 <div id="app-frame">
     <div class="notch"></div>
 
-    <!-- *** 1. SPLASH SCREEN *** -->
+    <!-- *** 1. SPLASH *** -->
     <div id="s-splash" class="screen active" style="align-items:center; justify-content:center;">
-        <img src="logo.png" alt="Logo" style="width:120px; animation:fadeIn 1s;">
+        <img src="logo.png" alt="Logo" style="width:120px; animation:popIn 0.5s;">
         <h1 style="margin-top:20px; color:var(--dark-purple);">Squishables</h1>
     </div>
 
-    <!-- *** 2. ONBOARDING AKIŞI *** -->
+    <!-- *** 2. ONBOARDING *** -->
     <div id="s-on1" class="screen" style="padding:30px; text-align:center;">
         <div class="onboard-img" style="background:var(--mint);"><i class="fa-solid fa-palette"></i></div>
         <h1>Hands On,<br>Screens Off.</h1>
-        <p>Discover the magic of sensory play.</p>
-        <div class="dots" style="margin-top:auto;"><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+        <p>Screen-free sensory play for creative minds.</p>
+        <div class="dots" style="margin-top:auto;"><div class="dot active"></div><div class="dot"></div></div>
         <button class="btn-primary" onclick="nav('s-on2')">Next</button>
     </div>
 
     <div id="s-on2" class="screen" style="padding:30px; text-align:center;">
-        <div class="onboard-img" style="background:var(--peach);"><i class="fa-regular fa-clock"></i></div>
-        <h1>Daily 10-Minute<br>Challenges</h1>
-        <p>Quick, fun activities for kids.</p>
-        <div class="dots" style="margin-top:auto;"><div class="dot"></div><div class="dot active"></div><div class="dot"></div></div>
-        <button class="btn-primary" onclick="nav('s-on3')">Next</button>
-    </div>
-
-    <div id="s-on3" class="screen" style="padding:30px; text-align:center;">
         <div class="onboard-img" style="background:var(--purple);"><i class="fa-solid fa-trophy"></i></div>
-        <h1>Earn Rewards</h1>
-        <p>Collect badges for every creation.</p>
-        <div class="dots" style="margin-top:auto;"><div class="dot"></div><div class="dot"></div><div class="dot active"></div></div>
+        <h1>Learn & Earn</h1>
+        <p>Complete challenges, unlock badges!</p>
+        <div class="dots" style="margin-top:auto;"><div class="dot"></div><div class="dot active"></div></div>
         <button class="btn-primary" onclick="nav('s-profile')">Get Started</button>
     </div>
 
-    <!-- *** 3. PROFİL KURULUMU (DETAYLI) *** -->
+    <!-- *** 3. PROFILE SETUP *** -->
     <div id="s-profile" class="screen">
-        <div class="header"><i class="fa-solid fa-arrow-left" onclick="nav('s-on3')"></i><h3>Profile Setup</h3><div></div></div>
+        <div class="header"><i class="fa-solid fa-arrow-left" onclick="nav('s-on2')"></i><h3>Profile</h3><div></div></div>
         <div class="scroll-content">
             <div class="input-group">
-                <label>Child's Name</label>
-                <input type="text" id="inp-name" class="custom-input" placeholder="Little Creator">
+                <label>Name</label>
+                <input type="text" id="inp-name" class="custom-input" placeholder="Creator Name">
             </div>
             <div class="input-group">
-                <label>Age</label>
-                <input type="number" class="custom-input" placeholder="e.g. 5">
-            </div>
-            <div class="input-group">
-                <label>Favorite Color (Theme)</label>
+                <label>App Theme</label>
                 <div class="color-picker">
                     <div class="color-opt selected" style="background:#C4DFD9;" onclick="pickColor(this, '#C4DFD9')"></div>
                     <div class="color-opt" style="background:#FFD1BA;" onclick="pickColor(this, '#FFD1BA')"></div>
                     <div class="color-opt" style="background:#DCD6F7;" onclick="pickColor(this, '#DCD6F7')"></div>
-                </div>
-            </div>
-            
-            <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
-            
-            <div class="input-group">
-                <label>Parent Name</label>
-                <input type="text" class="custom-input" placeholder="Parent Name">
-            </div>
-            <div class="input-group">
-                <label>Email (Optional)</label>
-                <input type="email" class="custom-input" placeholder="parent@email.com">
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                <label style="margin:0;">Daily Reminders</label>
-                <div class="toggle-switch active" onclick="this.classList.toggle('active')">
-                    <div class="toggle-knob"></div>
                 </div>
             </div>
         </div>
@@ -225,48 +177,41 @@
         </div>
     </div>
 
-    <!-- *** 4. ANA SAYFA (HOME) *** -->
+    <!-- *** 4. HOME *** -->
     <div id="s-home" class="screen">
         <div class="header">
-            <div><p style="margin:0;">Welcome,</p><h2 style="margin:0;" id="display-name">Creator</h2></div>
+            <div><p style="margin:0;">Hi,</p><h2 style="margin:0;" id="display-name">Creator</h2></div>
             <div style="background:#FFF3E0; color:orange; padding:5px 10px; border-radius:15px; font-weight:bold;">
                 <i class="fa-solid fa-star"></i> <span id="home-score">0</span>
             </div>
         </div>
         <div class="scroll-content">
-            <p style="text-align:center; margin-bottom:20px;">Ready for today's screen-free moment?</p>
+            <p style="text-align:center;">Let's create something today!</p>
             
-            <!-- Başlat Butonu -->
-            <div onclick="nav('s-challenges')" style="width:160px; height:160px; background:var(--primary-color); border-radius:50%; margin:0 auto; display:flex; flex-direction:column; justify-content:center; align-items:center; box-shadow:0 10px 20px rgba(0,0,0,0.1); cursor:pointer; transition:0.2s;">
-                <h2 style="margin:0; color:#333; font-size:1.5rem;">Start</h2>
-                <p style="color:#333; margin:0;">Challenge</p>
+            <!-- Büyük Start Butonu -->
+            <div onclick="nav('s-challenges')" style="width:160px; height:160px; background:var(--theme-color); border-radius:50%; margin:20px auto; display:flex; flex-direction:column; justify-content:center; align-items:center; box-shadow:0 10px 30px rgba(0,0,0,0.1); cursor:pointer;">
+                <h2 style="margin:0; color:#333;">Start</h2>
+                <p style="color:#333; margin:0;">Activity</p>
             </div>
 
+            <!-- Dashboard Grid -->
             <div class="dash-grid">
                 <div class="dash-item" onclick="nav('s-challenges')">
                     <i class="fa-regular fa-calendar" style="font-size:2rem; color:var(--dark-peach); margin-bottom:10px;"></i>
-                    <b>Today's Challenge</b>
+                    <b>Challenges</b>
                 </div>
                 <div class="dash-item" onclick="nav('s-build')">
                     <i class="fa-solid fa-shapes" style="font-size:2rem; color:var(--dark-mint); margin-bottom:10px;"></i>
                     <b>Build & Learn</b>
                 </div>
-                <div class="dash-item" onclick="nav('s-rewards')">
-                    <i class="fa-solid fa-trophy" style="font-size:2rem; color:var(--dark-purple); margin-bottom:10px;"></i>
-                    <b>Rewards</b>
-                </div>
-                <div class="dash-item">
-                    <i class="fa-solid fa-users" style="font-size:2rem; color:orange; margin-bottom:10px;"></i>
-                    <b>Parent Tips</b>
-                </div>
             </div>
 
+            <!-- Tıklanabilir Recent Activity -->
             <h3 style="margin-top:20px;">Recent Activity</h3>
             <div class="recent-scroll">
-                <div class="recent-item">🌸<br><small>Flower</small></div>
-                <div class="recent-item">🎂<br><small>Cake</small></div>
-                <div class="recent-item">🚗<br><small>Car</small></div>
-                <div class="recent-item">➕<br><small>Math</small></div>
+                <div class="recent-item" onclick="openGuide('flower')">🌸<br><small>Flower</small></div>
+                <div class="recent-item" onclick="openGuide('cake')">🎂<br><small>Cake</small></div>
+                <div class="recent-item" onclick="startLesson('math')">➕<br><small>Math</small></div>
             </div>
         </div>
         <div class="bottom-nav">
@@ -277,31 +222,23 @@
         </div>
     </div>
 
-    <!-- *** 5. CHALLENGES LISTESI *** -->
+    <!-- *** 5. CHALLENGES *** -->
     <div id="s-challenges" class="screen">
         <div class="header"><h3>Challenges</h3></div>
         <div class="scroll-content">
-            <div style="display:flex; gap:10px; margin-bottom:15px; overflow-x:auto;">
-                <span style="background:var(--purple); color:var(--dark-purple); padding:5px 15px; border-radius:15px; font-weight:bold;">All</span>
-                <span style="background:#eee; color:#888; padding:5px 15px; border-radius:15px;">Today</span>
-                <span style="background:#eee; color:#888; padding:5px 15px; border-radius:15px;">Completed</span>
-            </div>
-
-            <!-- Çiçek Kartı -->
+            <!-- Hepsi Tıklanabilir -->
             <div class="card" onclick="openGuide('flower')">
                 <div class="icon-box" style="background:var(--mint);"><i class="fa-solid fa-seedling"></i></div>
                 <div style="flex:1;"><h3>Make a Flower</h3><p>10 min • Easy</p></div>
                 <button class="btn-action btn-green">Start</button>
             </div>
             
-            <!-- Kale Kartı -->
             <div class="card" onclick="openGuide('castle')">
                 <div class="icon-box" style="background:var(--peach);"><i class="fa-brands fa-fort-awesome"></i></div>
                 <div style="flex:1;"><h3>Build a Castle</h3><p>15 min • Medium</p></div>
-                <button class="btn-action btn-peach">Resume</button>
+                <button class="btn-action btn-peach">Start</button>
             </div>
 
-            <!-- Hayvan Kartı -->
             <div class="card" onclick="openGuide('animal')">
                 <div class="icon-box" style="background:var(--purple);"><i class="fa-solid fa-paw"></i></div>
                 <div style="flex:1;"><h3>Create Animals</h3><p>12 min • Easy</p></div>
@@ -316,7 +253,7 @@
         </div>
     </div>
 
-    <!-- *** 6. GUIDE DETAY (SAYAÇLI) *** -->
+    <!-- *** 6. GUIDE DETAIL (ADIM ADIM) *** -->
     <div id="s-guide-detail" class="screen">
         <div class="header">
             <i class="fa-solid fa-arrow-left" onclick="nav('s-challenges')" style="cursor:pointer;"></i>
@@ -324,14 +261,23 @@
             <div></div>
         </div>
         <div class="scroll-content" style="text-align:center;">
-            <div class="timer-circle" id="guide-timer">10:00</div>
-            <p>Let's build together!</p>
             
-            <div class="step-list" id="guide-steps">
+            <div class="step-image-box">
+                <!-- Buraya dinamik resim gelebilir -->
+                <i class="fa-solid fa-image" id="step-icon"></i>
+            </div>
+
+            <div class="progress-dots" id="guide-dots">
                 <!-- JS ile dolacak -->
             </div>
 
-            <button class="btn-primary" onclick="finishChallenge()">Finish & Claim Points</button>
+            <h2 id="step-text">Step 1: Roll the ball</h2>
+            <p id="step-desc">Take a piece of dough and roll it.</p>
+
+            <div style="margin-top:40px; display:flex; gap:10px;">
+                <button class="btn-primary" style="background:#eee; color:#333; flex:1;" onclick="prevStep()">Back</button>
+                <button class="btn-primary" style="flex:2;" onclick="nextStep()" id="btn-next-step">Next Step</button>
+            </div>
         </div>
     </div>
 
@@ -340,6 +286,7 @@
         <div class="header"><h3>Build & Learn</h3></div>
         <div class="scroll-content">
             
+            <!-- Build Guides -->
             <div class="card" onclick="openGuide('cake')">
                 <div class="icon-box" style="background:#FFE5D9; color:#D68C6D;"><i class="fa-solid fa-cake-candles"></i></div>
                 <div><b>Make a Cake</b><p>6 steps</p></div>
@@ -354,34 +301,32 @@
 
             <!-- STUDY BUDDY UPLOAD -->
             <h3 style="margin-top:20px;">Study Buddy 🎓</h3>
-            <p>Upload your dough character to unlock interactive lessons!</p>
+            <p>Upload your dough character to unlock lessons!</p>
             
             <div class="upload-area" onclick="document.getElementById('file-inp').click()">
-                <!-- Önizleme yoksa -->
                 <div id="upload-placeholder">
                     <i class="fa-solid fa-camera" style="font-size:2rem; color:#ccc;"></i>
-                    <p style="margin-top:10px;">Tap to upload photo</p>
+                    <p>Tap to upload photo</p>
                 </div>
-                <!-- Yüklenince -->
-                <img id="buddy-preview-menu">
+                <img id="buddy-preview">
             </div>
             <input type="file" id="file-inp" style="display:none;" accept="image/*" onchange="loadBuddy(this)">
 
-            <!-- DERSLER (GİZLİ, YÜKLENİNCE AÇILIR) -->
+            <!-- DERSLER (Yükleyince aktifleşir) -->
             <div id="lessons-area" style="display:none; margin-top:20px;">
                 <div class="card" onclick="startLesson('math')">
                     <div class="icon-box" style="background:var(--purple);"><i class="fa-solid fa-calculator"></i></div>
-                    <div><b>Math Quiz</b><p>Level 1</p></div>
+                    <div><b>Math Quiz</b><p>Addition & Subtraction</p></div>
                     <i class="fa-solid fa-chevron-right" style="margin-left:auto; color:#ccc;"></i>
                 </div>
                 <div class="card" onclick="startLesson('colors')">
                     <div class="icon-box" style="background:var(--peach);"><i class="fa-solid fa-palette"></i></div>
-                    <div><b>Color Match</b><p>Identify Colors</p></div>
+                    <div><b>Colors</b><p>Identify & Mix</p></div>
                     <i class="fa-solid fa-chevron-right" style="margin-left:auto; color:#ccc;"></i>
                 </div>
                 <div class="card" onclick="startLesson('shapes')">
                     <div class="icon-box" style="background:var(--mint);"><i class="fa-solid fa-shapes"></i></div>
-                    <div><b>Shapes Fun</b><p>Circle & Square</p></div>
+                    <div><b>Shapes</b><p>Geometry Fun</p></div>
                     <i class="fa-solid fa-chevron-right" style="margin-left:auto; color:#ccc;"></i>
                 </div>
             </div>
@@ -395,67 +340,54 @@
         </div>
     </div>
 
-    <!-- *** 8. DERS MODU (QUIZ) *** -->
-    <div id="s-lesson" class="quiz-screen">
+    <!-- *** 8. DERS EKRANI (QUIZ) *** -->
+    <div id="s-lesson" class="screen" style="z-index:200; background:#F8F9FA;">
         <div style="padding:40px 20px 0 20px; display:flex; justify-content:space-between;">
             <i class="fa-solid fa-xmark" onclick="nav('s-build')" style="font-size:1.5rem; cursor:pointer;"></i>
             <span style="background:var(--purple); padding:5px 10px; border-radius:10px; font-weight:bold;" id="lesson-tag">Math</span>
         </div>
         
-        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px;">
-            <h1 style="font-size:3rem; color:var(--dark-purple); text-align:center;" id="quiz-question">?</h1>
-            <div id="quiz-options" style="display:grid; grid-template-columns:1fr 1fr; gap:15px; width:100%;">
-                <!-- Şıklar buraya gelecek -->
+        <div class="quiz-content">
+            <h1 class="quiz-question" id="quiz-q">?</h1>
+            <div class="options-grid" id="quiz-opts">
+                <!-- Şıklar -->
             </div>
         </div>
 
-        <!-- Buddy Köşede -->
-        <div style="position:absolute; bottom:20px; left:20px; display:flex; align-items:flex-end; width:100%;">
-            <img id="lesson-buddy" src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" class="buddy-avatar">
-            <div class="speech-bubble" id="buddy-bubble">Let's solve this!</div>
+        <!-- Buddy -->
+        <div class="buddy-corner">
+            <img id="lesson-buddy" src="logo.png" class="buddy-avatar">
+            <div class="speech-bubble" id="buddy-bubble">Let's do this!</div>
         </div>
     </div>
 
-    <!-- *** 9. REWARDS & LEADERBOARD *** -->
+    <!-- *** 9. REWARDS *** -->
     <div id="s-rewards" class="screen">
         <div class="header"><h3>Rewards</h3></div>
         <div class="scroll-content">
-            <div class="points-banner">
+            <div class="points-banner" style="background:linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); padding:30px; border-radius:25px; text-align:center; color:white; margin-bottom:20px;">
                 <h1 id="total-score" style="font-size:3rem; margin:0; color:white;">0</h1>
                 <p style="color:white;">Total Points</p>
             </div>
             
-            <h3>My Badges</h3>
-            <div class="badge-grid">
-                <div class="badge unlocked" id="badge-1"><i class="fa-solid fa-medal" style="font-size:1.5rem; color:gold;"></i><br><small>First</small></div>
-                <div class="badge" id="badge-2"><i class="fa-solid fa-fire" style="font-size:1.5rem; color:orange;"></i><br><small>Streak</small></div>
-                <div class="badge" id="badge-3"><i class="fa-solid fa-palette" style="font-size:1.5rem; color:purple;"></i><br><small>Artist</small></div>
+            <h3>Badges</h3>
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:20px;">
+                <div class="card" style="flex-direction:column; padding:10px; background:white; border:1px solid gold;">🥇<br><small>First</small></div>
+                <div class="card" style="flex-direction:column; padding:10px;">🔥<br><small>Streak</small></div>
+                <div class="card" style="flex-direction:column; padding:10px;">🎨<br><small>Artist</small></div>
             </div>
 
             <h3>Leaderboard</h3>
-            <div class="card" style="flex-direction:column; align-items:stretch; gap:0;">
-                <div class="leaderboard-item">
-                    <div class="rank" style="color:gold;">1</div>
-                    <div style="flex:1; margin-left:10px;"><b>Sarah</b></div>
-                    <div>1,500 pts</div>
+            <div class="card" style="flex-direction:column; align-items:stretch; gap:0; padding:0;">
+                <div style="display:flex; padding:15px; border-bottom:1px solid #eee;">
+                    <b style="color:gold; width:30px;">1</b> <span style="flex:1;">Sarah</span> <b>1500</b>
                 </div>
-                <div class="leaderboard-item">
-                    <div class="rank" style="color:silver;">2</div>
-                    <div style="flex:1; margin-left:10px;"><b>Tom</b></div>
-                    <div>1,200 pts</div>
+                <div style="display:flex; padding:15px; border-bottom:1px solid #eee;">
+                    <b style="color:silver; width:30px;">2</b> <span style="flex:1;">Tom</span> <b>1200</b>
                 </div>
-                <div class="leaderboard-item" style="background:#f9f9f9;">
-                    <div class="rank">3</div>
-                    <div style="flex:1; margin-left:10px;"><b id="lb-name">You</b></div>
-                    <div id="lb-score">0 pts</div>
+                <div style="display:flex; padding:15px; background:#f0f0f0;">
+                    <b style="width:30px;">3</b> <span style="flex:1;">You</span> <b id="lb-score">0</b>
                 </div>
-            </div>
-
-            <h3 style="margin-top:20px;">Redeem</h3>
-            <div class="card">
-                <div class="icon-box" style="background:#eee; color:#333;">📄</div>
-                <div><b>Certificate</b><p>Download PDF</p></div>
-                <span style="background:var(--purple); padding:5px; border-radius:5px; font-size:0.8rem;">100 pts</span>
             </div>
         </div>
         <div class="bottom-nav">
@@ -469,169 +401,191 @@
 </div>
 
 <script>
-    /* --- DEĞİŞKENLER --- */
+    /* --- GLOBAL DEĞİŞKENLER --- */
     let score = 0;
-    let userName = "Creator";
-    
-    /* --- DATA: QUIZ SORULARI --- */
-    const quizData = {
+    let currentGuide = null;
+    let currentStep = 0;
+    let lessonData = [];
+    let qIndex = 0;
+
+    /* --- DATA --- */
+    const guides = {
+        flower: { 
+            steps: [
+                { t: "Roll a Ball", d: "Make a round orange center." },
+                { t: "Make Petals", d: "Create 5 small pink circles." },
+                { t: "Attach", d: "Stick petals to the center." },
+                { t: "Add Stem", d: "Roll a green stick for stem." }
+            ]
+        },
+        castle: { 
+            steps: [
+                { t: "Base", d: "Make a big square base." },
+                { t: "Towers", d: "Add 4 cylinders on corners." },
+                { t: "Walls", d: "Connect towers with walls." },
+                { t: "Flag", d: "Put a flag on top!" }
+            ]
+        },
+        animal: { steps: [{t:"Body", d:"Make oval body"}, {t:"Head", d:"Add round head"}, {t:"Legs", d:"Add 4 legs"}] },
+        cake: { steps: [{t:"Base", d:"Round base"}, {t:"Layers", d:"Stack layers"}, {t:"Candle", d:"Add candle"}] },
+        car: { steps: [{t:"Body", d:"Rectangle body"}, {t:"Wheels", d:"4 black wheels"}, {t:"Window", d:"Blue square"}] }
+    };
+
+    const quizzes = {
         math: [
-            { q: "2 + 3 = ?", opt: [4, 5, 6, 1], ans: 5 },
-            { q: "5 + 5 = ?", opt: [9, 10, 11, 8], ans: 10 },
-            { q: "10 - 4 = ?", opt: [6, 5, 4, 7], ans: 6 }
+            { q:"2 + 2 = ?", opt:[3,4,5,6], ans:4 },
+            { q:"5 + 3 = ?", opt:[7,8,9,6], ans:8 },
+            { q:"10 - 2 = ?", opt:[5,6,7,8], ans:8 }
         ],
         colors: [
-            { q: "Which is RED?", opt: ["🟥", "🟦", "🟨", "🟩"], ans: "🟥" },
-            { q: "Mix 🔴 + 🟡 = ?", opt: ["Purple", "Orange", "Green", "Black"], ans: "Orange" }
+            { q:"Which is RED?", opt:["🔴","🔵","🟢","🟡"], ans:"🔴" },
+            { q:"Mix 🔵+🟡", opt:["🟣","🟠","🟢","⚫"], ans:"🟢" }
         ],
         shapes: [
-            { q: "Find the Circle", opt: ["⬛", "🔵", "🔺", "⭐"], ans: "🔵" },
-            { q: "How many sides?", img: "🔺", opt: [3, 4, 5, 6], ans: 3 }
+            { q:"Find Circle", opt:["⬛","🔺","🔵","⭐"], ans:"🔵" },
+            { q:"Find Square", opt:["⬛","🔺","🔵","⭐"], ans:"⬛" }
         ]
     };
 
-    /* --- DATA: GUIDE STEPS --- */
-    const guides = {
-        flower: { title: "Make a Flower", time: "10:00", steps: ["Roll a ball for center", "Make 5 petals", "Attach petals", "Add green stem"] },
-        castle: { title: "Build a Castle", time: "15:00", steps: ["Make 4 towers", "Create walls", "Add a flag", "Carve windows"] },
-        animal: { title: "Create Animal", time: "12:00", steps: ["Body shape", "Head & Ears", "Legs & Tail", "Face details"] },
-        cake: { title: "Make a Cake", time: "15:00", steps: ["Base layer", "Top layer", "Candles", "Decorate"] },
-        car: { title: "Make a Car", time: "20:00", steps: ["Body block", "4 Wheels", "Windows", "Headlights"] }
-    };
+    /* --- INIT --- */
+    setTimeout(() => nav('s-on1'), 2000);
 
-    /* --- BAŞLANGIÇ --- */
-    setTimeout(() => { nav('s-on1'); }, 2000);
-
-    /* --- NAVIGASYON --- */
-    function nav(screenId) {
+    /* --- NAV --- */
+    function nav(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
+        document.getElementById(id).classList.add('active');
     }
 
-    /* --- PROFIL --- */
+    /* --- PROFILE --- */
     function pickColor(el, color) {
         document.querySelectorAll('.color-opt').forEach(c => c.classList.remove('selected'));
         el.classList.add('selected');
-        document.documentElement.style.setProperty('--primary-color', color);
+        document.documentElement.style.setProperty('--theme-color', color);
     }
-
     function saveProfile() {
-        const name = document.getElementById('inp-name').value;
-        if(name) userName = name;
-        document.getElementById('display-name').innerText = userName;
-        document.getElementById('lb-name').innerText = userName;
+        const n = document.getElementById('inp-name').value;
+        if(n) document.getElementById('display-name').innerText = n;
         nav('s-home');
     }
 
-    /* --- GUIDE AÇMA --- */
+    /* --- GUIDE LOGIC (STEP BY STEP) --- */
     function openGuide(key) {
-        const g = guides[key];
-        document.getElementById('guide-title').innerText = g.title;
-        document.getElementById('guide-timer').innerText = g.time;
-        
-        const list = document.getElementById('guide-steps');
-        list.innerHTML = "";
-        g.steps.forEach((step, i) => {
-            list.innerHTML += `
-                <div class="step-item ${i===0 ? 'active' : ''}">
-                    <div class="step-num">${i+1}</div>
-                    <span>${step}</span>
-                </div>`;
-        });
+        currentGuide = guides[key];
+        currentStep = 0;
+        updateGuideUI();
         nav('s-guide-detail');
     }
 
-    function finishChallenge() {
-        alert("Great job! Challenge Completed! +50 Points");
-        addScore(50);
-        nav('s-rewards');
+    function updateGuideUI() {
+        const step = currentGuide.steps[currentStep];
+        document.getElementById('guide-title').innerText = `Step ${currentStep+1}`;
+        document.getElementById('step-text').innerText = step.t;
+        document.getElementById('step-desc').innerText = step.d;
+        
+        // Dots
+        const dots = document.getElementById('guide-dots');
+        dots.innerHTML = "";
+        currentGuide.steps.forEach((_, i) => {
+            dots.innerHTML += `<div class="p-dot ${i===currentStep?'active':''}" style="width:10px; height:10px; background:${i===currentStep?'var(--theme-color)':'#eee'}; border-radius:50%;"></div>`;
+        });
+
+        // Button Text
+        const btn = document.getElementById('btn-next-step');
+        btn.innerText = (currentStep === currentGuide.steps.length - 1) ? "Finish" : "Next Step";
     }
 
-    /* --- STUDY BUDDY --- */
+    function nextStep() {
+        if(currentStep < currentGuide.steps.length - 1) {
+            currentStep++;
+            updateGuideUI();
+        } else {
+            alert("Challenge Complete! +50 Points");
+            addScore(50);
+            nav('s-rewards');
+        }
+    }
+
+    function prevStep() {
+        if(currentStep > 0) {
+            currentStep--;
+            updateGuideUI();
+        }
+    }
+
+    /* --- UPLOAD --- */
     function loadBuddy(input) {
         const file = input.files[0];
         if(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('upload-placeholder').style.display = 'none';
-                document.getElementById('buddy-preview-menu').src = e.target.result;
-                document.getElementById('buddy-preview-menu').style.display = 'block';
-                
+                document.getElementById('upload-placeholder').style.display='none';
+                document.getElementById('buddy-preview').src = e.target.result;
+                document.getElementById('buddy-preview').style.display='block';
                 document.getElementById('lesson-buddy').src = e.target.result;
-                document.getElementById('lessons-area').style.display = 'block';
+                document.getElementById('lessons-area').style.display='block';
                 alert("Buddy Uploaded! Lessons Unlocked.");
             }
             reader.readAsDataURL(file);
         }
     }
 
-    /* --- DERS MANTIĞI --- */
-    let currentLesson = [];
-    let qIndex = 0;
-
+    /* --- LESSONS --- */
     function startLesson(type) {
-        currentLesson = quizData[type];
+        lessonData = quizzes[type];
         qIndex = 0;
         document.getElementById('lesson-tag').innerText = type.toUpperCase();
+        loadQuiz();
         nav('s-lesson');
-        loadQuestion();
-        buddySay("Let's learn " + type + "!");
     }
 
-    function loadQuestion() {
-        const q = currentLesson[qIndex];
-        document.getElementById('quiz-question').innerText = q.q;
-        const container = document.getElementById('quiz-options');
-        container.innerHTML = "";
-        
-        q.opt.forEach(opt => {
+    function loadQuiz() {
+        const q = lessonData[qIndex];
+        document.getElementById('quiz-q').innerText = q.q;
+        const grid = document.getElementById('quiz-opts');
+        grid.innerHTML = "";
+        q.opt.forEach(o => {
             const btn = document.createElement('div');
             btn.className = 'option-btn';
-            btn.innerText = opt;
-            btn.onclick = () => checkAnswer(opt, q.ans, btn);
-            container.appendChild(btn);
+            btn.innerText = o;
+            btn.onclick = () => checkAns(o, q.ans, btn);
+            grid.appendChild(btn);
         });
+        buddySay("Let's solve this!");
     }
 
-    function checkAnswer(selected, correct, btn) {
-        if(selected == correct) {
-            btn.style.background = "#C1E1C1"; // Green
-            buddySay("Correct! Awesome!");
+    function checkAns(sel, corr, btn) {
+        if(sel == corr) {
+            btn.style.background = "#C1E1C1";
+            buddySay("Correct! Good job!");
             addScore(10);
             setTimeout(() => {
-                if(qIndex < currentLesson.length - 1) {
+                if(qIndex < lessonData.length - 1) {
                     qIndex++;
-                    loadQuestion();
-                    buddySay("Next question...");
+                    loadQuiz();
                 } else {
-                    alert("Lesson Complete! +50 Bonus Points");
-                    addScore(50);
+                    alert("Lesson Complete!");
                     nav('s-rewards');
                 }
             }, 1000);
         } else {
-            btn.style.background = "#FFD1BA"; // Red
-            buddySay("Oops! Try again.");
+            btn.style.background = "#FFD1BA";
+            buddySay("Try again!");
         }
     }
 
-    function buddySay(text) {
+    function buddySay(txt) {
         const b = document.getElementById('buddy-bubble');
-        b.innerText = text;
+        b.innerText = txt;
         b.style.animation = 'none';
-        b.offsetHeight; 
+        b.offsetHeight;
         b.style.animation = 'popIn 0.3s ease';
     }
 
-    /* --- PUAN SİSTEMİ --- */
-    function addScore(points) {
-        score += points;
-        document.getElementById('total-score').innerText = score;
+    function addScore(n) {
+        score += n;
         document.getElementById('home-score').innerText = score;
-        document.getElementById('lb-score').innerText = score + " pts";
-        
-        if(score > 100) document.getElementById('badge-2').classList.add('unlocked');
-        if(score > 200) document.getElementById('badge-3').classList.add('unlocked');
+        document.getElementById('total-score').innerText = score;
+        document.getElementById('lb-score').innerText = score;
     }
 
 </script>
