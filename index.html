@@ -11,150 +11,162 @@
 
     <div id="mobile-screen">
         
-        <div class="app-header">
-            <img src="logo.png" alt="Squishables" class="app-logo">
+        <div id="splash-screen">
+            <img src="logo.png" class="splash-logo">
+            <h1 style="color:#5a4b8f; font-family:'Fredoka'; margin-top:10px;">Squishables</h1>
+        </div>
+
+        <div id="welcome-screen" class="full-screen-page" style="display:none;">
+            <div style="text-align:center; padding:40px;">
+                <img src="flower_thumb.jpg" style="width:150px; border-radius:50%; margin-bottom:30px; box-shadow:0 10px 20px rgba(0,0,0,0.1);">
+                <h1 style="font-family:'Fredoka'; color:#424874; font-size:2.5rem;">Hands On,<br>Screens Off.</h1>
+                <p style="color:#888; margin:20px 0;">Welcome to the magical world of sensory play. Build, learn, and grow with Doughy!</p>
+                
+                <button class="btn-big" onclick="startApp()" style="background:#FFD1BA; color:#d68c6d;">Uygulamayı Keşfet</button>
+                <p style="margin-top:20px; font-size:0.9rem; color:#bbb;">Already have an account? <b style="color:#424874;">Log In</b></p>
+            </div>
+        </div>
+
+        <div id="app-header" class="app-header" style="display:none;">
+            <img src="logo.png" class="app-logo">
             <div class="streak-pill"><i class="fa-solid fa-fire"></i> 12 Days</div>
         </div>
 
-        <div class="content-area">
+        <div id="content-area" class="content-area" style="display:none;">
 
             <div id="home" class="tab-content">
-                <h2>Hello, Burak! 👋</h2>
-                <div class="card" style="background:linear-gradient(135deg, #DCD6F7 0%, #F4F7F6 100%);">
+                <h2>Daily Challenge 🌟</h2>
+                <div class="card" onclick="openGuideDetail('flower')" style="background:linear-gradient(135deg, #FFF3E0 0%, #FFFFFF 100%); border:2px solid #FFD1BA; cursor:pointer;">
                     <div class="card-col">
-                        <h3>Daily Challenge</h3>
-                        <p>Make a "Happy Flower"</p>
+                        <span style="background:#FFD1BA; color:#d68c6d; padding:3px 10px; border-radius:10px; font-size:0.7rem; font-weight:bold; width:fit-content;">NEW</span>
+                        <h3>Make a Flower</h3>
+                        <p>10 Minutes • Easy</p>
                     </div>
-                    <div style="background:white; padding:10px; border-radius:50%; width:50px; height:50px; display:flex; align-items:center; justify-content:center;">
-                        <i class="fa-solid fa-play" style="color:var(--dark-purple)"></i>
+                    <img src="flower_thumb.jpg" style="width:60px; height:60px; border-radius:10px;">
+                </div>
+
+                <h3>Quick Actions</h3>
+                <div style="display:flex; gap:10px; margin-bottom:20px;">
+                    <div class="quick-btn" onclick="switchTab('buddy')">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <span>Study</span>
+                    </div>
+                    <div class="quick-btn" onclick="switchTab('build')">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>Guides</span>
+                    </div>
+                    <div class="quick-btn" onclick="switchTab('rewards')">
+                        <i class="fa-solid fa-gift"></i>
+                        <span>Rewards</span>
                     </div>
                 </div>
 
-                <h3>Your Creations</h3>
-                <div style="display:flex; gap:15px; overflow-x:auto; padding-bottom:10px;">
-                    <img src="product1.jpg" style="width:100px; height:100px; border-radius:15px; object-fit:cover;">
-                    <img src="product2.jpg" style="width:100px; height:100px; border-radius:15px; object-fit:cover;">
-                    <div style="width:100px; height:100px; border-radius:15px; background:#eee; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <i class="fa-solid fa-plus"></i>
-                    </div>
-                </div>
-
-                <h3 style="margin-top:20px;">Subjects</h3>
-                <div class="card" onclick="switchTab('buddy')"> <div class="card-col">
-                        <h3><i class="fa-solid fa-calculator"></i> Math with Buddy</h3>
-                        <p>Level 2 • Addition</p>
-                    </div>
-                    <button class="btn btn-purple">Play</button>
-                </div>
-            </div>
-
-            <div id="buddy" class="tab-content">
-                <div id="buddy-home">
-                    <h2 style="text-align:center;">Meet Your Study Buddy</h2>
-                    <p style="text-align:center; margin-bottom:20px;">Upload your dough creation to unlock Learning Mode!</p>
-                    
-                    <div class="upload-area" onclick="uploadBuddy()">
-                        <div id="upload-text">
-                            <i class="fa-solid fa-camera upload-icon"></i>
-                            <h3>Take Photo</h3>
-                            <p>or upload from gallery</p>
-                        </div>
-                        <div id="upload-loading" style="display:none; color:orange; font-weight:bold;"></div>
-                        
-                        <img src="bestfriend.png" id="my-buddy-img" alt="My Dough Buddy">
-                    </div>
-
-                    <button id="buddy-action-btn" class="btn-big" onclick="uploadBuddy()">Upload Character</button>
-                </div>
-
-                <div id="lesson-mode" class="lesson-screen">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <i class="fa-solid fa-xmark" onclick="goBack('home')" style="font-size:1.5rem; cursor:pointer;"></i>
-                        <span class="streak-pill">Math Quiz</span>
-                        <span>10:00</span>
-                    </div>
-
-                    <div class="math-problem">
-                        4 + 3 = ?
-                    </div>
-
-                    <div class="options-grid">
-                        <div class="option-btn" onclick="checkAnswer(this, false)">6</div>
-                        <div class="option-btn" onclick="checkAnswer(this, true)">7</div>
-                        <div class="option-btn" onclick="checkAnswer(this, false)">8</div>
-                        <div class="option-btn" onclick="checkAnswer(this, false)">5</div>
-                    </div>
-
-                    <img src="bestfriend.png" class="buddy-corner" alt="Buddy">
-                    <p style="margin-top:30px; color:#888;">"You can do it!" - Doughy</p>
+                <h3>Community Creations</h3>
+                <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:10px;">
+                    <div class="story-circle"><img src="castle_thumb.jpg"></div>
+                    <div class="story-circle"><img src="step3.jpg"></div>
+                    <div class="story-circle"><div style="background:#eee; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">+</div></div>
                 </div>
             </div>
 
             <div id="build" class="tab-content">
-                <h2>Build Guides</h2>
-                <div class="card">
-                    <div class="card-col">
-                        <h3>Dino Rex</h3>
-                        <p>Intermediate • 20 mins</p>
+                <h2>Build Guides 🛠️</h2>
+                <div class="card" onclick="openGuideDetail('flower')">
+                    <img src="flower_thumb.jpg" style="width:60px; height:60px; border-radius:10px; margin-right:15px;">
+                    <div class="card-col" style="flex:1;">
+                        <h3>Spring Flower</h3>
+                        <p>3 Steps • Easy</p>
                     </div>
-                    <button class="btn btn-green" onclick="openPage('guide-detail')">Build</button>
+                    <i class="fa-solid fa-chevron-right" style="color:#ccc;"></i>
                 </div>
                 <div class="card">
-                    <div class="card-col">
-                        <h3>Space Rocket</h3>
-                        <p>Easy • 10 mins</p>
+                    <img src="castle_thumb.jpg" style="width:60px; height:60px; border-radius:10px; margin-right:15px;">
+                    <div class="card-col" style="flex:1;">
+                        <h3>Sand Castle</h3>
+                        <p>5 Steps • Medium</p>
                     </div>
-                    <button class="btn btn-green">Build</button>
-                </div>
-            </div>
-
-            <div id="rewards" class="tab-content">
-                <div style="text-align:center; padding:30px 0; background:var(--purple); border-radius:20px; color:var(--dark-purple);">
-                    <h1 style="margin:0; font-size:3rem;">1,250</h1>
-                    <p>Total Points</p>
-                </div>
-                <h3>Badges</h3>
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:15px;">
-                    <div style="background:white; padding:15px; border-radius:15px; text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.05);">
-                        <div style="font-size:2rem;">🎨</div>
-                        <p style="font-size:0.8rem; font-weight:bold;">Artist</p>
-                    </div>
-                    <div style="background:white; padding:15px; border-radius:15px; text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.05);">
-                        <div style="font-size:2rem;">🧠</div>
-                        <p style="font-size:0.8rem; font-weight:bold;">Genius</p>
-                    </div>
-                    <div style="background:white; padding:15px; border-radius:15px; text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.05);">
-                        <div style="font-size:2rem;">🚀</div>
-                        <p style="font-size:0.8rem; font-weight:bold;">Rocket</p>
-                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color:#ccc;"></i>
                 </div>
             </div>
 
             <div id="guide-detail" class="tab-content">
-                <i class="fa-solid fa-arrow-left" onclick="goBack('build')" style="font-size:1.5rem; margin-bottom:20px; cursor:pointer;"></i>
-                <h2>Making Dino Rex</h2>
-                <img src="guide1.jpg" style="width:100%; border-radius:15px; margin-bottom:20px;">
-                <button class="btn-big" onclick="alert('Step 1 Completed!')">Next Step</button>
+                <div style="display:flex; align-items:center; margin-bottom:20px;">
+                    <i class="fa-solid fa-arrow-left" onclick="goBack('build')" style="font-size:1.5rem; cursor:pointer; margin-right:15px;"></i>
+                    <h3>Making: Spring Flower</h3>
+                </div>
+
+                <img id="step-image" src="step1.jpg" style="width:100%; height:200px; object-fit:cover; border-radius:20px; margin-bottom:20px; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+
+                <div style="display:flex; gap:5px; margin-bottom:20px;">
+                    <div id="bar-1" class="step-bar active"></div>
+                    <div id="bar-2" class="step-bar"></div>
+                    <div id="bar-3" class="step-bar"></div>
+                </div>
+
+                <h2 id="step-title">Step 1: Roll the Ball</h2>
+                <p id="step-desc" style="color:#666; margin-bottom:30px;">Take a piece of orange dough and roll it into a smooth ball. This will be the center.</p>
+
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn" style="background:#eee;" onclick="prevStep()">Back</button>
+                    <button class="btn-big" style="width:auto; margin:0; padding:10px 30px;" onclick="nextStep()">Next Step</button>
+                </div>
             </div>
 
-        </div> <div class="bottom-nav">
-            <div class="nav-item active" onclick="switchTab('home')">
-                <i class="fa-solid fa-house"></i><span>Home</span>
+            <div id="buddy" class="tab-content">
+                <div id="buddy-upload-screen">
+                    <h2 style="text-align:center;">Study Buddy 🎓</h2>
+                    <p style="text-align:center; color:#888;">Upload your character to start learning!</p>
+                    
+                    <div class="upload-area" onclick="triggerUpload()">
+                        <div id="upload-placeholder">
+                            <i class="fa-solid fa-camera" style="font-size:3rem; color:#ccc;"></i>
+                            <p>Tap to Upload</p>
+                        </div>
+                        <img id="uploaded-buddy" src="bestfriend.png" style="display:none; width:100%; height:200px; object-fit:contain;">
+                        <div id="loading-spinner" style="display:none;"><i class="fa-solid fa-spinner fa-spin"></i> Scanning...</div>
+                    </div>
+                    
+                    <button id="btn-start-lesson" class="btn-big" style="opacity:0.5; pointer-events:none;" onclick="startMathLesson()">Start Lesson</button>
+                </div>
+
+                <div id="math-screen" style="display:none; text-align:center; position:relative; height:100%;">
+                    <div style="background:white; padding:10px; border-radius:15px; display:inline-block; margin-bottom:20px; box-shadow:0 5px 10px rgba(0,0,0,0.05);">
+                        Math Level 1
+                    </div>
+                    <h1 style="font-size:4rem; margin:20px 0; font-family:'Fredoka'; color:#424874;">2 + 3 = ?</h1>
+                    
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <button class="option-btn" onclick="checkAnswer(this, false)">4</button>
+                        <button class="option-btn" onclick="checkAnswer(this, true)">5</button>
+                        <button class="option-btn" onclick="checkAnswer(this, false)">6</button>
+                        <button class="option-btn" onclick="checkAnswer(this, false)">1</button>
+                    </div>
+
+                    <img src="bestfriend.png" style="position:absolute; bottom:0; right:0; width:100px; animation: bounce 2s infinite;">
+                    <div style="position:absolute; bottom:80px; right:10px; background:white; padding:5px 10px; border-radius:10px; font-size:0.8rem; box-shadow:0 2px 5px rgba(0,0,0,0.1);">You got this!</div>
+                </div>
             </div>
-            <div class="nav-item" onclick="switchTab('build')">
-                <i class="fa-solid fa-shapes"></i><span>Build</span>
+
+            <div id="rewards" class="tab-content">
+                <h2>Your Rewards 🏆</h2>
+                <div style="background:var(--purple); padding:30px; border-radius:20px; text-align:center; color:#424874; margin-bottom:20px;">
+                    <h1 style="font-size:3rem; margin:0;">150</h1>
+                    <p>Total Points</p>
+                </div>
+                <h3>Badges</h3>
+                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;">
+                    <div class="badge-box">🎨<br>Artist</div>
+                    <div class="badge-box">🚀<br>Rocket</div>
+                    <div class="badge-box" style="opacity:0.5;">🔒<br>Locked</div>
+                </div>
             </div>
-            
-            <div class="nav-center" onclick="switchTab('buddy')">
-                <i class="fa-solid fa-camera"></i>
-            </div>
-            
-            <div class="nav-item" onclick="switchTab('buddy')">
-                <i class="fa-solid fa-graduation-cap"></i><span>Learn</span>
-            </div>
-            <div class="nav-item" onclick="switchTab('rewards')">
-                <i class="fa-solid fa-trophy"></i><span>Rewards</span>
-            </div>
+
+        </div> <div id="bottom-nav" class="bottom-nav" style="display:none;">
+            <div class="nav-item active" onclick="switchTab('home')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+            <div class="nav-item" onclick="switchTab('build')"><i class="fa-solid fa-shapes"></i><span>Build</span></div>
+            <div class="nav-center" onclick="switchTab('buddy')"><i class="fa-solid fa-camera"></i></div>
+            <div class="nav-item" onclick="switchTab('buddy')"><i class="fa-solid fa-book"></i><span>Learn</span></div>
+            <div class="nav-item" onclick="switchTab('rewards')"><i class="fa-solid fa-trophy"></i><span>Rewards</span></div>
         </div>
 
     </div>
