@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Squishables App</title>
+    <title>Squishables Learning</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#DCD6F7">
@@ -13,20 +13,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- 1. TEMEL AYARLAR --- */
+        /* --- 1. CSS AYARLARI --- */
         :root {
-            --theme-color: #C4DFD9;
+            --theme-color: #C4DFD9; /* Kullanıcı değiştirebilir */
             --mint: #C4DFD9; --dark-mint: #2e5c4d;
             --peach: #FFD1BA; --dark-peach: #d68c6d;
             --purple: #DCD6F7; --dark-purple: #424874;
             --bg-color: #eef2f5; --white: #ffffff;
-            --gold: #FFD700;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
         body { margin: 0; padding: 0; font-family: 'Nunito', sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-        /* --- 2. TELEFON ÇERÇEVESİ --- */
+        /* TELEFON ÇERÇEVESİ */
         #app-frame {
             width: 375px; height: 812px; background-color: var(--white);
             border-radius: 40px; position: relative; overflow: hidden;
@@ -34,7 +33,7 @@
         }
         .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 30px; background: #222; border-radius: 0 0 20px 20px; z-index: 999; }
 
-        /* --- 3. IN-APP BİLDİRİM (TOAST) --- */
+        /* --- 2. BİLDİRİM SİSTEMİ (TOAST) --- */
         #toast-container {
             position: absolute; top: 50px; left: 50%; transform: translateX(-50%);
             z-index: 3000; width: 90%; pointer-events: none; display: flex; flex-direction: column; gap: 10px;
@@ -48,9 +47,8 @@
         .toast.show { opacity: 1; transform: translateY(0); }
         .toast.success { background: rgba(46, 92, 77, 0.95); }
         .toast.error { background: rgba(214, 108, 108, 0.95); }
-        .toast.levelup { background: linear-gradient(45deg, #FFD700, #FFA500); color: #333; font-weight: bold; }
 
-        /* --- 4. EKRAN YÖNETİMİ --- */
+        /* --- 3. EKRAN YÖNETİMİ --- */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: white; display: none; flex-direction: column;
@@ -93,34 +91,44 @@
         .dot { width: 10px; height: 10px; background: #eee; border-radius: 50%; }
         .dot.active { background: #333; }
 
+        /* Profil */
         .input-group { margin-bottom: 15px; }
         .custom-input { width: 100%; padding: 15px; background: #f9f9f9; border: 1px solid #eee; border-radius: 15px; margin-bottom: 10px; font-family: 'Nunito'; font-size: 1rem; }
+        
+        .avatar-grid { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        .avatar-opt { width: 60px; height: 60px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; object-fit: cover; }
+        .avatar-opt.selected { border-color: var(--theme-color); transform: scale(1.1); }
+
         .color-picker { display: flex; gap: 15px; margin-top: 5px; }
         .color-opt { width: 50px; height: 50px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; }
         .color-opt.selected { border-color: #333; transform: scale(1.1); }
+        
         .toggle-switch { width: 50px; height: 26px; background: #eee; border-radius: 13px; position: relative; cursor: pointer; transition: 0.3s; }
         .toggle-switch.active { background: var(--theme-color); }
         .toggle-knob { width: 22px; height: 22px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .toggle-switch.active .toggle-knob { left: 26px; }
 
+        /* Home Dashboard */
         .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .dash-item { background: white; padding: 15px; border-radius: 20px; text-align: center; border: 1px solid #f0f0f0; box-shadow: 0 3px 8px rgba(0,0,0,0.03); cursor: pointer; }
         .recent-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-top: 10px; }
         .recent-item { min-width: 80px; background: white; border-radius: 15px; padding: 10px; text-align: center; border: 1px solid #eee; cursor: pointer; transition: 0.2s; }
         .recent-item:active { transform: scale(0.95); background: #f0f0f0; }
 
-        /* --- BUILD GUIDE (FOTOĞRAFLI) --- */
+        /* --- BUILD GUIDE (ADIM ADIM FOTOĞRAF) --- */
         .progress-bar { width: 100%; height: 6px; background: #eee; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--theme-color); width: 0%; transition: width 0.3s ease; }
         
-        /* ÖRNEK FOTOĞRAF ALANI */
         .step-image-box { 
             width: 100%; height: 220px; background: #f9f9f9; border-radius: 20px; margin-bottom: 20px;
             display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--theme-color); border: 2px dashed #eee; overflow: hidden; position: relative;
         }
         .step-image-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .step-image-box img.placeholder { display: block; opacity: 0.7; }
+        
         .guide-overlay-hint { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.5); color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.8rem; }
 
+        /* Upload Alanı */
         .step-upload-btn {
             background: white; border: 2px dashed #ccc; padding: 15px; border-radius: 15px;
             cursor: pointer; margin-bottom: 20px; text-align: center; transition: 0.2s; display: flex;
@@ -128,6 +136,7 @@
         }
         .step-upload-btn:active { background: #f0f0f0; border-color: var(--dark-purple); }
         
+        /* Summary Grid */
         .summary-grid { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
         .summary-card { background: white; padding: 10px; border-radius: 15px; display: flex; align-items: center; gap: 15px; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .summary-thumb { width: 70px; height: 70px; border-radius: 10px; background: #eee; object-fit: cover; border: 1px solid #ddd; }
@@ -159,8 +168,7 @@
 
         /* Rewards */
         .points-banner { background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); padding: 30px; border-radius: 25px; text-align: center; color: white; margin-bottom: 20px; }
-        .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; transition: 0.2s; }
-        .leaderboard-item.highlight { background: #FFF8E1; border-left: 4px solid gold; }
+        .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
         .gift-icon { color: #FF6B6B; margin-left: 5px; animation: pulse 1.5s infinite; }
 
         /* Bottom Nav */
@@ -207,10 +215,18 @@
         <button class="btn-primary" onclick="nav('s-profile')">Başla</button>
     </div>
 
-    <!-- 3. PROFIL -->
+    <!-- 3. PROFIL (DETAYLI) -->
     <div id="s-profile" class="screen">
         <div class="header"><i class="fa-solid fa-arrow-left" onclick="nav('s-on2')"></i><h3>Profil</h3><div></div></div>
         <div class="scroll-content">
+            <!-- Avatar Seçimi -->
+            <p style="text-align:center; margin-bottom:10px;">Avatarını Seç:</p>
+            <div class="avatar-grid">
+                <img src="https://picsum.photos/seed/ava1/100/100" class="avatar-opt selected" onclick="pickAvatar(this)">
+                <img src="https://picsum.photos/seed/ava2/100/100" class="avatar-opt" onclick="pickAvatar(this)">
+                <img src="https://picsum.photos/seed/ava3/100/100" class="avatar-opt" onclick="pickAvatar(this)">
+            </div>
+
             <div class="input-group"><label>Çocuk İsmi</label><input type="text" id="inp-name" class="custom-input" placeholder="İsim"></div>
             <div class="input-group"><label>Yaş</label><input type="number" class="custom-input" placeholder="5"></div>
             <div class="input-group">
@@ -222,7 +238,7 @@
                 </div>
             </div>
             <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
-            <div class="input-group"><label>Ebeveyn Adı</label><input type="text" class="custom-input" placeholder="Ebeveyn Adı"></div>
+            <div class="input-group"><label>Ebeveyn Adı</label><input type="text" class="custom-input" placeholder="Anne/Baba Adı"></div>
             <div class="input-group"><label>E-posta (İsteğe Bağlı)</label><input type="email" class="custom-input" placeholder="mail@ornek.com"></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
                 <label style="margin:0;">Günlük Hatırlatıcı</label>
@@ -236,7 +252,7 @@
     <div id="s-home" class="screen">
         <div class="header">
             <div><p style="margin:0;">Merhaba,</p><h2 style="margin:0;" id="display-name">Yaratıcı</h2></div>
-            <div style="background:#FFF3E0; color:orange; padding:5px 12px; border-radius:20px; font-weight:bold;" onclick="nav('s-rewards')"><i class="fa-solid fa-fire"></i> 3</div>
+            <div style="background:#FFF3E0; color:orange; padding:5px 12px; border-radius:20px; font-weight:bold;" onclick="nav('s-rewards')"><i class="fa-solid fa-fire"></i> 3 Gün</div>
         </div>
         <div class="scroll-content">
             <div style="margin-bottom:20px;" onclick="nav('s-rewards')">
@@ -292,7 +308,7 @@
         </div>
     </div>
 
-    <!-- 6B. GUIDE STEPS (FOTOĞRAFLI) -->
+    <!-- 6B. GUIDE STEPS (HER ADIMDA FOTOĞRAF) -->
     <div id="s-guide-steps" class="screen">
         <div class="header"><i class="fa-solid fa-xmark" onclick="nav('s-challenges')"></i><h3 id="step-header">Adım 1/4</h3><div></div></div>
         <div class="scroll-content" style="text-align:center;">
@@ -300,8 +316,8 @@
             
             <div class="step-image-box">
                 <!-- Örnek Fotoğraf (Placeholder) -->
-                <div class="guide-overlay-hint">Örnek</div>
-                <img id="step-img-example" class="placeholder" src="https://picsum.photos/seed/step1/400/400">
+                <div class="guide-overlay-hint">Örnek Görünüm</div>
+                <img id="step-img-example" class="placeholder" src="">
                 <img id="step-uploaded-img" style="z-index: 2; position: absolute; top:0; left:0;"> <!-- Kullanıcının Yüklediği -->
             </div>
 
@@ -309,7 +325,7 @@
             <p id="step-desc-text">Açıklama</p>
 
             <div class="step-upload-btn" onclick="document.getElementById('step-file').click()">
-                <i class="fa-solid fa-camera"></i> Fotoğrafını Yükle
+                <i class="fa-solid fa-camera"></i> Fotoğrafını Yükle (Zorunlu)
             </div>
             <input type="file" id="step-file" style="display:none;" accept="image/*" onchange="handleStepUpload(this)">
 
@@ -320,18 +336,18 @@
         </div>
     </div>
 
-    <!-- 6C. SUMMARY -->
+    <!-- 6C. SUMMARY (HİKAYE ÖZETİ) -->
     <div id="s-guide-summary" class="screen">
         <div class="scroll-content" style="text-align:center; padding-top:30px;">
             <div style="width:80px; height:80px; background:var(--mint); border-radius:50%; margin:0 auto; display:flex; align-items:center; justify-content:center; font-size:2.5rem; color:white;"><i class="fa-solid fa-check"></i></div>
             <h1 style="margin-top:15px;">Harika İş!</h1>
-            <p>İşte senin sürecin:</p>
+            <p>İşte senin yaratıcı sürecin:</p>
             <div id="summary-grid" class="summary-grid"></div>
-            <button class="btn-primary" onclick="nav('s-rewards'); addXP(50); launchConfetti();" style="margin-top:20px;">Ödülünü Al</button>
+            <button class="btn-primary" onclick="nav('s-rewards'); addXP(50); launchConfetti();" style="margin-top:20px;">Ödülünü Al (+50 XP)</button>
         </div>
     </div>
 
-    <!-- 7. BUILD & LEARN (LEVEL SİSTEMİ) -->
+    <!-- 7. BUILD & LEARN (GENİŞLETİLMİŞ DERSLER) -->
     <div id="s-build" class="screen">
         <div class="header"><h3>İnşa Et & Öğren</h3></div>
         <div class="scroll-content">
@@ -343,7 +359,7 @@
                 <input type="file" id="buddy-upload" style="display:none;" accept="image/*" onchange="uploadBuddy(this)">
             </div>
 
-            <h3 style="margin-bottom:15px;">Dersler</h3>
+            <h3 style="margin-bottom:15px;">Dersler (5 Kategori)</h3>
             <div class="card" onclick="openLevelSelect('math')"><div class="icon-box" style="background:var(--purple);"><i class="fa-solid fa-calculator"></i></div><div style="flex:1;"><h3>Matematik</h3><p>10 Seviye</p></div><i class="fa-solid fa-chevron-right" style="color:#ccc;"></i></div>
             <div class="card" onclick="openLevelSelect('colors')"><div class="icon-box" style="background:var(--peach);"><i class="fa-solid fa-palette"></i></div><div style="flex:1;"><h3>Renkler</h3><p>10 Seviye</p></div><i class="fa-solid fa-chevron-right" style="color:#ccc;"></i></div>
             <div class="card" onclick="openLevelSelect('shapes')"><div class="icon-box" style="background:var(--mint);"><i class="fa-solid fa-shapes"></i></div><div style="flex:1;"><h3>Şekiller</h3><p>10 Seviye</p></div><i class="fa-solid fa-chevron-right" style="color:#ccc;"></i></div>
@@ -427,9 +443,9 @@
     const guides = {
         flower: { t: "Çiçek Yapımı", time: "10:00", icon: "🌸", steps: [{t:"Merkez", d:"Turuncu top yap"}, {t:"Yapraklar", d:"Pembe toplar yap"}, {t:"Birleştir", d:"Yaprakları ekle"}, {t:"Sap", d:"Yeşil sap yap"}] },
         castle: { t: "Kale Yapımı", time: "15:00", icon: "🏰", steps: [{t:"Taban", d:"Kare taban yap"}, {t:"Kuleler", d:"4 kule ekle"}, {t:"Duvarlar", d:"Duvarları çek"}, {t:"Bayrak", d:"Bayrağı dik"}] },
-        animal: { t: "Hayvan Yap", time: "12:00", icon: "🦁", desc:"Vahşi hayvan.", steps: [{t:"Gövde", d:"Oval gövde"}, {t:"Kafa", d:"Kafayı ekle"}, {t:"Bacaklar", d:"4 bacak ekle"}] },
-        cake: { t: "Pasta Yap", time: "15:00", icon: "🎂", desc:"Lezzetli pasta.", steps: [{t:"Taban", d:"Yuvarlak taban"}, {t:"Katlar", d:"Katları çık"}, {t:"Süs", d:"Mum ekle"}] },
-        car: { t: "Araba Yap", time: "20:00", icon: "🚗", desc:"Yarış arabası.", steps: [{t:"Gövde", d:"Blok yap"}, {t:"Tekerlek", d:"4 tekerlek"}, {t:"Cam", d:"Camları ekle"}] }
+        animal: { t: "Hayvan Yap", time: "12:00", icon: "🦁", steps: [{t:"Gövde", d:"Oval gövde"}, {t:"Kafa", d:"Kafayı ekle"}, {t:"Bacaklar", d:"4 bacak ekle"}] },
+        cake: { t: "Pasta Yap", time: "15:00", icon: "🎂", steps: [{t:"Taban", d:"Yuvarlak taban"}, {t:"Katlar", d:"Katları çık"}, {t:"Süs", d:"Mum ekle"}] },
+        car: { t: "Araba Yap", time: "20:00", icon: "🚗", steps: [{t:"Gövde", d:"Blok yap"}, {t:"Tekerlek", d:"4 tekerlek"}, {t:"Cam", d:"Camları ekle"}] }
     };
 
     /* --- INIT --- */
@@ -462,6 +478,10 @@
         el.classList.add('selected');
         document.documentElement.style.setProperty('--theme-color', color);
     }
+    function pickAvatar(el) {
+        document.querySelectorAll('.avatar-opt').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+    }
     function saveProfile() {
         const n = document.getElementById('inp-name').value;
         if(n) document.getElementById('display-name').innerText = n;
@@ -469,7 +489,7 @@
         nav('s-home');
     }
 
-    /* --- BUILD GUIDE (LOCK STEP) --- */
+    /* --- BUILD GUIDE (ZORUNLU FOTOĞRAF) --- */
     function setupGuide(key) {
         activeGuideKey = key;
         nav('s-guide-intro');
@@ -493,7 +513,7 @@
         
         const img = document.getElementById('step-uploaded-img');
         const placeholder = document.getElementById('step-img-example');
-        // Gerçek foto yoksa placeholder göster (Picsum)
+        // Örnek görsel (Placeholder)
         placeholder.src = `https://picsum.photos/seed/${activeGuideKey}${guideStepIndex}/400/400`;
 
         if(guidePhotos[guideStepIndex]) {
@@ -509,7 +529,7 @@
             reader.onload = e => {
                 guidePhotos[guideStepIndex] = e.target.result;
                 renderGuideStep();
-                showToast('Harika görünüyor!', 'success');
+                showToast('Fotoğraf eklendi!', 'success');
             };
             reader.readAsDataURL(input.files[0]);
         }
@@ -544,9 +564,6 @@
 
         for(let i=1; i<=10; i++) {
             let status = i <= unlocked ? 'unlocked' : 'locked';
-            // TEST İÇİN HEPSİNİ AÇIK YAPABİLİRİZ AMA NORMALDE ÜSTTEKİ SATIR GEÇERLİ. ŞİMDİLİK KİLİDİ GÖSTERMEK İÇİN:
-            if(i == unlocked + 1) status = 'locked'; 
-            
             let icon = status === 'unlocked' ? i : '<i class="fa-solid fa-lock"></i>';
             let clickEvent = status === 'unlocked' ? `onclick="startQuiz(${i})"` : `onclick="showToast('Önceki seviyeyi bitir!', 'error')"`;
             
@@ -570,12 +587,12 @@
 
     function loadQuestion() {
         let q, ans, opts;
-        // DİNAMİK SORU ÜRETİMİ (ÇEŞİTLİLİK)
+        // DİNAMİK SORU ÜRETİMİ
         if(currentSubject === 'math') {
-            let maxNum = currentLevel * 5; // Level arttıkça sayılar büyür
+            let maxNum = currentLevel * 5; 
             let n1 = Math.floor(Math.random() * maxNum) + 1;
             let n2 = Math.floor(Math.random() * maxNum) + 1;
-            if(currentLevel > 5) { // 5. Seviyeden sonra çıkarma
+            if(currentLevel > 5) { 
                  q = `${n1 + n2} - ${n1} = ?`; ans = n2;
             } else {
                  q = `${n1} + ${n2} = ?`; ans = n1 + n2;
@@ -587,7 +604,7 @@
                 {n:"KIRMIZI", v:"🟥"}, {n:"MAVİ", v:"🟦"}, {n:"SARI", v:"🟨"}, {n:"YEŞİL", v:"🟩"},
                 {n:"TURUNCU", v:"🟧"}, {n:"MOR", v:"🟪"}
             ];
-            let target = colors[Math.floor(Math.random() * (currentLevel > 5 ? 6 : 3))]; // Level arttıkça renk sayısı artar
+            let target = colors[Math.floor(Math.random() * (currentLevel > 5 ? 6 : 3))]; 
             q = `Hangisi ${target.n}?`; ans = target.v;
             opts = colors.map(c => c.v).sort(()=>Math.random()-0.5).slice(0,4);
             if(!opts.includes(ans)) opts[0] = ans;
