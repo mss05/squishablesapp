@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Squishables</title>
+    <title>Squishables App</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#DCD6F7">
@@ -19,14 +19,14 @@
             --mint: #C4DFD9; --dark-mint: #2e5c4d;
             --peach: #FFD1BA; --dark-peach: #d68c6d;
             --purple: #DCD6F7; --dark-purple: #424874;
-            --bg-color: #eef2f5;
-            --white: #ffffff;
+            --bg-color: #eef2f5; --white: #ffffff;
+            --gold: #FFD700;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
         body { margin: 0; padding: 0; font-family: 'Nunito', sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-        /* TELEFON KASASI */
+        /* --- 2. TELEFON ÇERÇEVESİ --- */
         #app-frame {
             width: 375px; height: 812px; background-color: var(--white);
             border-radius: 40px; position: relative; overflow: hidden;
@@ -34,7 +34,7 @@
         }
         .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 30px; background: #222; border-radius: 0 0 20px 20px; z-index: 999; }
 
-        /* --- 2. BİLDİRİM SİSTEMİ (TOAST) --- */
+        /* --- 3. IN-APP BİLDİRİM (TOAST) --- */
         #toast-container {
             position: absolute; top: 50px; left: 50%; transform: translateX(-50%);
             z-index: 3000; width: 90%; pointer-events: none; display: flex; flex-direction: column; gap: 10px;
@@ -48,8 +48,9 @@
         .toast.show { opacity: 1; transform: translateY(0); }
         .toast.success { background: rgba(46, 92, 77, 0.95); }
         .toast.error { background: rgba(214, 108, 108, 0.95); }
+        .toast.levelup { background: linear-gradient(45deg, #FFD700, #FFA500); color: #333; font-weight: bold; }
 
-        /* --- 3. EKRAN YÖNETİMİ --- */
+        /* --- 4. EKRAN YÖNETİMİ --- */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: white; display: none; flex-direction: column;
@@ -63,7 +64,6 @@
         h1, h2, h3 { font-family: 'Fredoka', sans-serif; color: #333; margin: 10px 0; }
         p { color: #888; font-size: 0.9rem; line-height: 1.5; margin-top: 0; }
 
-        /* Butonlar */
         .btn-primary {
             background: var(--theme-color); color: #333; border: none; padding: 15px; width: 100%;
             border-radius: 25px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
@@ -88,14 +88,11 @@
         .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background:white; border-bottom: 1px solid #f9f9f9; z-index: 20; }
 
         /* --- ÖZEL SAYFA STİLLERİ --- */
-        
-        /* Onboarding */
         .onboard-img { width: 140px; height: 140px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white; margin: 40px auto; }
         .dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
         .dot { width: 10px; height: 10px; background: #eee; border-radius: 50%; }
         .dot.active { background: #333; }
 
-        /* Profil */
         .input-group { margin-bottom: 15px; }
         .custom-input { width: 100%; padding: 15px; background: #f9f9f9; border: 1px solid #eee; border-radius: 15px; margin-bottom: 10px; font-family: 'Nunito'; font-size: 1rem; }
         .color-picker { display: flex; gap: 15px; margin-top: 5px; }
@@ -106,27 +103,24 @@
         .toggle-knob { width: 22px; height: 22px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .toggle-switch.active .toggle-knob { left: 26px; }
 
-        /* Home Dashboard */
         .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .dash-item { background: white; padding: 15px; border-radius: 20px; text-align: center; border: 1px solid #f0f0f0; box-shadow: 0 3px 8px rgba(0,0,0,0.03); cursor: pointer; }
         .recent-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-top: 10px; }
         .recent-item { min-width: 80px; background: white; border-radius: 15px; padding: 10px; text-align: center; border: 1px solid #eee; cursor: pointer; transition: 0.2s; }
         .recent-item:active { transform: scale(0.95); background: #f0f0f0; }
 
-        /* --- BUILD GUIDE (ADIM ADIM FOTOĞRAF) --- */
+        /* --- BUILD GUIDE (FOTOĞRAFLI) --- */
         .progress-bar { width: 100%; height: 6px; background: #eee; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--theme-color); width: 0%; transition: width 0.3s ease; }
         
+        /* ÖRNEK FOTOĞRAF ALANI */
         .step-image-box { 
             width: 100%; height: 220px; background: #f9f9f9; border-radius: 20px; margin-bottom: 20px;
             display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--theme-color); border: 2px dashed #eee; overflow: hidden; position: relative;
         }
         .step-image-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .step-image-box img.placeholder { display: block; opacity: 0.7; } /* Placeholder gösterimi */
-        
         .guide-overlay-hint { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.5); color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.8rem; }
 
-        /* Upload Alanı */
         .step-upload-btn {
             background: white; border: 2px dashed #ccc; padding: 15px; border-radius: 15px;
             cursor: pointer; margin-bottom: 20px; text-align: center; transition: 0.2s; display: flex;
@@ -134,7 +128,6 @@
         }
         .step-upload-btn:active { background: #f0f0f0; border-color: var(--dark-purple); }
         
-        /* Summary Grid */
         .summary-grid { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
         .summary-card { background: white; padding: 10px; border-radius: 15px; display: flex; align-items: center; gap: 15px; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .summary-thumb { width: 70px; height: 70px; border-radius: 10px; background: #eee; object-fit: cover; border: 1px solid #ddd; }
@@ -166,7 +159,9 @@
 
         /* Rewards */
         .points-banner { background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); padding: 30px; border-radius: 25px; text-align: center; color: white; margin-bottom: 20px; }
-        .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
+        .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; transition: 0.2s; }
+        .leaderboard-item.highlight { background: #FFF8E1; border-left: 4px solid gold; }
+        .gift-icon { color: #FF6B6B; margin-left: 5px; animation: pulse 1.5s infinite; }
 
         /* Bottom Nav */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 80px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #f0f0f0; padding-bottom: 15px; z-index: 100; }
@@ -176,6 +171,7 @@
 
         @keyframes popIn { from {transform: scale(0);} to {transform: scale(1);} }
         @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+        @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.2);} 100% {transform: scale(1);} }
     </style>
 </head>
 <body>
