@@ -7,7 +7,7 @@
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#DCD6F7">
-    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="apple-touch-icon" href="https://picsum.photos/seed/logo/192/192">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -89,7 +89,8 @@
         /* --- ÖZEL SAYFA STİLLERİ --- */
         
         /* Onboarding */
-        .onboard-img { width: 140px; height: 140px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white; margin: 40px auto; }
+        .onboard-img { width: 140px; height: 140px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white; margin: 40px auto; overflow: hidden; }
+        .onboard-img img { width: 100%; height: 100%; object-fit: cover; }
         .dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
         .dot { width: 10px; height: 10px; background: #eee; border-radius: 50%; }
         .dot.active { background: #333; }
@@ -109,7 +110,8 @@
         .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .dash-item { background: white; padding: 15px; border-radius: 20px; text-align: center; border: 1px solid #f0f0f0; box-shadow: 0 3px 8px rgba(0,0,0,0.03); cursor: pointer; }
         .recent-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-top: 10px; }
-        .recent-item { min-width: 80px; background: white; border-radius: 15px; padding: 10px; text-align: center; border: 1px solid #eee; cursor: pointer; transition: 0.2s; }
+        .recent-item { min-width: 80px; background: white; border-radius: 15px; padding: 10px; text-align: center; border: 1px solid #eee; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .recent-item img { width: 40px; height: 40px; border-radius: 50%; margin-bottom: 5px; object-fit: cover; }
         .recent-item:active { transform: scale(0.95); background: #f0f0f0; }
 
         /* --- BUILD GUIDE (ADIM ADIM FOTOĞRAF) --- */
@@ -121,7 +123,10 @@
             display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--theme-color); border: 2px dashed #eee; overflow: hidden; position: relative;
         }
         .step-image-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .step-image-box img.placeholder { display: block; opacity: 0.7; } /* Placeholder gösterimi */
         
+        .guide-overlay-hint { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.5); color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.8rem; }
+
         /* Upload Alanı */
         .step-upload-btn {
             background: white; border: 2px dashed #ccc; padding: 15px; border-radius: 15px;
@@ -183,20 +188,26 @@
 
     <!-- 1. SPLASH -->
     <div id="s-splash" class="screen active" style="align-items:center; justify-content:center;">
-        <img src="logo.png" alt="Logo" style="width:120px; animation:popIn 0.5s;">
+        <img src="https://picsum.photos/seed/logo/200/200" alt="Logo" style="width:120px; border-radius: 50%; animation:popIn 0.5s;">
         <h1 style="margin-top:20px; color:var(--dark-purple);">Squishables</h1>
     </div>
 
     <!-- 2. ONBOARDING -->
     <div id="s-on1" class="screen" style="padding:30px; text-align:center;">
-        <div class="onboard-img" style="background:var(--mint);"><i class="fa-solid fa-palette"></i></div>
+        <div class="onboard-img">
+            <img src="https://picsum.photos/seed/playdough1/400/400" alt="Playdough Fun">
+        </div>
         <h1>Eller Hamura,<br>Ekranlar Kenara.</h1>
+        <p>Duyusal oyunun sihrini keşfet!</p>
         <div class="dots" style="margin-top:auto;"><div class="dot active"></div><div class="dot"></div></div>
         <button class="btn-primary" onclick="nav('s-on2')">İleri</button>
     </div>
     <div id="s-on2" class="screen" style="padding:30px; text-align:center;">
-        <div class="onboard-img" style="background:var(--purple);"><i class="fa-solid fa-trophy"></i></div>
+        <div class="onboard-img">
+            <img src="https://picsum.photos/seed/playdough2/400/400" alt="Learn and Earn">
+        </div>
         <h1>Öğren & Kazan</h1>
+        <p>Görevleri tamamla, rozetlerin kilidini aç!</p>
         <div class="dots" style="margin-top:auto;"><div class="dot"></div><div class="dot active"></div></div>
         <button class="btn-primary" onclick="nav('s-profile')">Başla</button>
     </div>
@@ -246,9 +257,9 @@
             </div>
             <h3 style="margin-top:25px;">Son Aktiviteler</h3>
             <div class="recent-scroll">
-                <div class="recent-item" onclick="setupGuide('flower')">🌸<br><small>Çiçek</small></div>
-                <div class="recent-item" onclick="openLevelSelect('math')">➕<br><small>Matematik</small></div>
-                <div class="recent-item" onclick="nav('s-rewards')">🏆<br><small>Ödüller</small></div>
+                <div class="recent-item" onclick="setupGuide('flower')"><img src="https://picsum.photos/seed/flower/100/100"><small>Çiçek</small></div>
+                <div class="recent-item" onclick="openLevelSelect('math')"><img src="https://picsum.photos/seed/math/100/100"><small>Matematik</small></div>
+                <div class="recent-item" onclick="nav('s-rewards')"><img src="https://picsum.photos/seed/trophy/100/100"><small>Ödüller</small></div>
             </div>
         </div>
         <div class="bottom-nav">
@@ -294,9 +305,9 @@
             
             <div class="step-image-box">
                 <!-- Örnek Fotoğraf (Placeholder) -->
-                <div class="guide-overlay-hint">Örnek Görünüm</div>
-                <i class="fa-solid fa-image" id="step-img-icon"></i>
-                <img id="step-uploaded-img"> <!-- Kullanıcının Yüklediği -->
+                <div class="guide-overlay-hint">Örnek</div>
+                <img id="step-img-example" class="placeholder" src="https://picsum.photos/seed/step1/400/400">
+                <img id="step-uploaded-img" style="z-index: 2; position: absolute; top:0; left:0;"> <!-- Kullanıcının Yüklediği -->
             </div>
 
             <h2 id="step-title-text">Başlık</h2>
@@ -331,7 +342,7 @@
         <div class="scroll-content">
             <!-- Buddy -->
             <div style="background:white; padding:20px; border-radius:20px; text-align:center; border:1px solid #f0f0f0; margin-bottom:20px;">
-                <img id="menu-buddy" src="logo.png" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid var(--purple);">
+                <img id="menu-buddy" src="https://picsum.photos/seed/buddy/200/200" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid var(--purple);">
                 <h3 style="font-size:1rem; margin-top:10px;">Çalışma Arkadaşı</h3>
                 <button class="btn-action btn-purple" onclick="document.getElementById('buddy-upload').click()">Yükle</button>
                 <input type="file" id="buddy-upload" style="display:none;" accept="image/*" onchange="uploadBuddy(this)">
@@ -370,7 +381,7 @@
             <div class="options-grid" id="quiz-opts"></div>
         </div>
         <div class="buddy-corner">
-            <img id="quiz-buddy-img" src="logo.png" class="buddy-avatar">
+            <img id="quiz-buddy-img" src="https://picsum.photos/seed/buddy/200/200" class="buddy-avatar">
             <div class="speech-bubble" id="quiz-bubble">Başarılar!</div>
         </div>
     </div>
@@ -486,11 +497,14 @@
         document.getElementById('step-desc-text').innerText = step.d;
         
         const img = document.getElementById('step-uploaded-img');
-        const icon = document.getElementById('step-img-icon');
+        const placeholder = document.getElementById('step-img-example');
+        // Gerçek foto yoksa placeholder göster (Picsum)
+        placeholder.src = `https://picsum.photos/seed/${activeGuideKey}${guideStepIndex}/400/400`;
+
         if(guidePhotos[guideStepIndex]) {
-            img.src = guidePhotos[guideStepIndex]; img.style.display='block'; icon.style.display='none';
+            img.src = guidePhotos[guideStepIndex]; img.style.display='block';
         } else {
-            img.style.display='none'; icon.style.display='block';
+            img.style.display='none';
         }
     }
 
