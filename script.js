@@ -1,289 +1,207 @@
 /**
- * SQUISHABLES CORE LOGIC
- * Senior Developer Notes:
- * - Module Pattern used for namespace protection.
- * - LocalStorage is wrapped in try-catch blocks for safety.
- * - Dynamic generation used for scalability.
+ * SQUISHABLES - MOODMAKERS APP
+ * Logic Controller
  */
 
-// Global State
-const state = {
-    user: {
-        name: null,
-        avatar: null,
-        xp: 0,
-        level: 1,
-        buddyImage: null // Base64 string for the playdough buddy
+const app = {
+    // --- STATE MANAGEMENT (Veri Yönetimi) ---
+    data: {
+        user: null, // {name, avatar, xp, level}
+        buddy: null // Base64 image
     },
-    currentLesson: null,
-    currentStep: 0
-};
 
-// --- DATA MANAGEMENT ---
-const Storage = {
+    // Uygulama Başlatıcı
+    init: () => {
+        // Splash ekranını bekle
+        setTimeout(() => {
+            const stored = localStorage.getItem('squishUser');
+            if (stored) {
+                app.data.user = JSON.parse(stored);
+                app.navTo('screen-home');
+                app.updateUI();
+            } else {
+                app.navTo('screen-profile');
+            }
+        }, 3000); // 3 saniye splash
+        
+        app.setupEventListeners();
+    },
+
     save: () => {
-        try {
-            localStorage.setItem('squish_user', JSON.stringify(state.user));
-            View.updateStats();
-        } catch (e) {
-            console.error("Storage Error:", e);
-            alert("Veriler kaydedilemedi! Tarayıcı belleği dolu olabilir.");
-        }
+        localStorage.setItem('squishUser', JSON.stringify(app.data.user));
+        app.updateUI();
     },
-    load: () => {
-        const data = localStorage.getItem('squish_user');
-        if (data) {
-            state.user = JSON.parse(data);
-            return true;
-        }
-        return false;
-    }
-};
 
-// --- VIEW / UI HANDLERS ---
-const View = {
-    screens: ['onboarding', 'dashboard', 'lesson-screen', 'guide-screen', 'shop-screen'],
+    // --- NAVIGATION (Geçişler) ---
+    navTo: (screenId) => {
+        // Tüm section'ları gizle
+        document.querySelectorAll('section').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('section').forEach(el => el.classList.remove('active'));
+        
+        // Hedef ekranı aç
+        const target = document.getElementById(screenId);
+        target.classList.remove('hidden');
+        
+        // Animasyon için active ekle
+        setTimeout(() => target.classList.add('active'), 10);
+        
+        // Eğer dersler ekranıysa içeriği yükle
+        if(screenId === 'screen-lessons') app.loadLessons();
+    },
+
+    // --- UI UPDATES ---
+    updateUI: () => {
+        if (!app.data.user) return;
+        
+        // Home verilerini güncelle
+        document.getElementById('home-name').innerText = app.data.user.name;
+        document.getElementById('home-xp').innerText = app.data.user.xp;
+        document.getElementById('home-avatar').src = `avatar${app.data.user.avatar}.png`;
+        
+        // Avatar hata verirse placeholder koy
+        document.getElementById('home-avatar').onerror = function() {
+            this.src = 'https://via.placeholder.com/50';
+        };
+    },
+
+    // --- CORE FEATURES ---
     
-    navigate: (screenId) => {
-        View.screens.forEach(s => document.getElementById(s).classList.add('hidden'));
-        document.getElementById(screenId).classList.remove('hidden');
-        window.scrollTo(0,0);
-    },
-
-    updateStats: () => {
-        document.getElementById('xp-display').innerText = state.user.xp;
-        document.getElementById('level-display').innerText = state.user.level;
-        document.querySelectorAll('.xp-val').forEach(el => el.innerText = state.user.xp);
+    // 1. Profil Oluşturma
+    createProfile: () => {
+        const nameInput = document.getElementById('input-name').value;
+        const selectedAvatar = document.querySelector('.avatar-option.selected');
         
-        // Show/Hide Header Stats
-        if(state.user.name) {
-            document.getElementById('user-stats').classList.remove('hidden');
-        }
-    },
-
-    renderDashboard: () => {
-        document.getElementById('greeting').innerText = `Merhaba, ${state.user.name}!`;
-        document.getElementById('dashboard-avatar').src = `avatar${state.user.avatar}.png`;
-        
-        // Render Buddy
-        const buddyContainer = document.getElementById('buddy-container');
-        if(state.user.buddyImage) {
-            buddyContainer.innerHTML = `<img src="${state.user.buddyImage}" alt="My Buddy">`;
+        if (!nameInput || !selectedAvatar) {
+            alert("Lütfen bir isim yaz ve avatar seç!");
+            return;
         }
 
-        // Render Categories
-        const categories = [
-            { id: 'math', name: 'Matematik', icon: '🔢' },
-            { id: 'colors', name: 'Renkler', icon: '🎨' },
-            { id: 'shapes', name: 'Şekiller', icon: '🔺' },
-            { id: 'space', name: 'Uzay', icon: '🚀' },
-            { id: 'music', name: 'Müzik', icon: '🎵' },
-            { id: 'animals', name: 'Hayvanlar', icon: '🦁' }
+        app.data.user = {
+            name: nameInput,
+            avatar: selectedAvatar.dataset.id,
+            xp: 0,
+            level: 1
+        };
+        
+        app.save();
+        app.navTo('screen-home');
+    },
+
+    // 2. Ders/Oyun Yükleme
+    loadLessons: () => {
+        const list = document.getElementById('lessons-list');
+        list.innerHTML = '';
+        
+        const topics = [
+            { id: 1, title: 'Matematik', icon: 'fa-calculator' },
+            { id: 2, title: 'Renkler', icon: 'fa-palette' },
+            { id: 3, title: 'Şekiller', icon: 'fa-shapes' }
         ];
 
-        const grid = document.querySelector('.category-grid');
-        grid.innerHTML = '';
-        categories.forEach((cat, index) => {
-            const isLocked = index > state.user.level; // Simple unlock logic
-            const el = document.createElement('div');
-            el.className = `cat-card squish-effect ${isLocked ? 'locked' : ''}`;
-            el.innerHTML = `<h1>${cat.icon}</h1><p>${cat.name}</p>`;
-            el.onclick = () => !isLocked ? LessonEngine.start(cat.id) : alert("Önceki seviyeleri tamamla!");
-            grid.appendChild(el);
+        topics.forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'glass-card squish-effect';
+            div.style.display = 'flex';
+            div.style.alignItems = 'center';
+            div.style.gap = '15px';
+            div.style.cursor = 'pointer';
+            div.innerHTML = `<i class="fas ${t.icon}" style="font-size:1.5rem; color:var(--text-dark)"></i> <b>${t.title}</b>`;
+            div.onclick = () => app.startQuiz(t.id);
+            list.appendChild(div);
         });
-    }
-};
-
-// --- APP LOGIC ---
-const app = {
-    init: () => {
-        // Squish Animation Listener
-        document.addEventListener('click', (e) => {
-            if(e.target.classList.contains('squish-effect')) {
-                e.target.classList.add('squish-active');
-                setTimeout(() => e.target.classList.remove('squish-active'), 400);
-            }
-        });
-
-        if (Storage.load()) {
-            View.updateStats();
-            View.renderDashboard();
-            View.navigate('dashboard');
-        } else {
-            View.navigate('onboarding');
-        }
     },
 
-    register: () => {
-        const nameInput = document.getElementById('username-input');
-        const selectedAvatar = document.querySelector('.avatar-option.selected');
+    // 3. Quiz Mantığı
+    startQuiz: (topicId) => {
+        app.navTo('screen-quiz');
+        const qBox = document.getElementById('quiz-q');
+        const optBox = document.getElementById('quiz-options');
+        optBox.innerHTML = '';
 
-        try {
-            if (!nameInput.value.trim()) throw new Error("Lütfen ismini gir.");
-            if (!selectedAvatar) throw new Error("Lütfen bir avatar seç.");
-
-            state.user.name = nameInput.value;
-            state.user.avatar = selectedAvatar.dataset.id;
-            
-            Storage.save();
-            View.renderDashboard();
-            View.navigate('dashboard');
-        } catch (err) {
-            alert("Hata: " + err.message);
-        }
+        // Basit Matematik Örneği
+        const n1 = Math.floor(Math.random() * 10);
+        const n2 = Math.floor(Math.random() * 10);
+        const correct = n1 + n2;
+        
+        qBox.innerText = `${n1} + ${n2} = ?`;
+        
+        // Şıklar
+        const options = [correct, correct+1, correct-1, correct+2].sort(() => Math.random() - 0.5);
+        
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'glass-card squish-effect';
+            btn.style.border = 'none';
+            btn.style.fontSize = '1.2rem';
+            btn.style.fontWeight = 'bold';
+            btn.innerText = opt;
+            btn.onclick = () => {
+                if(opt === correct) {
+                    alert("Harika! +10 XP");
+                    app.data.user.xp += 10;
+                    app.save();
+                    app.navTo('screen-home');
+                } else {
+                    alert("Tekrar dene! 💪");
+                }
+            };
+            optBox.appendChild(btn);
+        });
     },
 
-    goHome: () => View.navigate('dashboard'),
-    showGuide: () => View.navigate('guide-screen'),
-    showShop: () => View.navigate('shop-screen'),
+    // 4. Workshop / Upload Mantığı
+    startWorkshop: (type) => {
+        app.navTo('screen-workshop-detail');
+        // Örnek statik veri
+        document.getElementById('ws-guide-img').src = 'cicek_adim1.jpg';
+        document.getElementById('ws-guide-img').onerror = function(){this.src='https://via.placeholder.com/300x200?text=Cicek+Adim+1'};
+        
+        // Reset
+        document.getElementById('preview-img').classList.add('hidden');
+        document.getElementById('upload-icon').classList.remove('hidden');
+        document.getElementById('btn-complete-step').disabled = true;
+    },
 
-    handleBuddyUpload: (event) => {
+    handleFileUpload: (event) => {
         const file = event.target.files[0];
-        if (file) {
+        if(file){
             const reader = new FileReader();
             reader.onload = (e) => {
-                state.user.buddyImage = e.target.result; // Save base64
-                Storage.save();
-                alert("Harika! Buddy'nin fotoğrafı kaydedildi.");
-                View.renderDashboard(); // Refresh UI
+                const img = document.getElementById('preview-img');
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                document.getElementById('upload-icon').classList.add('hidden');
+                document.getElementById('btn-complete-step').disabled = false;
             };
             reader.readAsDataURL(file);
         }
     },
 
-    buyCoupon: () => {
-        if(state.user.xp >= 500) {
-            state.user.xp -= 500;
-            Storage.save();
-            document.getElementById('coupon-area').classList.remove('hidden');
-        } else {
-            alert("Yeterli XP yok! (500 XP gerekli)");
-        }
+    // --- EVENT LISTENERS ---
+    setupEventListeners: () => {
+        // Avatar Seçimi
+        document.querySelectorAll('.avatar-option').forEach(el => {
+            el.addEventListener('click', function() {
+                document.querySelectorAll('.avatar-option').forEach(a => a.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Başla Butonu
+        document.getElementById('btn-start').addEventListener('click', app.createProfile);
+
+        // Dosya Yükleme
+        document.getElementById('file-upload').addEventListener('change', app.handleFileUpload);
+
+        // Atölye Tamamla
+        document.getElementById('btn-complete-step').addEventListener('click', () => {
+            alert("Tebrikler! Fotoğraf yüklendi. +50 XP kazandın.");
+            app.data.user.xp += 50;
+            app.save();
+            app.navTo('screen-home');
+        });
     }
 };
 
-// --- LESSON ENGINE ---
-const LessonEngine = {
-    start: (category) => {
-        state.currentLesson = category;
-        View.navigate('lesson-screen');
-        document.getElementById('lesson-title').innerText = category.toUpperCase();
-        
-        // Buddy Check
-        if(state.user.buddyImage) {
-            document.getElementById('quiz-buddy-area').classList.remove('hidden');
-            document.getElementById('quiz-buddy-img').src = state.user.buddyImage;
-        }
-
-        LessonEngine.generateQuestion(category);
-    },
-
-    generateQuestion: (category) => {
-        const area = document.getElementById('question-area');
-        
-        // Basit Random Generator (Gerçek app'te veritabanından gelir)
-        let html = '';
-        if (category === 'math') {
-            const n1 = Math.floor(Math.random() * 10);
-            const n2 = Math.floor(Math.random() * 10);
-            html = `
-                <h1 style="font-size:3rem; text-align:center;">${n1} + ${n2} = ?</h1>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;">
-                    <button class="btn-primary squish-effect" onclick="LessonEngine.checkAnswer(${n1+n2}, ${n1+n2})">${n1+n2}</button>
-                    <button class="btn-primary squish-effect" onclick="LessonEngine.checkAnswer(${n1+n2}, ${n1+n2+1})">${n1+n2+1}</button>
-                </div>
-            `;
-        } else {
-            html = `<p style="text-align:center;">Bu kategori için örnek soru hazırlanıyor...</p>
-                    <button class="btn-primary" onclick="app.goHome()">Geri Dön</button>`;
-        }
-        
-        // Eğer kategori "shapes" ise Buddy upload göster (Örnek mantık)
-        const buddyUp = document.getElementById('buddy-upload-area');
-        if(category === 'shapes') buddyUp.classList.remove('hidden');
-        else buddyUp.classList.add('hidden');
-
-        area.innerHTML = html;
-    },
-
-    checkAnswer: (correct, selected) => {
-        if(correct === selected) {
-            alert("Tebrikler! Doğru Cevap! 🎉 +10 XP");
-            state.user.xp += 10;
-            Storage.save();
-            app.goHome();
-        } else {
-            alert("Tekrar dene! 💪");
-        }
-    }
-};
-
-// --- GUIDE SYSTEM ---
-const guide = {
-    data: {
-        flower: ['cicek_adim1.jpg', 'cicek_adim2.jpg', 'cicek_adim5.jpg'],
-        castle: ['kale_adim1.jpg', 'kale_adim2.jpg'],
-        animal: ['hayvan_adim1.jpg']
-    },
-    currentType: null,
-    stepIndex: 0,
-
-    load: (type) => {
-        guide.currentType = type;
-        guide.stepIndex = 0;
-        document.getElementById('step-container').classList.remove('hidden');
-        guide.renderStep();
-    },
-
-    renderStep: () => {
-        const steps = guide.data[guide.currentType];
-        const img = document.getElementById('step-image');
-        img.src = steps[guide.stepIndex];
-        img.style.width = "100%";
-        img.style.borderRadius = "15px";
-        
-        document.getElementById('step-desc').innerText = `Adım ${guide.stepIndex + 1} / ${steps.length}`;
-        
-        // Buton Yönetimi
-        document.getElementById('prev-step').disabled = guide.stepIndex === 0;
-        document.getElementById('next-step').innerText = guide.stepIndex === steps.length - 1 ? "Bitir" : "İleri";
-    }
-};
-
-// Guide Event Listeners
-document.getElementById('next-step').addEventListener('click', () => {
-    const total = guide.data[guide.currentType].length;
-    if (guide.stepIndex < total - 1) {
-        guide.stepIndex++;
-        guide.renderStep();
-    } else {
-        alert("Harika iş çıkardın! +50 XP");
-        state.user.xp += 50;
-        Storage.save();
-        app.goHome();
-    }
-});
-
-document.getElementById('prev-step').addEventListener('click', () => {
-    if (guide.stepIndex > 0) {
-        guide.stepIndex--;
-        guide.renderStep();
-    }
-});
-
-// Avatar Selection Logic
-document.querySelectorAll('.avatar-option').forEach(img => {
-    img.addEventListener('click', function() {
-        document.querySelectorAll('.avatar-option').forEach(i => i.classList.remove('selected'));
-        this.classList.add('selected');
-    });
-});
-
-// Start Button Logic
-document.getElementById('start-btn').addEventListener('click', app.register);
-
-// Buddy Upload Listener (Quiz Screen)
-document.getElementById('buddy-file').addEventListener('change', app.handleBuddyUpload);
-
-// Initialize App
+// Uygulamayı Başlat
 document.addEventListener('DOMContentLoaded', app.init);
