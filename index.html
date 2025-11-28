@@ -3,146 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Squishables - Oyna ve Öğren</title>
+    <title>Squishables - MoodMakers App</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <div class="app-container">
-        <header class="glass-header">
-            <img src="logo.png" alt="Squishables Logo" class="app-logo">
-            <div id="user-stats" class="hidden">
-                <span class="stat-badge"><i class="fas fa-star"></i> <span id="xp-display">0</span> XP</span>
-                <span class="stat-badge"><i class="fas fa-crown"></i> Lv. <span id="level-display">1</span></span>
-            </div>
-        </header>
-
-        <section id="onboarding" class="screen active">
-            <div class="glass-card">
-                <h1>Merhaba Kâşif! 👋</h1>
-                <p>Maceraya başlamadan önce kendini tanıt.</p>
-                
-                <div class="avatar-selection">
-                    <h3>Avatarını Seç</h3>
-                    <div class="avatars">
-                        <img src="avatar1.png" data-id="1" class="avatar-option" alt="Avatar 1">
-                        <img src="avatar2.png" data-id="2" class="avatar-option" alt="Avatar 2">
-                        <img src="avatar3.png" data-id="3" class="avatar-option" alt="Avatar 3">
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <input type="text" id="username-input" placeholder="Adın ne?">
-                </div>
-
-                <button id="start-btn" class="btn-primary squish-effect">Maceraya Atıl 🚀</button>
-            </div>
-        </section>
-
-        <section id="dashboard" class="screen hidden">
-            <div class="welcome-banner glass-card">
-                <div class="profile-info">
-                    <img id="dashboard-avatar" src="" alt="User Avatar">
-                    <h2 id="greeting">Merhaba!</h2>
-                </div>
-                <div class="buddy-preview">
-                    <p><small>Oyun Hamuru Arkadaşın:</small></p>
-                    <div id="buddy-container">
-                        <div class="buddy-placeholder"><i class="fas fa-camera"></i> Yok</div>
-                    </div>
-                </div>
-            </div>
-
-            <h3>Ders Kategorileri</h3>
-            <div class="category-grid">
-                </div>
-
-            <div class="quick-actions">
-                <button onclick="app.showGuide()" class="btn-secondary squish-effect"><i class="fas fa-book-open"></i> Rehber</button>
-                <button onclick="app.showShop()" class="btn-secondary squish-effect"><i class="fas fa-store"></i> Mağaza</button>
-            </div>
-        </section>
-
-        <section id="lesson-screen" class="screen hidden">
-            <button onclick="app.goHome()" class="btn-back"><i class="fas fa-arrow-left"></i> Çık</button>
+    <div id="phone-chassis">
+        <div id="phone-notch"></div>
+        
+        <div id="screen-container">
             
-            <div id="quiz-buddy-area" class="glass-card mini-card hidden">
-                <img id="quiz-buddy-img" src="" alt="Buddy Support">
-                <p>Buddy sana inanıyor! 🌟</p>
-            </div>
-
-            <div class="glass-card question-card">
-                <h2 id="lesson-title">Matematik</h2>
-                <div class="progress-bar"><div id="progress-fill"></div></div>
-                
-                <div id="question-area">
-                    </div>
-
-                <div id="buddy-upload-area" class="hidden">
-                    <label for="buddy-file" class="upload-btn squish-effect">
-                        <i class="fas fa-camera"></i> Buddy Fotoğrafı Yükle
-                    </label>
-                    <input type="file" id="buddy-file" accept="image/*" hidden>
+            <section id="screen-splash" class="active">
+                <div class="logo-area">
+                    <img src="logo.png" alt="Squishables" class="app-logo" onerror="this.src='https://via.placeholder.com/150?text=Squishables'">
+                    <h1>Squishables</h1>
+                    <p class="tagline">Hands On, Screens Off.</p>
                 </div>
-            </div>
-        </section>
+                <div class="loader"></div>
+            </section>
 
-        <section id="guide-screen" class="screen hidden">
-            <button onclick="app.goHome()" class="btn-back"><i class="fas fa-arrow-left"></i></button>
-            <div class="glass-card">
-                <h2>Yapım Rehberi</h2>
-                <div class="guide-tabs">
-                    <button onclick="guide.load('flower')" class="squish-effect">Çiçek 🌸</button>
-                    <button onclick="guide.load('castle')" class="squish-effect">Kale 🏰</button>
-                    <button onclick="guide.load('animal')" class="squish-effect">Hayvan 🦁</button>
-                </div>
-                
-                <div id="step-container" class="step-view hidden">
-                    <img id="step-image" src="" alt="Adım Görseli">
-                    <p id="step-desc">Adım Açıklaması</p>
+            <section id="screen-profile" class="hidden">
+                <div class="glass-card text-center">
+                    <h2>Maceraya Hazır mısın?</h2>
+                    <p>MoodMakers kitini kullanmak için karakterini seç.</p>
                     
-                    <div class="user-craft-upload">
-                        <p>Senin yaptığını görelim:</p>
-                        <input type="file" id="craft-upload" accept="image/*">
+                    <div class="avatar-grid">
+                        <img src="avatar1.png" class="avatar-option" data-id="1" alt="Avatar 1" onerror="this.src='https://via.placeholder.com/80?text=A1'">
+                        <img src="avatar2.png" class="avatar-option" data-id="2" alt="Avatar 2" onerror="this.src='https://via.placeholder.com/80?text=A2'">
+                        <img src="avatar3.png" class="avatar-option" data-id="3" alt="Avatar 3" onerror="this.src='https://via.placeholder.com/80?text=A3'">
                     </div>
 
-                    <div class="step-nav">
-                        <button id="prev-step" class="btn-small">Geri</button>
-                        <button id="next-step" class="btn-small">İleri</button>
+                    <div class="input-group">
+                        <input type="text" id="input-name" placeholder="İsmin ne Kaşif?">
                     </div>
                 </div>
-            </div>
-        </section>
+                <button id="btn-start" class="btn btn-primary squish-effect">Başla 🚀</button>
+            </section>
 
-        <section id="shop-screen" class="screen hidden">
-            <button onclick="app.goHome()" class="btn-back"><i class="fas fa-arrow-left"></i></button>
-            <div class="glass-card">
-                <h2><i class="fas fa-shopping-cart"></i> XP Mağazası</h2>
-                <p>Mevcut XP: <span class="xp-val">0</span></p>
+            <section id="screen-home" class="hidden">
+                <div class="glass-card header-card">
+                    <div class="user-info">
+                        <img id="home-avatar" src="" alt="Avatar">
+                        <div>
+                            <h3 id="home-name">Kullanıcı</h3>
+                            <span class="badge">MoodMaker</span>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <div class="xp-pill"><i class="fas fa-star"></i> <span id="home-xp">0</span></div>
+                    </div>
+                </div>
+
+                <div class="banner-card">
+                    <h4>Günün Görevi</h4>
+                    <p>Bugün ekran yok! Hamurdan bir kedi yap.</p>
+                </div>
+
+                <h3>Keşfet</h3>
+                <div class="nav-grid">
+                    <div class="nav-item squish-effect" onclick="app.navTo('screen-lessons')">
+                        <div class="icon-box c1"><i class="fas fa-shapes"></i></div>
+                        <span>Oyunlar</span>
+                    </div>
+                    <div class="nav-item squish-effect" onclick="app.navTo('screen-workshop')">
+                        <div class="icon-box c2"><i class="fas fa-paint-brush"></i></div>
+                        <span>Atölye</span>
+                    </div>
+                    <div class="nav-item squish-effect" onclick="app.navTo('screen-shop')">
+                        <div class="icon-box c3"><i class="fas fa-store"></i></div>
+                        <span>Market</span>
+                    </div>
+                    <div class="nav-item squish-effect" onclick="app.navTo('screen-buddy')">
+                        <div class="icon-box c4"><i class="fas fa-camera"></i></div>
+                        <span>Buddy</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="screen-lessons" class="hidden">
+                <button class="btn-back" onclick="app.navTo('screen-home')"><i class="fas fa-arrow-left"></i> Geri</button>
+                <h2>Öğrenme Alanı</h2>
+                <div id="lessons-list" class="vertical-list">
+                    </div>
+            </section>
+
+            <section id="screen-quiz" class="hidden">
+                <div class="glass-card question-box">
+                    <h1 id="quiz-q">Soru?</h1>
+                </div>
+                <div id="quiz-options" class="options-grid">
+                    </div>
+                <div id="quiz-buddy-helper" class="buddy-float hidden">
+                    <img id="buddy-img-small" src="">
+                    <div class="bubble">Yapabilirsin!</div>
+                </div>
+            </section>
+
+            <section id="screen-workshop" class="hidden">
+                <button class="btn-back" onclick="app.navTo('screen-home')"><i class="fas fa-arrow-left"></i></button>
+                <h2>Atölye</h2>
+                <p>Eller çalışsın, ekranlar kapansın!</p>
                 
-                <div class="shop-item">
-                    <img src="Product1.jpg" alt="Ürün">
-                    <div>
-                        <h4>Squishables Oyun Hamuru Seti</h4>
-                        <p>%15 İndirim Kuponu</p>
-                        <button onclick="app.buyCoupon()" class="btn-primary squish-effect">500 XP ile Al</button>
+                <div class="glass-card guide-card">
+                    <img src="cicek_adim5.jpg" class="guide-img" onerror="this.src='https://via.placeholder.com/300x200?text=Cicek+Modeli'">
+                    <h3>Çiçek Yapımı</h3>
+                    <p>Adım adım rehber ile kendi çiçeğini yap.</p>
+                    <button class="btn btn-secondary squish-effect" onclick="app.startWorkshop('flower')">Rehberi Aç</button>
+                </div>
+            </section>
+
+             <section id="screen-workshop-detail" class="hidden">
+                <button class="btn-back" onclick="app.navTo('screen-workshop')"><i class="fas fa-arrow-left"></i></button>
+                <h3 id="ws-title">Adım 1</h3>
+                
+                <div class="comparison-view">
+                    <div class="target-img">
+                        <span>Hedef</span>
+                        <img id="ws-guide-img" src="" alt="Guide">
+                    </div>
+                    <div class="user-img">
+                        <span>Senin Yaptığın</span>
+                        <div id="upload-area" onclick="document.getElementById('file-upload').click()">
+                            <img id="preview-img" class="hidden">
+                            <div id="upload-icon"><i class="fas fa-camera"></i><br>Yükle</div>
+                        </div>
+                        <input type="file" id="file-upload" hidden accept="image/*">
                     </div>
                 </div>
-                <div id="coupon-area" class="hidden code-box">KOD: SQUISH15</div>
-            </div>
-            
-            <div class="glass-card" style="margin-top: 20px;">
-                <h3>🏆 Haftanın Liderleri</h3>
-                <ul id="leaderboard-list">
-                    <li>1. Ayşe - 1200 XP</li>
-                    <li>2. Can - 1150 XP</li>
-                    <li>3. Sen - <span class="xp-val">0</span> XP</li>
-                </ul>
-            </div>
-        </section>
+                
+                <button id="btn-complete-step" class="btn btn-primary squish-effect" disabled>Tamamla (+50 XP)</button>
+            </section>
 
+        </div> 
+        
+        <div id="home-indicator"></div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
