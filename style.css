@@ -1,150 +1,127 @@
 :root {
-    /* Renk Paleti (PDF'ten esinlenildi) */
-    --mint: #C4DFD9;
-    --peach: #FFD1BA;
-    --lavender: #DCD6F7;
-    --text-dark: #4A4A4A;
-    --glass-bg: rgba(255, 255, 255, 0.65);
-    --glass-border: rgba(255, 255, 255, 0.8);
-    
-    /* Telefon Boyutları */
-    --phone-w: 400px;
-    --phone-h: 850px;
+    --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    --phone-bg: linear-gradient(180deg, #C4DFD9 0%, #FFD1BA 100%);
+    --glass: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.9);
+    --primary: #FF9F43; /* Canlı Turuncu */
+    --accent: #54A0FF; /* Mavi */
+    --danger: #FF6B6B;
+    --text: #2d3436;
+    --radius: 20px;
 }
 
-* { box-sizing: border-box; user-select: none; }
+* { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+body { margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #e0e0e0; font-family: 'Varela Round', sans-serif; color: var(--text); }
 
-body {
-    background: #f0f2f5; /* Masaüstü arka planı */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    font-family: 'Varela Round', sans-serif;
-    margin: 0;
-}
-
-/* --- TELEFON KASASI (Phone Chassis) --- */
+/* PHONE CHASSIS */
 #phone-chassis {
-    width: var(--phone-w);
-    height: var(--phone-h);
-    background: linear-gradient(135deg, var(--mint), var(--peach));
+    width: 414px; height: 896px; /* iPhone Max Boyutları */
+    background: var(--phone-bg);
     border-radius: 45px;
-    /* Telefon Çerçevesi Efekti */
-    box-shadow: 
-        0 0 0 12px #2d3436, 
-        20px 20px 50px rgba(0,0,0,0.3);
-    position: relative;
-    overflow: hidden;
+    border: 14px solid #1e1e1e;
+    position: relative; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
 }
 
 #phone-notch {
-    position: absolute;
-    top: 0; left: 50%;
-    transform: translateX(-50%);
-    width: 150px; height: 30px;
-    background: #2d3436;
-    border-radius: 0 0 15px 15px;
-    z-index: 100;
-}
-
-#home-indicator {
-    position: absolute;
-    bottom: 8px; left: 50%;
-    transform: translateX(-50%);
-    width: 120px; height: 5px;
-    background: rgba(0,0,0,0.2);
-    border-radius: 10px;
-    z-index: 100;
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 160px; height: 32px; background: #1e1e1e;
+    border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 100;
 }
 
 #screen-container {
-    width: 100%; height: 100%;
-    overflow-y: auto; /* İçerik kaydırma */
-    padding: 50px 20px 40px 20px;
+    height: 100%; overflow-y: auto; padding: 60px 20px 100px 20px; /* Nav için padding */
 }
 #screen-container::-webkit-scrollbar { display: none; }
 
-/* --- ORTAK COMPONENTLER --- */
+/* COMPONENTS */
 .hidden { display: none !important; }
-
 .glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    background: var(--glass); backdrop-filter: blur(12px);
+    border: 2px solid var(--glass-border); border-radius: var(--radius);
+    padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.btn-primary, .btn-small {
+    background: white; border: none; padding: 15px; width: 100%;
+    border-radius: 50px; font-weight: bold; font-size: 1rem; color: var(--text);
+    cursor: pointer; transition: transform 0.1s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.btn-small { padding: 8px 15px; width: auto; font-size: 0.9rem; }
+.btn-back { background: transparent; border: none; font-size: 1.2rem; cursor: pointer; margin-bottom: 10px; }
+.squish:active { transform: scale(0.95); }
+.disabled { opacity: 0.5; pointer-events: none; }
+.fit-img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+
+/* STATUS BAR */
+#status-bar {
+    position: absolute; top: 15px; width: 100%; padding: 0 25px;
+    display: flex; justify-content: space-between; z-index: 90; font-weight: bold; font-size: 0.9rem;
 }
 
-.btn {
-    width: 100%; padding: 15px;
-    border: none; border-radius: 15px;
-    font-size: 1.1rem; font-weight: bold;
-    cursor: pointer; margin-top: 10px;
-    transition: transform 0.1s;
+/* BOTTOM NAVIGATION */
+#bottom-nav {
+    position: absolute; bottom: 20px; left: 20px; right: 20px;
+    height: 70px; background: rgba(255,255,255,0.9);
+    border-radius: 35px; display: flex; justify-content: space-around; align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 99;
+}
+.nav-item { font-size: 1.5rem; color: #ccc; transition: 0.3s; cursor: pointer; }
+.nav-item.active { color: var(--primary); transform: translateY(-5px); }
+
+/* HOME SCREENS */
+.welcome-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+#user-avatar-display { width: 60px; height: 60px; border-radius: 50%; border: 3px solid white; }
+.buddy-status-card { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.buddy-circle { 
+    width: 50px; height: 50px; background: #eee; border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
 }
 
-.btn-primary { background: var(--peach); color: #5a3a2a; }
-.btn-secondary { background: white; color: var(--text-dark); }
-.btn-back { background: transparent; border: none; font-size: 1.2rem; cursor: pointer; margin-bottom: 15px; color: #444; }
+/* LESSONS & LEVELS */
+.grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.subject-card { text-align: center; padding: 20px; cursor: pointer; }
+.subject-card i { font-size: 2rem; margin-bottom: 10px; color: var(--accent); }
 
-/* Squish Animasyonu */
-.squish-effect:active { transform: scale(0.90); }
+.levels-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.lvl-box {
+    aspect-ratio: 1; background: rgba(255,255,255,0.5); border-radius: 15px;
+    display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer;
+}
+.lvl-box.locked { background: rgba(0,0,0,0.1); color: #888; pointer-events: none; }
+.lvl-box.completed { background: var(--primary); color: white; }
 
-/* --- EKRANLARA ÖZEL STİLLER --- */
+/* QUIZ */
+.quiz-buddy-helper {
+    position: absolute; top: 110px; right: 10px; width: 80px; text-align: center;
+}
+#quiz-buddy-img { width: 60px; height: 60px; border-radius: 50%; border: 3px solid white; object-fit: cover; }
+.speech-bubble {
+    background: white; padding: 5px; border-radius: 10px; font-size: 0.7rem;
+    position: relative; top: -5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+.opt-btn { height: 60px; font-size: 1.2rem; }
 
-/* Splash */
-#screen-splash {
-    text-align: center; padding-top: 50%;
-    animation: fadeOut 0.5s ease-out 2.5s forwards;
+/* GUIDE COMPARISON */
+.guide-comparison { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
+.guide-box, .user-box { 
+    height: 200px; background: white; border-radius: 15px; border: 2px dashed #ccc; 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; position: relative;
 }
-.app-logo { width: 120px; animation: bounce 2s infinite; }
-
-/* Profile */
-.avatar-grid { display: flex; justify-content: space-around; margin: 20px 0; }
-.avatar-option { 
-    width: 70px; height: 70px; border-radius: 50%; 
-    border: 3px solid transparent; cursor: pointer; 
-}
-.avatar-option.selected { border-color: var(--peach); transform: scale(1.1); }
-.input-group input { 
-    width: 100%; padding: 15px; border-radius: 15px; 
-    border: none; background: rgba(255,255,255,0.8); text-align: center; 
+.guide-box span, .user-box span { 
+    position: absolute; top: 5px; left: 5px; background: rgba(0,0,0,0.5); 
+    color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; z-index: 2;
 }
 
-/* Dashboard */
-.header-card { display: flex; justify-content: space-between; align-items: center; }
-.user-info { display: flex; align-items: center; gap: 10px; }
-.user-info img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid white; }
-.nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-.nav-item { 
-    background: rgba(255,255,255,0.5); border-radius: 20px; 
-    padding: 20px; text-align: center; cursor: pointer; 
+/* OVERLAY TIME UP */
+.overlay {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.85); z-index: 200;
+    display: flex; justify-content: center; align-items: center;
 }
-.icon-box { 
-    font-size: 1.5rem; margin-bottom: 10px; 
-    width: 50px; height: 50px; margin: 0 auto 10px auto;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 50%; color: white;
-}
-.c1 { background: #FF9F43; }
-.c2 { background: #54A0FF; }
-.c3 { background: #5F27CD; }
-.c4 { background: #1DD1A1; }
-
-/* Workshop Upload */
-.comparison-view { display: flex; flex-direction: column; gap: 15px; }
-.target-img, .user-img { 
-    background: white; border-radius: 15px; padding: 10px; text-align: center; 
-}
-.target-img img, #preview-img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; }
-#upload-area { 
-    height: 150px; border: 2px dashed #ccc; border-radius: 10px; 
-    display: flex; align-items: center; justify-content: center; cursor: pointer; 
-}
-#btn-complete-step:disabled { opacity: 0.5; cursor: not-allowed; }
-
-/* Animations */
+.alert-box { text-align: center; color: var(--text); width: 80%; }
+.logo-bounce { animation: bounce 2s infinite; width: 100px; }
 @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* SHOP ITEM */
+.shop-item { display: flex; justify-content: space-between; align-items: center; }
