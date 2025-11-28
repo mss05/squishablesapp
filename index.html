@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Squishables - Professional Edition</title>
+    <title>Squishables - Ultimate</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
     <div id="phone-chassis">
-        
         <div id="dynamic-island">
             <div id="island-content">
                 <span id="island-time">20:00</span>
@@ -24,23 +23,19 @@
             <section id="screen-splash" class="screen active-screen">
                 <div class="splash-content">
                     <div class="logo-circle-layer bounce-anim">
-                        <img src="logo.png" alt="Squishables" onerror="this.src='https://via.placeholder.com/150?text=S'">
+                        <img src="logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/150?text=S'">
                     </div>
                     <h1 class="app-title">Squishables</h1>
                     <p class="app-motto">Hands On, Screens Off.</p>
-                    
-                    <div class="loading-track">
-                        <div class="loading-bar"></div>
-                    </div>
+                    <div class="loading-track"><div class="loading-bar"></div></div>
                 </div>
             </section>
 
             <section id="screen-onboarding" class="screen hidden">
                 <div class="header-tile">
                     <h2>Kimsin Sen?</h2>
-                    <p>Maceraya başlamak için karakterini seç.</p>
+                    <p>Karakterini seç ve başla.</p>
                 </div>
-
                 <div class="avatar-selection-grid">
                     <div class="avatar-circle-wrapper" onclick="app.selectAvatar(1, this)">
                         <img src="avatar1.png" class="avatar-img" onerror="this.src='https://via.placeholder.com/100?text=1'">
@@ -55,19 +50,15 @@
                         <div class="check-mark"><i class="fas fa-check"></i></div>
                     </div>
                 </div>
-
                 <div class="input-tile">
-                    <label>Kâşif İsmi</label>
-                    <input type="text" id="input-name" placeholder="Adını buraya yaz...">
+                    <input type="text" id="input-name" placeholder="Adın ne?">
                 </div>
-
                 <div class="action-area">
-                    <button class="btn-main squish-btn" onclick="app.registerUser()">Maceraya Atıl 🚀</button>
+                    <button class="btn-main squish-btn" onclick="app.registerUser()">Başla 🚀</button>
                 </div>
             </section>
 
             <section id="screen-home" class="screen hidden">
-                
                 <div class="profile-header-tile">
                     <div class="profile-left">
                         <div class="profile-avatar-circle">
@@ -79,10 +70,7 @@
                         </div>
                     </div>
                     <div class="profile-right">
-                        <div class="streak-circle">
-                            <i class="fas fa-fire"></i>
-                            <span>3</span>
-                        </div>
+                        <div class="streak-circle"><i class="fas fa-fire"></i><span>3</span></div>
                     </div>
                 </div>
 
@@ -101,26 +89,71 @@
                     <div class="dashboard-tile color-1 squish-btn" onclick="app.nav.to('lessons')">
                         <div class="tile-icon-circle"><i class="fas fa-rocket"></i></div>
                         <h3>Dersler</h3>
-                        <p>Öğrenmeye Başla</p>
                     </div>
-
                     <div class="dashboard-tile color-2 squish-btn" onclick="app.nav.to('workshop')">
                         <div class="tile-icon-circle"><i class="fas fa-palette"></i></div>
                         <h3>Atölye</h3>
-                        <p>Yaratıcılık Zamanı</p>
                     </div>
-
                     <div class="dashboard-tile color-3 squish-btn" onclick="app.nav.to('shop')">
                         <div class="tile-icon-circle"><i class="fas fa-store"></i></div>
                         <h3>Market</h3>
-                        <p>XP Harca</p>
                     </div>
-
-                    <div class="dashboard-tile color-4 squish-btn" onclick="alert('Yakında!')">
+                    <div class="dashboard-tile color-4 squish-btn" onclick="app.nav.to('settings')">
                         <div class="tile-icon-circle"><i class="fas fa-cog"></i></div>
                         <h3>Ayarlar</h3>
-                        <p>Profili Düzenle</p>
                     </div>
+                </div>
+            </section>
+
+            <section id="screen-settings" class="screen hidden">
+                <div class="page-header">
+                    <button class="btn-round-back" onclick="app.nav.to('home')"><i class="fas fa-chevron-left"></i></button>
+                    <h2>Ayarlar</h2>
+                </div>
+
+                <div class="settings-group">
+                    <h3>Profili Düzenle</h3>
+                    <div class="input-tile">
+                        <label>İsim Değiştir</label>
+                        <input type="text" id="edit-name-input">
+                    </div>
+                    <div class="avatar-selection-grid small-grid">
+                        <div class="avatar-circle-wrapper" onclick="app.settings.setAvatar(1, this)">
+                            <img src="avatar1.png" class="avatar-img">
+                            <div class="check-mark"><i class="fas fa-check"></i></div>
+                        </div>
+                        <div class="avatar-circle-wrapper" onclick="app.settings.setAvatar(2, this)">
+                            <img src="avatar2.png" class="avatar-img">
+                            <div class="check-mark"><i class="fas fa-check"></i></div>
+                        </div>
+                        <div class="avatar-circle-wrapper" onclick="app.settings.setAvatar(3, this)">
+                            <img src="avatar3.png" class="avatar-img">
+                            <div class="check-mark"><i class="fas fa-check"></i></div>
+                        </div>
+                    </div>
+                    <button class="btn-main squish-btn" onclick="app.settings.saveProfile()">Kaydet</button>
+                </div>
+
+                <div class="settings-group" style="margin-top:20px;">
+                    <h3>Uygulama Ayarları</h3>
+                    <div class="toggle-row">
+                        <span><i class="fas fa-music"></i> Müzik & Sesler</span>
+                        <label class="switch">
+                            <input type="checkbox" checked onchange="app.settings.toggleSound()">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-row">
+                        <span><i class="fas fa-bell"></i> Bildirimler</span>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    
+                    <button class="btn-danger squish-btn" onclick="app.settings.resetApp()">
+                        <i class="fas fa-trash"></i> İlerlemeyi Sıfırla
+                    </button>
                 </div>
             </section>
 
@@ -129,13 +162,11 @@
                     <button class="btn-round-back" onclick="app.nav.to('home')"><i class="fas fa-chevron-left"></i></button>
                     <h2>Ders Haritası</h2>
                 </div>
-
                 <div class="subject-tabs-scroll">
-                    <button class="tab-pill active" onclick="app.lessons.filter('math')">Matematik</button>
-                    <button class="tab-pill" onclick="app.lessons.filter('colors')">Renkler</button>
-                    <button class="tab-pill" onclick="app.lessons.filter('shapes')">Şekiller</button>
+                    <button class="tab-pill active">Matematik</button>
+                    <button class="tab-pill">Renkler</button>
+                    <button class="tab-pill">Şekiller</button>
                 </div>
-
                 <div id="levels-container" class="levels-honeycomb">
                     <div class="level-node" id="lvl-1" onclick="app.lessons.startLevel(1)">1</div>
                     <div class="level-node locked" id="lvl-2" onclick="app.lessons.startLevel(2)">2</div>
@@ -148,33 +179,23 @@
                     <div class="level-node locked" id="lvl-9" onclick="app.lessons.startLevel(9)">9</div>
                     <div class="level-node locked" id="lvl-10" onclick="app.lessons.startLevel(10)"><i class="fas fa-trophy"></i></div>
                 </div>
-                
-                <div class="info-alert">
-                    <i class="fas fa-info-circle"></i> Seviyeleri sırayla tamamlamalısın!
-                </div>
             </section>
 
             <section id="screen-quiz" class="screen hidden">
                 <div class="quiz-top-bar">
-                    <div class="progress-capsule">
-                        <div id="quiz-progress-fill" style="width: 10%;"></div>
-                    </div>
+                    <div class="progress-capsule"><div id="quiz-progress-fill" style="width: 10%;"></div></div>
                     <button class="btn-close-circle" onclick="app.nav.to('lessons')"><i class="fas fa-times"></i></button>
                 </div>
-
                 <div class="question-container">
                     <div class="question-bubble glass-panel">
                         <h1 id="quiz-question-text">2 + 2 = ?</h1>
                     </div>
-                    
                     <div class="buddy-helper-float">
                         <div class="buddy-speech">Yapabilirsin!</div>
                         <img id="quiz-buddy-visual" src="" class="buddy-avatar-small">
                     </div>
                 </div>
-
-                <div class="options-grid-2x2" id="quiz-options-area">
-                    </div>
+                <div class="options-grid-2x2" id="quiz-options-area"></div>
             </section>
 
             <section id="screen-workshop" class="screen hidden">
@@ -182,27 +203,25 @@
                     <button class="btn-round-back" onclick="app.nav.to('home')"><i class="fas fa-chevron-left"></i></button>
                     <h2>Yaratıcı Atölye</h2>
                 </div>
-
                 <div class="workshop-list">
-                    <div class="workshop-card" onclick="app.workshop.open('flower')">
+                    <div class="workshop-card" onclick="app.workshop.start('flower')">
                         <div class="card-image-wrapper">
                             <img src="cicek_adim5.jpg" onerror="this.src='https://via.placeholder.com/300x150?text=Cicek'">
-                            <span class="tag-label">Kolay</span>
+                            <span class="tag-label">5 Adım</span>
                         </div>
                         <div class="card-content">
                             <h3>Çiçek Yapımı</h3>
-                            <p>5 Adımda kendi bahçeni yarat.</p>
+                            <p>Bahçeni renklendir!</p>
                         </div>
                     </div>
-                    
-                    <div class="workshop-card" onclick="app.workshop.open('castle')">
+                    <div class="workshop-card" onclick="app.workshop.start('castle')">
                         <div class="card-image-wrapper">
                             <img src="kale_adim2.jpg" onerror="this.src='https://via.placeholder.com/300x150?text=Kale'">
-                            <span class="tag-label">Orta</span>
+                            <span class="tag-label">3 Adım</span>
                         </div>
                         <div class="card-content">
                             <h3>Kale Yapımı</h3>
-                            <p>Prensesler ve şövalyeler için.</p>
+                            <p>Krallığını inşa et.</p>
                         </div>
                     </div>
                 </div>
@@ -213,32 +232,18 @@
                     <button class="btn-round-back" onclick="app.nav.to('home')"><i class="fas fa-chevron-left"></i></button>
                     <h2>XP Market</h2>
                 </div>
-
                 <div class="balance-card">
                     <span>Mevcut Bakiyen</span>
                     <h1><span id="shop-balance">0</span> XP</h1>
                 </div>
-
                 <div class="shop-grid">
                     <div class="shop-item-tile squish-btn" onclick="app.shop.buy(500)">
                         <div class="item-icon bg-orange"><i class="fas fa-shapes"></i></div>
-                        <h4>Mega Hamur</h4>
-                        <span class="price-tag">500 XP</span>
+                        <h4>Mega Hamur</h4><span class="price-tag">500 XP</span>
                     </div>
                     <div class="shop-item-tile squish-btn" onclick="app.shop.buy(300)">
                         <div class="item-icon bg-blue"><i class="fas fa-paint-brush"></i></div>
-                        <h4>Simli Boya</h4>
-                        <span class="price-tag">300 XP</span>
-                    </div>
-                    <div class="shop-item-tile squish-btn" onclick="app.shop.buy(1000)">
-                        <div class="item-icon bg-purple"><i class="fas fa-crown"></i></div>
-                        <h4>Pro Rozeti</h4>
-                        <span class="price-tag">1000 XP</span>
-                    </div>
-                    <div class="shop-item-tile squish-btn" onclick="app.shop.buy(150)">
-                        <div class="item-icon bg-green"><i class="fas fa-seedling"></i></div>
-                        <h4>Tohum Seti</h4>
-                        <span class="price-tag">150 XP</span>
+                        <h4>Simli Boya</h4><span class="price-tag">300 XP</span>
                     </div>
                 </div>
             </section>
@@ -248,25 +253,15 @@
                     <button class="btn-round-back" onclick="app.nav.to('home')"><i class="fas fa-chevron-left"></i></button>
                     <h2>Buddy Oluştur</h2>
                 </div>
-
                 <div class="buddy-creation-area">
                     <div class="buddy-large-circle-container">
                         <img id="buddy-preview-large" src="" class="hidden">
-                        <div id="buddy-placeholder-large">
-                            <i class="fas fa-robot fa-3x"></i>
-                            <p>Henüz Buddy Yok</p>
-                        </div>
+                        <div id="buddy-placeholder-large"><i class="fas fa-robot fa-3x"></i></div>
                     </div>
-
                     <div class="instruction-box">
                         <h3>Nasıl Yapılır?</h3>
-                        <ol>
-                            <li>Oyun hamurundan bir arkadaş yap.</li>
-                            <li>Ona göz ve ağız ekle.</li>
-                            <li>Fotoğrafını çekip buraya yükle!</li>
-                        </ol>
+                        <p>Hamurdan arkadaşını yap, fotoğrafını yükle!</p>
                     </div>
-
                     <button class="btn-main squish-btn" onclick="document.getElementById('buddy-upload-input').click()">
                         <i class="fas fa-camera"></i> Fotoğraf Yükle
                     </button>
@@ -278,35 +273,43 @@
                 <div class="modal-card">
                     <div class="modal-icon-circle bg-danger"><i class="fas fa-hourglass-end"></i></div>
                     <h2>Süre Doldu!</h2>
-                    <p>Bugünlük ekran süren bitti. Şimdi hamurlarınla gerçek dünyada oynama zamanı!</p>
-                    <div class="locked-badge"><i class="fas fa-lock"></i> Kilitlendi</div>
+                    <p>Bugünlük ekran süren bitti.</p>
                 </div>
             </div>
 
             <div id="overlay-guide" class="full-overlay hidden">
                 <div class="guide-modal">
                     <div class="guide-header">
-                        <h3 id="modal-guide-title">Adım 1</h3>
+                        <h3 id="modal-guide-title">Adım 1/5</h3>
                         <button class="btn-close-circle" onclick="app.workshop.close()"><i class="fas fa-times"></i></button>
                     </div>
+                    
+                    <p id="modal-step-desc" class="step-description">Hamuru yuvarla.</p>
+
                     <div class="split-view">
                         <div class="view-part">
                             <span>Hedef</span>
                             <img id="modal-guide-img" src="">
                         </div>
-                        <div class="view-part user-upload-part" onclick="document.getElementById('craft-upload').click()">
+                        <div class="view-part user-upload-part" onclick="document.getElementById('step-upload').click()">
                             <span>Senin Yaptığın</span>
                             <img id="modal-user-img" class="hidden">
                             <div id="modal-upload-icon"><i class="fas fa-camera"></i></div>
                         </div>
                     </div>
-                    <input type="file" id="craft-upload" hidden accept="image/*">
-                    <button id="btn-guide-complete" class="btn-main disabled" disabled onclick="app.workshop.finish()">Görevi Bitir</button>
+                    
+                    <input type="file" id="step-upload" hidden accept="image/*">
+
+                    <div class="step-controls">
+                        <button id="btn-prev-step" class="btn-step" onclick="app.workshop.prevStep()">Geri</button>
+                        <button id="btn-next-step" class="btn-main squish-btn" onclick="app.workshop.nextStep()">Sonraki Adım</button>
+                    </div>
                 </div>
             </div>
 
         </div> <div id="home-indicator"></div>
+    </div>
 
-    </div> <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
