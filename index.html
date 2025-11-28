@@ -1,16 +1,22 @@
 <!-- 
     ============================================================================
-    PROJE: SQUISHABLES LEARNING APP - BUDDY SYSTEM FIX
-    SÜRÜM: 7.0 (BUDDY & AVATAR SEPARATION)
+    PROJE: SQUISHABLES LEARNING APP - ULTIMATE MASTERPIECE EDITION
+    SÜRÜM: 10.0 (FINAL PRODUCTION READY)
     
-    YAPILANDIRMA:
-    - Avatar: Kullanıcının profil resmi (Dijital)
-    - Buddy: Kullanıcının hamurdan yaptığı ve fotoğrafını çektiği arkadaş (Gerçek)
-    - Bu iki görsel artık birbirine karışmayacak.
+    YAPILANDIRMA VE DOSYA YÖNETİMİ:
+    Bu dosya, GitHub 'main' branch kök dizininde çalışır.
+    Tüm görseller index.html ile YAN YANA olmalıdır.
     
-    BEKLENEN DOSYALAR (index.html ile aynı dizinde):
-    - logo.png, Product1.jpg
+    GEREKLİ GÖRSELLER:
+    -------------------------------------------------------
+    [Sistem]
+    - logo.png          (Uygulama İkonu)
+    - Product1.jpg      (Kutu Görseli)
+    
+    [Avatarlar (Dijital Profil)]
     - avatar1.png, avatar2.png, avatar3.png
+    
+    [Rehberler (Adım Görselleri)]
     - cicek_adim1.jpg ... cicek_adim5.jpg
     - kale_adim1.jpg, kale_adim2.jpg
     - hayvan_adim1.jpg
@@ -24,110 +30,382 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Squishables - Yaratıcı Öğrenme</title>
     
+    <!-- PWA & Meta -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#C4DFD9">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    
     <link rel="apple-touch-icon" href="logo.png">
+    <link rel="shortcut icon" href="logo.png" type="image/png">
 
+    <!-- Fontlar -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- İkonlar -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- CSS AYARLARI --- */
+        /* =================================================================
+           BÖLÜM 1: CORE CSS & VARIABLES
+           ================================================================= 
+        */
         :root {
-            --primary: #C4DFD9; --primary-dark: #2e5c4d;
-            --secondary: #FFD1BA; --secondary-dark: #d68c6d;
-            --accent: #DCD6F7; --accent-dark: #424874;
-            --bg-body: #f4f7f6; --white: #ffffff;
-            --text-main: #2D3436; --text-muted: #636E72;
-            --success: #00b894; --warning: #fdcb6e; --danger: #ff7675; --gold: #FFD700;
-            --shadow-card: 0 8px 20px rgba(0,0,0,0.06);
-            --trans-fast: 0.2s ease;
+            /* Renk Paleti */
+            --primary: #C4DFD9;      /* Nane */
+            --primary-dark: #2e5c4d;
+            --secondary: #FFD1BA;    /* Şeftali */
+            --secondary-dark: #d68c6d;
+            --accent: #DCD6F7;       /* Lavanta */
+            --accent-dark: #424874;
+            
+            --bg-body: #f0f4f8;
+            --white: #ffffff;
+            --text-main: #2D3436;
+            --text-muted: #636E72;
+            
+            /* Durumlar */
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #ff7675;
+            --gold: #FFD700;
+            
+            /* Gölgeler */
+            --shadow-xs: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-sm: 0 4px 8px rgba(0,0,0,0.06);
+            --shadow-md: 0 8px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 16px 32px rgba(0,0,0,0.1);
+            --shadow-float: 0 20px 50px rgba(0,0,0,0.12);
+            
+            /* Animasyon */
+            --trans-fast: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --trans-med: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --trans-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            
+            /* Radius */
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 32px;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; outline: none; }
-        body { margin: 0; padding: 0; font-family: 'Nunito', sans-serif; background-color: var(--bg-body); display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; overflow: hidden; color: var(--text-main); }
-        ::-webkit-scrollbar { display: none; }
-
-        #app-frame { width: 100%; max-width: 414px; height: 100%; max-height: 896px; background-color: var(--white); position: relative; overflow: hidden; display: flex; flex-direction: column; transition: 0.4s ease; }
-        @media (min-width: 450px) {
-            #app-frame { height: 85vh; border-radius: 45px; border: 14px solid #2d3436; box-shadow: 0 20px 50px rgba(0,0,0,0.15); }
-            .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 160px; height: 32px; background: #2d3436; border-radius: 0 0 24px 24px; z-index: 9999; }
+        
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Nunito', sans-serif; 
+            background-color: var(--bg-body); 
+            display: flex; justify-content: center; align-items: center; 
+            height: 100vh; width: 100vw; overflow: hidden;
+            color: var(--text-main);
         }
 
-        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); display: none; flex-direction: column; animation: fadeIn 0.4s ease forwards; z-index: 10; }
-        .screen.active { display: flex; }
-        .scroll-content { flex: 1; overflow-y: auto; padding: 25px; padding-bottom: 130px; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
 
-        /* UI */
-        h1, h2, h3 { font-family: 'Fredoka', sans-serif; margin: 0; }
-        .btn { border: none; padding: 18px; width: 100%; border-radius: 22px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: var(--trans-fast); display: flex; align-items: center; justify-content: center; gap: 10px; font-family: 'Fredoka', sans-serif; }
-        .btn:active { transform: scale(0.96); }
-        .btn-primary { background: var(--primary); color: #333; box-shadow: 0 8px 20px rgba(196, 223, 217, 0.4); }
-        .btn-secondary { background: white; color: var(--text-muted); border: 2px solid #eee; }
+        /* =================================================================
+           BÖLÜM 2: APP FRAMEWORK
+           ================================================================= 
+        */
+        #app-frame {
+            width: 100%; max-width: 414px; height: 100%; max-height: 915px;
+            background-color: var(--white);
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+            transition: var(--trans-med);
+        }
+
+        @media (min-width: 450px) {
+            #app-frame {
+                height: 90vh; border-radius: 45px;
+                border: 12px solid #2d3436;
+                box-shadow: var(--shadow-float);
+            }
+            .notch {
+                position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+                width: 160px; height: 30px; background: #2d3436;
+                border-radius: 0 0 20px 20px; z-index: 9999;
+            }
+        }
+
+        /* Screen Logic */
+        .screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-body); 
+            display: none; flex-direction: column;
+            animation: fadeIn 0.4s ease forwards; 
+            z-index: 10;
+        }
+        .screen.active { display: flex; }
         
-        .card { background: white; border-radius: 28px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.03); box-shadow: var(--shadow-card); position: relative; overflow: hidden; transition: var(--trans-fast); }
+        .scroll-content { 
+            flex: 1; overflow-y: auto; padding: 25px; 
+            padding-bottom: 130px; 
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        /* =================================================================
+           BÖLÜM 3: COMPONENTS
+           ================================================================= 
+        */
+        h1, h2, h3, h4 { font-family: 'Fredoka', sans-serif; margin: 0; padding: 0; letter-spacing: 0.5px; }
+        h1 { font-size: 2.2rem; font-weight: 700; }
+        p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin: 8px 0; }
+
+        /* Buttons */
+        .btn {
+            border: none; padding: 18px; width: 100%; border-radius: 22px;
+            font-size: 1.1rem; font-weight: 700; cursor: pointer;
+            transition: var(--trans-fast); position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            font-family: 'Fredoka', sans-serif;
+        }
+        .btn:active { transform: scale(0.96); }
+        
+        .btn-primary { 
+            background: var(--primary); color: #333; 
+            box-shadow: 0 8px 25px rgba(196, 223, 217, 0.5); 
+        }
+        .btn-secondary { background: white; color: var(--text-muted); border: 2px solid #eee; }
+        .btn-success { background: var(--success); color: white; box-shadow: 0 8px 25px rgba(0, 184, 148, 0.3); }
+        .btn-text { background: transparent; color: var(--text-muted); padding: 10px; font-size: 0.9rem; }
+
+        /* Cards */
+        .card {
+            background: white; border-radius: 28px; padding: 20px;
+            margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.03);
+            box-shadow: var(--shadow-sm); transition: var(--trans-fast);
+            position: relative; overflow: hidden;
+        }
         .card:active { transform: scale(0.98); background: #fdfdfd; }
         
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; height: 80px; }
-        .back-btn { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: #f5f6fa; color: var(--text-main); font-size: 1.1rem; cursor: pointer; }
+        /* Header */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 25px; background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px); z-index: 100;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: sticky; top: 0; height: 80px;
+        }
+        .back-btn { 
+            width: 42px; height: 42px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            background: #fff; color: var(--text-main); font-size: 1.2rem;
+            cursor: pointer; transition: 0.2s; box-shadow: var(--shadow-xs);
+        }
+        .back-btn:active { transform: scale(0.9); }
 
-        /* TOAST */
-        #toast-container { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); z-index: 5000; width: 90%; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: rgba(45, 52, 54, 0.95); color: white; padding: 14px 20px; border-radius: 30px; text-align: center; opacity: 0; transform: translateY(-30px) scale(0.9); transition: 0.4s; font-size: 0.95rem; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; gap: 12px; backdrop-filter: blur(8px); }
+        /* =================================================================
+           BÖLÜM 4: FEEDBACK (TOASTS & MODALS)
+           ================================================================= 
+        */
+        #toast-container {
+            position: absolute; top: 90px; left: 50%; transform: translateX(-50%);
+            z-index: 5000; width: 90%; pointer-events: none;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .toast {
+            background: rgba(45, 52, 54, 0.98); color: white;
+            padding: 14px 20px; border-radius: 30px; text-align: center;
+            opacity: 0; transform: translateY(-30px) scale(0.9); 
+            transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-size: 0.95rem; font-weight: 600;
+            box-shadow: var(--shadow-md); display: flex; align-items: center;
+            justify-content: center; gap: 12px; backdrop-filter: blur(5px);
+        }
         .toast.show { opacity: 1; transform: translateY(0) scale(1); }
         .toast.success { background: var(--primary-dark); }
         .toast.error { background: var(--danger); }
+        .toast.levelup { 
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); 
+            color: #333; font-weight: 800; border: 2px solid white;
+        }
 
-        /* MODAL */
-        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 4000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.3s; backdrop-filter: blur(5px); }
-        .modal-box { background: white; width: 88%; max-height: 85%; overflow-y: auto; padding: 30px; border-radius: 35px; text-align: center; animation: popIn 0.4s; position: relative; }
-        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #f5f6fa; border-radius: 50%; }
+        .modal-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 4000; display: none;
+            align-items: center; justify-content: center;
+            animation: fadeIn 0.3s; backdrop-filter: blur(5px);
+        }
+        .modal-box {
+            background: white; width: 88%; max-height: 85%; overflow-y: auto;
+            padding: 30px; border-radius: 35px; text-align: center;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; box-shadow: var(--shadow-float);
+        }
+        .close-modal {
+            position: absolute; top: 20px; right: 20px; font-size: 1.2rem;
+            cursor: pointer; color: var(--text-muted); width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            background: #f5f6fa; border-radius: 50%;
+        }
 
-        /* SAYFA STİLLERİ */
-        .product-hero { width: 100%; height: 260px; border-radius: 35px; overflow: hidden; margin-bottom: 25px; position: relative; background: white; border: 1px solid rgba(0,0,0,0.05); box-shadow: var(--shadow-card); }
-        .product-hero img { width: 100%; height: 100%; object-fit: contain; padding: 20px; }
-        
+        /* =================================================================
+           BÖLÜM 5: SAYFA STİLLERİ (DETAYLI)
+           ================================================================= 
+        */
+
+        /* Product & Onboarding */
+        .product-hero {
+            width: 100%; height: 260px; border-radius: 35px;
+            overflow: hidden; margin-bottom: 25px; position: relative;
+            background: white; border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-md);
+        }
+        .product-hero img { 
+            width: 100%; height: 100%; object-fit: contain; padding: 20px; 
+            transition: transform 0.5s;
+        }
+        .product-tag {
+            position: absolute; bottom: 15px; left: 15px;
+            background: rgba(255,255,255,0.95); padding: 8px 18px;
+            border-radius: 20px; font-size: 0.85rem; font-weight: 700;
+            color: var(--text-main); backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Profil Seçimi */
         .avatar-grid { display: flex; gap: 15px; justify-content: center; margin: 30px 0; }
-        .avatar-opt { width: 85px; height: 85px; border-radius: 50%; border: 4px solid white; cursor: pointer; object-fit: cover; transition: var(--trans-fast); background: #eee; box-shadow: var(--shadow-card); }
-        .avatar-opt.selected { border-color: var(--text-main); transform: scale(1.15); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .custom-input { width: 100%; padding: 18px 20px; background: white; border: 2px solid #eee; border-radius: 20px; margin-bottom: 20px; font-family: 'Nunito'; font-size: 1.05rem; transition: 0.2s; outline: none; color: var(--text-main); }
-        .custom-input:focus { border-color: var(--primary); }
+        .avatar-opt {
+            width: 90px; height: 90px; border-radius: 50%;
+            border: 5px solid white; cursor: pointer; object-fit: cover;
+            transition: var(--trans-fast); background: #eee;
+            box-shadow: var(--shadow-sm);
+        }
+        .avatar-opt.selected {
+            border-color: var(--text-main); transform: scale(1.15);
+            box-shadow: var(--shadow-md);
+        }
+        .custom-input {
+            width: 100%; padding: 20px 20px; background: white;
+            border: 2px solid #eee; border-radius: 22px;
+            margin-bottom: 20px; font-family: 'Nunito'; font-size: 1.1rem;
+            transition: 0.2s; outline: none; color: var(--text-main);
+        }
+        .custom-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(196, 223, 217, 0.2); }
 
-        .progress-bar { width: 100%; height: 10px; background: #e0e0e0; border-radius: 5px; margin-bottom: 25px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary-dark); width: 0%; transition: width 0.5s; border-radius: 5px; }
-        .step-image-box { width: 100%; height: 220px; background: white; border-radius: 28px; display: flex; align-items: center; justify-content: center; border: 2px solid #f0f0f0; overflow: hidden; position: relative; margin-bottom: 15px; box-shadow: var(--shadow-card); }
+        /* Guide (Rehber) */
+        .step-progress { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 0 5px; position: relative; }
+        .progress-bar { width: 100%; height: 12px; background: #e0e0e0; border-radius: 6px; margin-bottom: 25px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary-dark); width: 0%; transition: width 0.5s ease; border-radius: 6px; }
+        
+        .step-image-box {
+            width: 100%; height: 240px; background: white; border-radius: 28px;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid #f0f0f0; overflow: hidden; position: relative;
+            transition: var(--trans-fast); margin-bottom: 15px;
+            box-shadow: var(--shadow-sm);
+        }
         .step-image-box img { width: 100%; height: 100%; object-fit: cover; }
-        .guide-label { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.75); color: white; padding: 6px 14px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; z-index: 2; pointer-events: none; }
+        .guide-label {
+            position: absolute; top: 15px; left: 15px;
+            background: rgba(0,0,0,0.8); color: white;
+            padding: 8px 16px; border-radius: 14px; font-size: 0.8rem;
+            font-weight: 800; z-index: 2; pointer-events: none;
+            backdrop-filter: blur(4px);
+        }
+        .guide-label.user { background: var(--primary-dark); }
         
-        .lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .lesson-card { background: white; border-radius: 24px; padding: 25px 15px; text-align: center; cursor: pointer; transition: var(--trans-fast); border: 2px solid transparent; box-shadow: var(--shadow-card); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px; gap: 15px; }
-        .lesson-card:active { transform: scale(0.96); border-color: var(--primary); }
-        .lesson-card i { font-size: 2.5rem; }
-        
-        .level-map { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 30px 10px; }
-        .level-node { aspect-ratio: 1; border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 800; font-size: 1.4rem; cursor: pointer; position: relative; background: #e0e0e0; color: #a4b0be; border: 3px solid transparent; transition: 0.2s; }
-        .level-node.unlocked { background: white; color: var(--text-main); border-color: #eee; box-shadow: var(--shadow-card); }
-        .level-node.completed { background: var(--primary); color: #333; border-color: var(--primary-dark); }
-        .level-stars { display: flex; gap: 2px; font-size: 0.7rem; color: var(--gold); margin-top: 5px; }
+        .step-upload-btn {
+            background: #fdfdfd; border: 3px dashed #ccc; padding: 30px; 
+            border-radius: 28px; cursor: pointer; margin-bottom: 20px; 
+            text-align: center; transition: 0.2s; color: var(--text-muted);
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+        }
+        .step-upload-btn:active { background: #f0f0f0; border-color: var(--primary-dark); }
 
-        .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 95px; background: rgba(255,255,255,0.98); display: flex; justify-content: space-around; align-items: center; padding-bottom: 25px; z-index: 200; box-shadow: 0 -10px 40px rgba(0,0,0,0.05); border-radius: 40px 40px 0 0; backdrop-filter: blur(10px); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: #b2bec3; font-size: 0.75rem; cursor: pointer; width: 25%; transition: 0.3s; position: relative; font-weight: 600; }
-        .nav-item.active { color: var(--text-main); }
-        .nav-item.active i { transform: translateY(-5px); color: var(--primary-dark); }
-        .nav-item i { font-size: 1.6rem; transition: 0.3s; }
+        /* Profil Header */
+        .profile-card {
+            background: white; border-radius: 0 0 45px 45px; padding: 30px;
+            text-align: center; margin-bottom: 25px; margin-top: -20px;
+            box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+            border-bottom: 1px solid #eee;
+        }
+        .profile-bg-pattern {
+            position: absolute; top: 0; left: 0; width: 100%; height: 130px;
+            background: linear-gradient(135deg, var(--primary) 0%, #fff 100%);
+            opacity: 0.6; z-index: 0; border-radius: 0 0 50% 50% / 20px;
+        }
+        .profile-avatar-lg {
+            width: 120px; height: 120px; border-radius: 50%;
+            border: 6px solid white; margin-top: 50px; margin-bottom: 15px;
+            position: relative; z-index: 1; object-fit: cover;
+            box-shadow: var(--shadow-md); background: white;
+        }
+        .stat-row { display: flex; justify-content: center; gap: 15px; margin-top: 25px; position: relative; z-index: 1; }
+        .stat-box { background: #f8f9fa; padding: 12px 25px; border-radius: 20px; min-width: 100px; border: 1px solid #eee; }
+        .stat-val { font-size: 1.4rem; font-weight: 800; color: var(--text-main); display: block; }
+        .stat-lbl { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+
+        /* Level Map Grid */
+        .level-map { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; padding: 30px 10px; }
+        .level-node {
+            aspect-ratio: 1; border-radius: 26px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 1.5rem; cursor: pointer; position: relative;
+            transition: var(--trans-bounce);
+            background: #e0e0e0; color: #a4b0be; border: 4px solid transparent;
+        }
+        .level-node.unlocked { background: white; color: var(--text-main); border-color: #eee; box-shadow: var(--shadow-sm); }
+        .level-node.completed { background: var(--primary); color: #333; border-color: var(--primary-dark); box-shadow: var(--shadow-md); }
+        .level-node:active { transform: scale(0.9); }
 
         /* Quiz UI */
-        .option-btn { background: white; border: 2px solid #f0f0f0; padding: 25px; border-radius: 22px; font-size: 1.4rem; font-weight: 700; color: var(--text-main); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-card); }
+        .quiz-timer { width: 100%; height: 10px; background: #eee; margin-bottom: 30px; border-radius: 5px; overflow: hidden; }
+        .quiz-timer-fill { height: 100%; background: var(--warning); width: 100%; transition: width 1s linear; border-radius: 5px; }
+        
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .option-btn {
+            background: white; border: 2px solid #f0f0f0; padding: 25px;
+            border-radius: 22px; font-size: 1.4rem; font-weight: 700;
+            color: var(--text-main); cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: var(--shadow-sm);
+        }
         .option-btn:active { transform: scale(0.96); background: #f9f9f9; border-color: #ddd; }
         
-        /* Buddy Widget */
-        .buddy-corner { position: absolute; bottom: 130px; left: 20px; display: flex; align-items: flex-end; z-index: 50; pointer-events: none; }
-        .buddy-avatar-small { width: 80px; height: 80px; border-radius: 50%; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.15); background: white; object-fit: cover; }
-        .buddy-bubble { background: white; padding: 12px 18px; border-radius: 20px 20px 20px 0; box-shadow: 0 10px 25px rgba(0,0,0,0.1); font-size: 0.9rem; color: var(--text-main); max-width: 200px; margin-bottom: 20px; margin-left: 15px; font-weight: 600; animation: popIn 0.3s ease; transform-origin: bottom left; }
+        /* Buddy Widget (Quiz'deki Hamur Arkadaşı) */
+        .buddy-corner { 
+            position: absolute; bottom: 140px; left: 25px; 
+            display: flex; align-items: flex-end; z-index: 50; pointer-events: none;
+        }
+        .buddy-avatar-small {
+            width: 90px; height: 90px; border-radius: 50%; border: 5px solid white;
+            box-shadow: var(--shadow-lg); background: white; object-fit: cover;
+            animation: float 3s ease-in-out infinite;
+        }
+        .buddy-bubble {
+            background: white; padding: 15px 20px; border-radius: 20px 20px 20px 0;
+            box-shadow: var(--shadow-lg); font-size: 1rem; color: var(--text-main);
+            max-width: 200px; margin-bottom: 30px; margin-left: 15px; font-weight: 700;
+            animation: popIn 0.4s ease; transform-origin: bottom left;
+        }
 
+        /* Bottom Nav */
+        .bottom-nav {
+            position: absolute; bottom: 0; width: 100%; height: 100px;
+            background: rgba(255,255,255,0.98); display: flex; justify-content: space-around;
+            align-items: center; padding-bottom: 25px; z-index: 200;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.05); border-radius: 40px 40px 0 0;
+            backdrop-filter: blur(10px); border-top: 1px solid rgba(0,0,0,0.02);
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            color: #b2bec3; font-size: 0.8rem; cursor: pointer; width: 25%;
+            transition: 0.3s; position: relative; font-weight: 600;
+        }
+        .nav-item i { font-size: 1.7rem; transition: 0.3s; }
+        .nav-item.active { color: var(--text-main); }
+        .nav-item.active i { transform: translateY(-5px); color: var(--primary-dark); }
+        .nav-item.active::after {
+            content: ''; position: absolute; bottom: -12px; width: 6px; height: 6px;
+            background: var(--primary-dark); border-radius: 50%; animation: popIn 0.3s;
+        }
+
+        /* Animasyonlar */
         @keyframes popIn { 0% {transform: scale(0.9); opacity: 0;} 100% {transform: scale(1); opacity: 1;} }
         @keyframes fadeIn { 0% {opacity: 0;} 100% {opacity: 1;} }
+        @keyframes float { 0% {transform: translateY(0px);} 50% {transform: translateY(-8px);} 100% {transform: translateY(0px);} }
     </style>
 </head>
 <body>
@@ -150,10 +428,11 @@
 
     <!-- EKRAN 1: SPLASH -->
     <div id="s-splash" class="screen active" style="align-items:center; justify-content:center; background:var(--bg-body);">
-        <img src="logo.png" alt="Logo" style="width:160px; height:160px; object-fit:cover; border-radius:35px; box-shadow:var(--shadow-card); margin-bottom:30px; animation:popIn 1s;" onerror="this.src='https://placehold.co/150x150?text=Logo';">
+        <img src="logo.png" alt="Logo" style="width:160px; height:160px; object-fit:cover; border-radius:35px; box-shadow:var(--shadow-lg); margin-bottom:30px; animation:popIn 1s;" onerror="this.src='https://placehold.co/150x150?text=Logo';">
         <h1 style="color:var(--text-main); font-size:2.2rem; font-weight:800;">Squishables</h1>
         <p>Yaratıcılığın Dokunuşu</p>
         <div style="margin-top:50px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:2.5rem; color:var(--primary-dark);"></i></div>
+        <!-- Safe Boot Button -->
         <button id="force-start-btn" class="btn-primary" style="display:none; width:auto; padding:12px 30px; margin-top:30px; position:absolute; bottom:50px;" onclick="nav('s-onboarding')">Uygulamayı Başlat</button>
     </div>
 
@@ -165,12 +444,12 @@
         <div style="padding:40px 30px; text-align:center; flex:1; display:flex; flex-direction:column; justify-content:center;">
             <h1 style="font-size:2.2rem; margin-bottom:15px; color:var(--text-main);">Aile Bağları Kiti</h1>
             <p style="font-size:1.1rem; margin-bottom:30px;">Bu kutu ile ailecek hem öğrenin, hem eğlenin.</p>
-            <button class="btn-primary" style="box-shadow:var(--shadow-card);" onclick="nav('s-profile-setup')">Hadi Başlayalım! <i class="fa-solid fa-arrow-right"></i></button>
+            <button class="btn-primary" style="box-shadow:var(--shadow-lg);" onclick="nav('s-profile-create')">Hadi Başlayalım! <i class="fa-solid fa-arrow-right"></i></button>
         </div>
     </div>
 
     <!-- EKRAN 3: PROFIL KURULUMU (ZORUNLU) -->
-    <div id="s-profile-setup" class="screen">
+    <div id="s-profile-create" class="screen">
         <div class="header">
             <div class="back-btn" onclick="nav('s-onboarding')"><i class="fa-solid fa-chevron-left"></i></div>
             <h3>Profilini Yarat</h3><div style="width:40px;"></div>
@@ -184,11 +463,10 @@
                     <img src="avatar3.png" class="avatar-opt" onclick="pickAvatar(this, 'avatar3.png')" onerror="this.src='https://placehold.co/100x100?text=A3';">
                 </div>
             </div>
-            <div class="input-group"><label style="font-weight:800; margin-bottom:8px; display:block;">İsmin Nedir?</label><input type="text" id="inp-name" class="custom-input" placeholder="Örn: Deniz"></div>
-            <div class="input-group"><label style="font-weight:800; margin-bottom:8px; display:block;">Kaç Yaşındasın?</label><input type="number" class="custom-input" placeholder="5"></div>
+            <div class="input-group"><label class="form-label" style="font-weight:800; margin-bottom:8px; display:block;">İsmin Nedir?</label><input type="text" id="inp-name" class="custom-input" placeholder="Örn: Deniz"></div>
+            <div class="input-group"><label class="form-label" style="font-weight:800; margin-bottom:8px; display:block;">Kaç Yaşındasın?</label><input type="number" class="custom-input" placeholder="5"></div>
         </div>
         <div style="padding:30px;">
-            <!-- BUTON FIX: saveProfileAndStart fonksiyonu -->
             <button class="btn-primary" onclick="saveProfileAndStart()">Maceraya Atıl 🚀</button>
         </div>
     </div>
@@ -208,6 +486,7 @@
             <h3 style="margin:10px 0 15px 0; font-size:1.3rem;">Kutunun İçindekiler</h3>
             <div class="product-hero" style="height:200px;" onclick="nav('s-challenges')">
                 <img src="Product1.jpg" onerror="this.src='https://placehold.co/400x200?text=Urun+Kutusu';">
+                <div class="product-tag"><i class="fa-solid fa-box-open"></i> İçini Keşfet</div>
             </div>
 
             <h3 style="margin:25px 0 15px 0; font-size:1.3rem;">Hızlı Erişim</h3>
@@ -233,28 +512,40 @@
         <div class="header"><h3>Dersler</h3></div>
         <div class="scroll-content">
             <!-- BUDDY CARD -->
-            <div class="card" style="background:#fff0f5; border-left:5px solid #e84393; display:flex; align-items:center; justify-content:space-between; cursor:pointer;" onclick="setupBuddy()">
+            <div class="card" style="background:#fff0f5; border-left:6px solid #e84393; display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:25px;" onclick="document.getElementById('buddy-file').click()">
                 <div>
-                    <h3 style="margin:0; font-size:1.1rem; color:#d63031;">Çalışma Arkadaşı</h3>
-                    <p style="margin:5px 0 0 0; font-size:0.8rem;">Hamurdan arkadaşını yükle!</p>
+                    <h3 style="margin:0; font-size:1.2rem; color:#d63031; margin-bottom:5px;">Çalışma Arkadaşı</h3>
+                    <p style="margin:0; font-size:0.9rem;">Hamurdan arkadaşını yükle!</p>
                 </div>
                 <div style="position:relative;">
-                    <img id="lesson-buddy-preview" src="https://placehold.co/60x60?text=?" style="width:60px; height:60px; border-radius:50%; object-fit:cover; border:2px solid white;">
-                    <div style="position:absolute; bottom:-5px; right:-5px; background:white; border-radius:50%; padding:5px; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-                        <i class="fa-solid fa-camera" style="font-size:0.8rem; color:#e84393;"></i>
+                    <img id="lesson-buddy-preview" src="https://placehold.co/70x70?text=?" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:3px solid white; box-shadow:var(--shadow-sm);">
+                    <div style="position:absolute; bottom:0; right:0; background:white; border-radius:50%; padding:6px; box-shadow:var(--shadow-sm);">
+                        <i class="fa-solid fa-camera" style="font-size:1rem; color:#e84393;"></i>
                     </div>
                 </div>
-                <input type="file" id="buddy-upload" style="display:none;" accept="image/*" onchange="handleBuddyUpload(this)">
+                <input type="file" id="buddy-file" style="display:none;" accept="image/*" onchange="handleBuddy(this)">
             </div>
 
-            <p style="margin:20px 0;">Konu Seç:</p>
-            <div class="lesson-grid">
-                <div class="lesson-card" onclick="openLevelMap('math')"><i class="fa-solid fa-calculator" style="color:var(--accent-dark);"></i><b>Matematik</b><small style="color:var(--success);">10 Seviye</small></div>
-                <div class="lesson-card" onclick="openLevelMap('colors')"><i class="fa-solid fa-palette" style="color:var(--secondary-dark);"></i><b>Renkler</b><small style="color:var(--success);">10 Seviye</small></div>
-                <div class="lesson-card" onclick="openLevelMap('shapes')"><i class="fa-solid fa-shapes" style="color:var(--primary-dark);"></i><b>Şekiller</b><small style="color:var(--success);">10 Seviye</small></div>
-                <div class="lesson-card" onclick="openLevelMap('space')"><i class="fa-solid fa-rocket" style="color:#0984e3;"></i><b>Uzay</b><small style="color:var(--success);">10 Seviye</small></div>
-                <div class="lesson-card" onclick="openLevelMap('music')"><i class="fa-solid fa-music" style="color:#fd79a8;"></i><b>Müzik</b><small style="color:var(--success);">10 Seviye</small></div>
-                <div class="lesson-card" onclick="openLevelMap('animals')"><i class="fa-solid fa-paw" style="color:#e17055;"></i><b>Hayvanlar</b><small style="color:var(--success);">10 Seviye</small></div>
+            <p style="margin:25px 0 15px 0; font-weight:700; font-size:1.1rem;">Konu Seç:</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                <div class="card" style="text-align:center; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px;" onclick="openLevelMap('math')">
+                    <i class="fa-solid fa-calculator" style="font-size:2.5rem; color:var(--accent-dark);"></i><b>Matematik</b>
+                </div>
+                <div class="card" style="text-align:center; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px;" onclick="openLevelMap('colors')">
+                    <i class="fa-solid fa-palette" style="font-size:2.5rem; color:var(--secondary-dark);"></i><b>Renkler</b>
+                </div>
+                <div class="card" style="text-align:center; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px;" onclick="openLevelMap('shapes')">
+                    <i class="fa-solid fa-shapes" style="font-size:2.5rem; color:var(--primary-dark);"></i><b>Şekiller</b>
+                </div>
+                <div class="card" style="text-align:center; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px;" onclick="openLevelMap('space')">
+                    <i class="fa-solid fa-rocket" style="font-size:2.5rem; color:#0984e3;"></i><b>Uzay</b>
+                </div>
+                <div class="card" style="text-align:center; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px;" onclick="openLevelMap('music')">
+                    <i class="fa-solid fa-music" style="font-size:2.5rem; color:#fd79a8;"></i><b>Müzik</b>
+                </div>
+                <div class="card" style="text-align:center; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px;" onclick="openLevelMap('animals')">
+                    <i class="fa-solid fa-paw" style="font-size:2.5rem; color:#e17055;"></i><b>Hayvanlar</b>
+                </div>
             </div>
         </div>
         <div class="bottom-nav">
@@ -279,13 +570,13 @@
         <div class="header"><div class="back-btn" onclick="nav('s-level-map')"><i class="fa-solid fa-xmark" style="color:var(--danger);"></i></div><h3 id="quiz-level-ind">Level 1</h3><div style="width:40px;"></div></div>
         <div class="scroll-content" style="display:flex; flex-direction:column; justify-content:center; padding-top:40px;">
             <div class="quiz-timer"><div class="quiz-timer-fill" id="timer-bar"></div></div>
-            <div style="text-align:center; margin-bottom:50px;"><h1 style="font-size:3rem; color:var(--text-main); margin-bottom:15px; font-weight:800;" id="quiz-question">?</h1><p style="font-size:1.1rem;">Doğru cevabı seç!</p></div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;" id="quiz-options"></div>
+            <div style="text-align:center; margin-bottom:40px;"><h1 style="font-size:3.5rem; color:var(--text-main); margin-bottom:15px; font-weight:800;" id="quiz-question">?</h1><p style="font-size:1.2rem;">Doğru cevabı seç!</p></div>
+            <div class="options-grid" id="quiz-options"></div>
             
             <!-- BUDDY GÖRÜNÜMÜ -->
             <div class="buddy-corner">
-                <div class="buddy-bubble" id="quiz-buddy-msg">Başarılar!</div>
-                <img id="quiz-buddy-img" src="" class="buddy-avatar-small" onerror="this.style.display='none'">
+                <div class="buddy-bubble" id="buddy-msg">Başarılar!</div>
+                <img id="quiz-buddy" src="avatar1.png" class="buddy-avatar-small" onerror="this.style.display='none'">
             </div>
         </div>
     </div>
@@ -343,28 +634,18 @@
         <div style="padding:20px 0;"><button class="btn-primary" onclick="claimGuideReward()">Ödülünü Al (+50 XP) <i class="fa-solid fa-gift"></i></button></div>
     </div>
 
-    <!-- EKRAN 11: PROFİL -->
+    <!-- EKRAN 11: REWARDS & PROFIL -->
     <div id="s-rewards" class="screen">
         <div class="scroll-content" style="padding:0;">
-            <div style="background:white; padding:40px 20px; border-radius:0 0 40px 40px; text-align:center; box-shadow:var(--shadow-card); margin-bottom:25px;">
-                <img id="profile-avatar-display" src="" style="width:100px; height:100px; border-radius:50%; border:5px solid var(--primary); object-fit:cover;">
-                <h2 style="margin-top:15px;" id="profile-name-display">İsimsiz</h2>
-                <p>Usta Yaratıcı</p>
-                <div style="display:flex; justify-content:center; gap:20px; margin-top:20px;">
-                    <div style="background:#f9f9f9; padding:10px 20px; border-radius:15px;">
-                        <b style="font-size:1.2rem;" id="profile-lvl">1</b><br><small>Seviye</small>
+            <div class="profile-card">
+                <div class="profile-bg-pattern"></div>
+                <div style="position:relative; z-index:2;">
+                    <img id="profile-avatar-main" src="avatar1.png" class="profile-avatar-lg" onerror="this.src='https://placehold.co/100x100?text=A';">
+                    <h2 id="profile-name-main">İsimsiz</h2><p style="margin:5px 0; opacity:0.8;">Usta Yaratıcı</p>
+                    <div class="stat-row">
+                        <div class="stat-box"><span class="stat-val" id="profile-lvl">1</span><span class="stat-lbl">Seviye</span></div>
+                        <div class="stat-box"><span class="stat-val" id="profile-xp">0</span><span class="stat-lbl">Toplam XP</span></div>
                     </div>
-                    <div style="background:#f9f9f9; padding:10px 20px; border-radius:15px;">
-                        <b style="font-size:1.2rem;" id="profile-xp">0</b><br><small>XP</small>
-                    </div>
-                </div>
-            </div>
-            <div style="padding:0 25px;">
-                <h3 style="margin-bottom:15px;">Rozetlerin</h3>
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
-                    <div class="card" style="text-align:center; padding:10px;"><div style="font-size:2rem;">🥇</div><small>İlk Adım</small></div>
-                    <div class="card" style="text-align:center; padding:10px; opacity:0.5;"><div style="font-size:2rem;">🛠️</div><small>Usta</small></div>
-                    <div class="card" style="text-align:center; padding:10px; opacity:0.5;"><div style="font-size:2rem;">🎨</div><small>Sanatçı</small></div>
                 </div>
             </div>
         </div>
@@ -378,170 +659,190 @@
 
 </div>
 
-<!-- KONFETİ -->
+<!-- KONFETİ EFEKTİ -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-    /* ==================== JAVASCRIPT MANTIĞI ==================== */
-    
-    // --- VERİ YÖNETİMİ ---
-    let user = {
-        name: "",
+    // --- TEK VERİ KAYNAĞI: appData ---
+    let appData = {
+        name: "Misafir",
         avatar: "avatar1.png",
-        buddy: null, // Hamur arkadaşı
+        buddy: null, // Kullanıcının yüklediği hamur arkadaşı
         xp: 0,
         level: 1,
+        // Ders İlerleme Verileri (Her ders ayrı)
         progress: {
             math: 1, colors: 1, shapes: 1, music: 1, space: 1, animals: 1
         }
     };
 
-    // --- BAŞLATMA & VERİ YÜKLEME ---
+    // --- BAŞLATMA ---
     window.onload = function() {
         try {
-            const saved = localStorage.getItem('squish_user');
+            const saved = localStorage.getItem('squish_data_v2');
             if(saved) {
-                user = JSON.parse(saved);
+                appData = JSON.parse(saved);
+                updateUI();
                 nav('s-home');
             } else {
                 nav('s-splash');
-                setTimeout(() => nav('s-profile-create'), 2500);
+                setTimeout(() => {
+                    // Eğer veri yoksa, direkt profil oluşturmaya gönder (ONBOARDING'i atla)
+                    nav('s-profile-create');
+                }, 2000);
             }
-            updateUI();
-            
-            // Eğer splash'te takılırsa butonu göster
+
+            // Güvenlik: Eğer splash ekranında takılırsa butonu aç
             setTimeout(() => {
-                if(document.getElementById('s-splash').classList.contains('active')) {
-                    document.getElementById('force-start-btn').style.display='block';
+                if(document.getElementById('s-splash').style.display !== 'none') {
+                    document.getElementById('force-start-btn').style.display = 'block';
                 }
             }, 3000);
         } catch(e) {
-            console.error("Başlatma hatası", e);
-            document.getElementById('force-start-btn').style.display='block';
+            console.error("Başlatma Hatası:", e);
+            localStorage.removeItem('squish_data_v2'); 
+            nav('s-profile-create'); 
         }
     };
 
-    function save() {
-        localStorage.setItem('squish_user', JSON.stringify(user));
+    function saveData() {
+        localStorage.setItem('squish_data_v2', JSON.stringify(appData));
         updateUI();
     }
 
-    // --- UI GÜNCELLEME ---
     function updateUI() {
-        // İsimler
-        const nameEls = ['home-name-display', 'profile-name-display'];
-        nameEls.forEach(id => { 
-            const el = document.getElementById(id);
-            if(el) el.innerText = user.name; 
-        });
+        document.getElementById('home-name').innerText = appData.name;
+        document.getElementById('home-name-display').innerText = appData.name;
+        document.getElementById('profile-name-main').innerText = appData.name;
         
-        // Avatarlar
-        const avEls = ['header-avatar', 'profile-avatar-display'];
-        avEls.forEach(id => { 
-            const el = document.getElementById(id);
-            if(el) el.src = user.avatar; 
-        });
+        document.getElementById('home-avatar').src = appData.avatar;
+        document.getElementById('profile-avatar-main').src = appData.avatar;
         
-        // Buddy (Quizdeki)
-        const quizBuddy = document.getElementById('quiz-buddy-img');
-        if(quizBuddy) {
-            if(user.buddy) {
-                quizBuddy.src = user.buddy;
-                quizBuddy.style.display = 'block';
-            } else {
-                // Eğer buddy yoksa avatarı göster veya gizle (istediğin gibi ayarla)
-                // quizBuddy.src = "https://placehold.co/100x100?text=No+Buddy";
-                quizBuddy.style.display = 'none'; // Şimdilik gizle
-            }
-        }
-        
-        // Buddy Preview (Ders menüsündeki)
-        const lessonBuddy = document.getElementById('lesson-buddy-preview');
-        if(lessonBuddy && user.buddy) lessonBuddy.src = user.buddy;
+        document.getElementById('lvl-disp').innerText = appData.level;
+        document.getElementById('xp-disp').innerText = appData.xp;
+        document.getElementById('profile-lvl').innerText = appData.level;
+        document.getElementById('profile-xp').innerText = appData.xp;
 
-        // Stats
-        if(document.getElementById('home-lvl')) document.getElementById('home-lvl').innerText = user.level;
-        if(document.getElementById('home-xp')) document.getElementById('home-xp').innerText = user.xp;
-        if(document.getElementById('profile-lvl')) document.getElementById('profile-lvl').innerText = user.level;
-        if(document.getElementById('profile-xp')) document.getElementById('profile-xp').innerText = user.xp;
-        if(document.getElementById('dash-lvl')) document.getElementById('dash-lvl').innerText = user.level;
-        
-        if(document.getElementById('home-xp-bar')) document.getElementById('home-xp-bar').style.width = (user.xp % 100) + "%";
-        if(document.getElementById('dash-xp-bar')) document.getElementById('dash-xp-bar').style.width = (user.xp % 100) + "%";
+        // Buddy Güncelleme
+        const buddyImg = document.getElementById('quiz-buddy');
+        const previewImg = document.getElementById('lesson-buddy-preview');
+        if(appData.buddy) {
+            if(buddyImg) { buddyImg.src = appData.buddy; buddyImg.style.display = 'block'; }
+            if(previewImg) previewImg.src = appData.buddy;
+        } else {
+            if(buddyImg) buddyImg.style.display = 'none'; // Yüklemediyse gösterme
+        }
     }
 
-    // --- NAVİGASYON ---
     function nav(id) {
         document.querySelectorAll('.screen').forEach(s => {
             s.classList.remove('active');
             s.style.display = 'none';
         });
-        const target = document.getElementById(id);
-        if(target) {
-            target.style.display = 'flex';
-            setTimeout(() => target.classList.add('active'), 10);
+        const t = document.getElementById(id);
+        if(t) {
+            t.style.display = 'flex';
+            setTimeout(() => t.classList.add('active'), 10);
         }
         
-        // Bottom Nav Active State
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        if(id === 's-home') updateNav(0);
-        if(id === 's-lessons') updateNav(1);
-        if(id === 's-challenges') updateNav(2);
-        if(id === 's-profile-view' || id === 's-rewards') updateNav(3);
-    }
-    function updateNav(i) {
-        const items = document.querySelectorAll('.nav-item');
-        if(items[i]) items[i].classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        if(id === 's-home') document.querySelectorAll('.nav-item')[0].classList.add('active');
+        if(id === 's-lessons') document.querySelectorAll('.nav-item')[1].classList.add('active');
+        if(id === 's-challenges') document.querySelectorAll('.nav-item')[2].classList.add('active');
+        if(id === 's-rewards') document.querySelectorAll('.nav-item')[3].classList.add('active');
     }
 
     // --- PROFİL ---
-    function selectAvatar(el, src) {
-        document.querySelectorAll('.avatar-option').forEach(a => a.classList.remove('selected'));
+    function pickAvatar(el, src) {
+        document.querySelectorAll('.avatar-opt').forEach(a => a.classList.remove('selected'));
         el.classList.add('selected');
-        user.avatar = src;
-    }
-    
-    // BUTON DÜZELTMESİ BURADA
-    function saveProfileAndStart() {
-        try {
-            const nameInput = document.getElementById('inp-name');
-            if(nameInput && nameInput.value.trim() !== "") {
-                user.name = nameInput.value;
-            }
-            save();
-            showToast("Hoş geldin!", "success");
-            nav('s-home');
-        } catch(e) {
-            console.error("Save error", e);
-            // Hata olsa bile geç
-            nav('s-home');
-        }
+        appData.avatar = src;
     }
 
-    function resetProgress() {
-        if(confirm("Sıfırlamak istiyor musun?")) {
-            localStorage.clear();
-            location.reload();
-        }
+    function completeSetup() {
+        const name = document.getElementById('inp-name').value;
+        if(!name) return alert("Lütfen ismini yaz!");
+        appData.name = name;
+        saveData();
+        nav('s-home');
     }
 
-    // --- BUDDY ---
-    function setupBuddy() {
-        document.getElementById('buddy-upload').click();
+    function resetApp() {
+        localStorage.removeItem('squish_data_v2');
+        location.reload();
     }
-    function handleBuddyUpload(input) {
+
+    // --- BUDDY SİSTEMİ ---
+    function handleBuddy(input) {
         if(input.files && input.files[0]) {
             const r = new FileReader();
-            r.onload = function(e) {
-                user.buddy = e.target.result;
-                save();
-                showToast("Hamur arkadaşın kaydedildi!", "success");
+            r.onload = e => {
+                appData.buddy = e.target.result;
+                saveData();
+                alert("Arkadaşın eklendi! Derslerde seni bekliyor.");
             }
             r.readAsDataURL(input.files[0]);
         }
     }
 
-    // --- LEVEL SİSTEMİ & SORU MOTORU ---
+    // --- SORU MOTORU (4 ŞIKLI & LEVEL DUYARLI) ---
+    function generateQuestion(type, lvl) {
+        let q, ans, correct;
+        
+        // MATEMATİK: Seviyeye göre zorluk
+        if(type === 'math') {
+            if(lvl <= 2) { // 1-5 Toplama
+                const n1 = Math.floor(Math.random()*3)+1;
+                const n2 = Math.floor(Math.random()*2)+1;
+                q = `${n1} + ${n2} = ?`; correct = n1+n2;
+            } else if (lvl <= 5) { // 1-10 Toplama
+                const n1 = Math.floor(Math.random()*5)+1;
+                const n2 = Math.floor(Math.random()*5)+1;
+                q = `${n1} + ${n2} = ?`; correct = n1+n2;
+            } else { // Çıkarma
+                const n1 = Math.floor(Math.random()*5)+5;
+                const n2 = Math.floor(Math.random()*4)+1;
+                q = `${n1} - ${n2} = ?`; correct = n1-n2;
+            }
+            ans = [correct, correct+1, correct-1, correct+2];
+        } 
+        
+        // RENKLER: Asla tekrar etmeyen şıklar
+        else if(type === 'colors') {
+            const items = [{n:'Kırmızı',v:'🟥'},{n:'Mavi',v:'🟦'},{n:'Sarı',v:'🟨'},{n:'Yeşil',v:'🟩'},{n:'Mor',v:'🟪'},{n:'Turuncu',v:'🟧'}];
+            const target = items[Math.floor(Math.random()*items.length)];
+            q = `Hangisi ${target.n}?`;
+            correct = target.v;
+            ans = [correct];
+            while(ans.length < 4) {
+                const random = items[Math.floor(Math.random()*items.length)].v;
+                if(!ans.includes(random)) ans.push(random);
+            }
+        }
+
+        // UZAY
+        else if(type === 'space') {
+            const items = [{n:'Roket',v:'🚀'},{n:'Dünya',v:'🌍'},{n:'Ay',v:'🌙'},{n:'Yıldız',v:'⭐'},{n:'Güneş',v:'☀️'},{n:'Uzaylı',v:'👽'}];
+            const target = items[Math.floor(Math.random()*items.length)];
+            q = `Hangisi ${target.n}?`;
+            correct = target.v;
+            ans = [correct];
+            while(ans.length < 4) {
+                const random = items[Math.floor(Math.random()*items.length)].v;
+                if(!ans.includes(random)) ans.push(random);
+            }
+        }
+        
+        // Diğerleri (Fallback)
+        else {
+            q = "Hazırlanıyor..."; ans = ["A","B","C","D"]; correct="A";
+        }
+
+        // Şıkları Karıştır
+        ans.sort(() => Math.random() - 0.5);
+        return { q, ans, correct };
+    }
+
     let currentSubject = '';
     function openLevelMap(subject) {
         currentSubject = subject;
@@ -549,7 +850,7 @@
         mapDiv.innerHTML = "";
         document.getElementById('map-title').innerText = subject.toUpperCase();
         
-        const unlocked = user.progress[subject] || 1;
+        const unlocked = appData.progress[subject] || 1;
 
         for(let i=1; i<=10; i++) {
             let stateClass = "level-dot";
@@ -563,198 +864,118 @@
             if(i <= unlocked) {
                 div.onclick = () => startQuiz(i);
             } else {
-                div.onclick = () => showToast("Önceki seviyeyi bitirmelisin!", "error");
+                div.onclick = () => alert("Önceki seviyeyi bitirmelisin!");
             }
             mapDiv.appendChild(div);
         }
         nav('s-level-map');
     }
 
-    // SORU ÜRETİCİ
-    function generateQuestion(type, lvl) {
-        let q, ans, correct;
-        
-        // MATEMATİK
-        if(type === 'math') {
-            let max = lvl * 5; 
-            let n1 = Math.floor(Math.random() * max) + 1;
-            let n2 = Math.floor(Math.random() * max) + 1;
-            
-            if(lvl > 4) { // Çıkarma
-                if(n1 < n2) { let temp = n1; n1 = n2; n2 = temp; } // Negatif olmasın
-                q = `${n1} - ${n2} = ?`;
-                correct = n1 - n2;
-            } else { // Toplama
-                q = `${n1} + ${n2} = ?`;
-                correct = n1 + n2;
-            }
-            ans = [correct, correct+1, correct-1, correct+2];
-        } 
-        // RENKLER
-        else if (type === 'colors') {
-            const cols = [{n:"Kırmızı", v:"🟥"}, {n:"Mavi", v:"🟦"}, {n:"Sarı", v:"🟨"}, {n:"Yeşil", v:"🟩"}, {n:"Mor", v:"🟪"}];
-            let t = cols[Math.floor(Math.random() * cols.length)];
-            q = `Hangisi ${t.n}?`;
-            correct = t.v;
-            ans = [t.v];
-            while(ans.length < 4) {
-                let r = cols[Math.floor(Math.random() * cols.length)].v;
-                if(!ans.includes(r)) ans.push(r);
-            }
-        }
-        // MÜZİK
-        else if (type === 'music') {
-            const items = ["Gitar 🎸", "Davul 🥁", "Keman 🎻", "Piyano 🎹", "Trompet 🎺"];
-            let t = items[Math.floor(Math.random() * items.length)];
-            q = `${t.split(' ')[0]} hangisi?`;
-            correct = t.split(' ')[1];
-            ans = [correct];
-            while(ans.length < 4) {
-                let r = items[Math.floor(Math.random() * items.length)].split(' ')[1];
-                if(!ans.includes(r)) ans.push(r);
-            }
-        }
-        // ... Diğer dersler için fallback
-        else {
-            q = "Deneme Soru"; correct = "A"; ans = ["A","B","C","D"];
-        }
-        
-        // Şıkları karıştır
-        ans.sort(() => Math.random() - 0.5);
-        return { q, ans, correct };
-    }
-
     function startQuiz(lvl) {
         const qData = generateQuestion(currentSubject, lvl);
-        document.getElementById('q-text').innerText = qData.q;
-        document.getElementById('quiz-title').innerText = `Level ${lvl}`;
+        document.getElementById('quiz-question').innerText = qData.q;
+        document.getElementById('quiz-level-ind').innerText = `Level ${lvl}`;
         
-        const grid = document.getElementById('q-options');
+        const grid = document.getElementById('quiz-options');
         grid.innerHTML = "";
         
         qData.ans.forEach(opt => {
-            let btn = document.createElement('div');
-            btn.className = 'quiz-option option-btn';
+            const btn = document.createElement('div');
+            btn.className = 'option-btn';
             btn.innerText = opt;
             btn.onclick = () => {
                 if(opt == qData.correct) {
                     btn.style.background = "var(--success)";
                     btn.style.color = "white";
-                    document.getElementById('quiz-buddy-msg').innerText = "Harika!";
+                    document.getElementById('buddy-msg').innerText = "Harikasın!";
                     setTimeout(() => {
-                        if(lvl === user.progress[currentSubject]) {
-                            user.progress[currentSubject]++;
-                            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                        if(lvl === appData.progress[currentSubject]) {
+                            appData.progress[currentSubject]++;
                         }
-                        user.xp += 10;
-                        if(user.xp >= 100) { user.level++; user.xp = 0; showToast("Seviye Atladın!", "levelup"); }
-                        save();
-                        openLevelMap(currentSubject); 
+                        appData.xp += 10;
+                        if(appData.xp >= 100) { appData.level++; appData.xp=0; alert("Seviye Atladın!"); }
+                        saveData();
+                        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                        nav('s-level-map'); // Haritaya geri dön
+                        openLevelMap(currentSubject);
                     }, 1000);
                 } else {
                     btn.style.background = "var(--danger)";
                     btn.style.color = "white";
-                    document.getElementById('quiz-buddy-msg').innerText = "Tekrar dene!";
+                    document.getElementById('buddy-msg').innerText = "Tekrar dene!";
                 }
-            };
+            }
             grid.appendChild(btn);
         });
         
-        document.getElementById('quiz-buddy-msg').innerText = "Başarılar!";
+        // Buddy Mesajı
+        document.getElementById('buddy-msg').innerText = `Hadi yapalım ${appData.name}!`;
         nav('s-quiz');
     }
 
     // --- REHBERLER ---
-    let guidePhotos = [];
-    let guideStepIndex = 0;
-    let activeGuideKey = null;
-
-    const guidesLocal = {
-        flower: { title:"Çiçek", steps: [{t:"Adım 1", d:"Yap", img:"cicek_adim1.jpg"}, {t:"Adım 2", d:"Yap", img:"cicek_adim2.jpg"}, {t:"Adım 3", d:"Yap", img:"cicek_adim3.jpg"}, {t:"Adım 4", d:"Yap", img:"cicek_adim4.jpg"}, {t:"Adım 5", d:"Bitir", img:"cicek_adim5.jpg"}] },
-        castle: { title:"Kale", steps: [{t:"Adım 1", d:"Yap", img:"kale_adim1.jpg"}, {t:"Adım 2", d:"Bitir", img:"kale_adim2.jpg"}] },
-        animal: { title:"Hayvan", steps: [{t:"Adım 1", d:"Yap", img:"hayvan_adim1.jpg"}] }
+    const guides = {
+        flower: { steps: [
+            {t:"Adım 1", d:"Yap", i:"cicek_adim1.jpg"}, {t:"Adım 2", d:"Yap", i:"cicek_adim2.jpg"},
+            {t:"Adım 3", d:"Yap", i:"cicek_adim3.jpg"}, {t:"Adım 4", d:"Yap", i:"cicek_adim4.jpg"},
+            {t:"Adım 5", d:"Bitir", i:"cicek_adim5.jpg"}
+        ]},
+        castle: { steps: [{t:"Taban", d:"Yap", i:"kale_adim1.jpg"}, {t:"Kule", d:"Yap", i:"kale_adim2.jpg"}] },
+        animal: { steps: [{t:"Gövde", d:"Yap", i:"hayvan_adim1.jpg"}] }
     };
+    
+    let activeGuide = null;
+    let gIdx = 0;
+    let gPhoto = null;
 
     function startGuide(key) {
-        activeGuideKey = key;
-        guideStepIndex = 0;
-        guidePhotos = new Array(guidesLocal[key].steps.length).fill(null);
+        activeGuide = guides[key];
+        gIdx = 0;
         renderStep();
         nav('s-guide-steps');
     }
 
     function renderStep() {
-        const d = guidesLocal[activeGuideKey].steps[guideStepIndex];
-        document.getElementById('guide-step-header').innerText = `Adım ${guideStepIndex + 1}`;
-        document.getElementById('guide-step-title').innerText = d.t;
-        document.getElementById('guide-step-desc').innerText = d.d;
-        document.getElementById('guide-example-img').src = d.img;
+        const s = activeGuide.steps[gIdx];
+        document.getElementById('guide-step-header').innerText = `Adım ${gIdx+1}`;
+        document.getElementById('guide-step-title').innerText = s.t;
+        document.getElementById('guide-step-desc').innerText = s.d;
+        document.getElementById('guide-example-img').src = s.i;
         
-        const userBox = document.getElementById('guide-user-box');
-        const userImg = document.getElementById('guide-user-img');
-        if(guidePhotos[guideStepIndex]) {
-            userImg.src = guidePhotos[guideStepIndex];
-            userBox.style.display = 'flex';
-        } else {
-            userBox.style.display = 'none';
-        }
-
-        const btn = document.getElementById('btn-guide-next');
-        const isLast = guideStepIndex === guidesLocal[activeGuideKey].steps.length - 1;
-        btn.innerHTML = isLast ? 'Tamamla <i class="fa-solid fa-flag-checkered"></i>' : 'İleri <i class="fa-solid fa-arrow-right"></i>';
+        gPhoto = null;
+        document.getElementById('guide-user-box').style.display = 'none';
+        document.getElementById('btn-guide-next').innerText = (gIdx === activeGuide.steps.length-1) ? "Bitir" : "İleri";
     }
 
-    function handlePhotoUpload(input) {
+    function handleGuideUpload(input) {
         if(input.files && input.files[0]) {
             const r = new FileReader();
             r.onload = e => {
-                guidePhotos[guideStepIndex] = e.target.result;
-                renderStep();
-                showToast("Yüklendi!", "success");
-            };
+                gPhoto = e.target.result;
+                document.getElementById('guide-user-img').src = gPhoto;
+                document.getElementById('guide-user-box').style.display = 'flex';
+            }
             r.readAsDataURL(input.files[0]);
         }
     }
 
     function nextStep() {
-        if(!guidePhotos[guideStepIndex]) return showToast("Fotoğraf yükle!", "error");
-        if(guideStepIndex < guidesLocal[activeGuideKey].steps.length - 1) {
-            guideStepIndex++;
+        if(!gPhoto) return alert("Lütfen fotoğraf yükle!");
+        if(gIdx < activeGuide.steps.length - 1) {
+            gIdx++;
             renderStep();
         } else {
-            // Bitir
-            const grid = document.getElementById('summary-grid');
-            grid.innerHTML = "";
-            guidePhotos.forEach((p, i) => {
-                grid.innerHTML += `<div class="card" style="padding:10px;"><img src="${p}" style="width:100%; border-radius:10px;"><b>Adım ${i+1}</b></div>`;
-            });
-            nav('s-guide-success');
+            alert("Tebrikler! Aktivite Tamamlandı.");
+            appData.xp += 50;
+            saveData();
+            nav('s-challenges');
         }
     }
     function prevStep() {
-        if(guideStepIndex > 0) { guideStepIndex--; renderStep(); }
-        else nav('s-challenges');
-    }
-    function claimGuideReward() {
-        user.xp += 50;
-        save();
-        launchConfetti();
-        nav('s-rewards');
-    }
-
-    // --- UTIL ---
-    function showToast(msg, type='neutral') {
-        const box = document.getElementById('toast-container');
-        const t = document.createElement('div');
-        t.className = `toast ${type}`;
-        t.innerHTML = msg;
-        box.appendChild(t);
-        setTimeout(()=>t.classList.add('show'), 10);
-        setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),300); }, 3000);
+        if(gIdx > 0) { gIdx--; renderStep(); } else nav('s-challenges');
     }
     
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    function launchConfetti() { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }
 
 </script>
 
