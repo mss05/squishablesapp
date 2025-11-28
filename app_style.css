@@ -1,69 +1,158 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap');
-
 :root {
-    --purple: #DCD6F7; --dark-purple: #424874;
-    --peach: #FFD1BA; --dark-peach: #d68c6d;
-    --mint: #C4DFD9; --bg: #F4F7F6;
+    --mint: #C4DFD9;
+    --peach: #FFD1BA;
+    --lavender: #DCD6F7;
+    --text-dark: #4A4A4A;
+    --glass-bg: rgba(255, 255, 255, 0.45);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { margin: 0; padding: 0; font-family: 'Nunito', sans-serif; background-color: #eef2f5; display: flex; justify-content: center; min-height: 100vh; }
-
-#mobile-screen {
-    width: 100%; max-width: 414px; background-color: white; height: 100vh;
-    position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Comic Sans MS', 'Varela Round', sans-serif; /* Çocuk dostu fontlar */
 }
 
-/* SPLASH SCREEN */
-#splash-screen {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: white; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    animation: fadeOut 0.5s ease 2s forwards; /* 2 saniye bekle sonra kaybol */
+body {
+    background: linear-gradient(135deg, var(--mint), var(--lavender), var(--peach));
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    color: var(--text-dark);
 }
-.splash-logo { width: 100px; animation: bounce 1s infinite; }
 
-/* FULL SCREEN PAGES */
-.full-screen-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 50; display: flex; flex-direction: column; justify-content: center; }
+/* --- Container & Layout --- */
+.app-container {
+    width: 100%;
+    max-width: 480px; /* Mobil öncelikli sınırlama */
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
 
-/* HEADER & CONTENT */
-.app-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: white; border-bottom: 1px solid #f0f0f0; }
-.app-logo { height: 30px; }
-.content-area { flex: 1; padding: 20px; overflow-y: auto; padding-bottom: 90px; }
+.hidden { display: none !important; }
+.screen { animation: fadeIn 0.5s ease-out; }
 
-/* COMPONENTS */
-.card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
-.card:active { transform: scale(0.98); }
-.btn-big { width: 100%; padding: 15px; border-radius: 25px; border: none; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.2s; }
-.btn-big:active { transform: scale(0.95); }
+/* --- Glassmorphism Components --- */
+.glass-header, .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 30px;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 20px;
+}
 
-/* QUICK ACTIONS */
-.quick-btn { flex: 1; background: #f9f9f9; padding: 15px; border-radius: 15px; text-align: center; font-size: 0.8rem; color: #666; cursor: pointer; }
-.quick-btn i { font-size: 1.5rem; color: var(--dark-purple); display: block; margin-bottom: 5px; }
+.glass-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
 
-/* STORY CIRCLES */
-.story-circle { width: 60px; height: 60px; border-radius: 50%; overflow: hidden; border: 2px solid var(--purple); padding: 2px; flex-shrink: 0; }
-.story-circle img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.app-logo { height: 40px; }
 
-/* GUIDE DETAIL */
-.step-bar { flex: 1; height: 5px; background: #eee; border-radius: 5px; }
-.step-bar.active { background: var(--dark-peach); }
-.btn { padding: 10px 20px; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; }
+/* --- Buttons & Inputs --- */
+.btn-primary, .btn-secondary, .upload-btn, .btn-small {
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: transform 0.1s;
+}
 
-/* MATH GAME */
-.option-btn { background: #f9f9f9; border: 2px solid #eee; padding: 20px; border-radius: 15px; font-size: 1.5rem; font-weight: bold; color: var(--dark-purple); cursor: pointer; }
+.btn-primary { background: white; color: var(--text-dark); border: 2px solid var(--peach); }
+.btn-secondary { background: rgba(255,255,255,0.6); margin-bottom: 10px;}
+.btn-back { background: transparent; border: none; font-size: 1.5rem; margin-bottom: 10px; cursor: pointer; color: white;}
 
-/* REWARDS */
-.badge-box { background: white; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,0.05); font-weight: bold; font-size: 0.8rem; }
+.input-group input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 20px;
+    border: 2px solid white;
+    background: rgba(255,255,255,0.6);
+    margin: 15px 0;
+    font-size: 1.1rem;
+    text-align: center;
+}
 
-/* NAV */
-.bottom-nav { position: absolute; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #f0f0f0; z-index: 20; }
-.nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #ccc; font-size: 0.75rem; cursor: pointer; width: 20%; }
-.nav-item.active { color: var(--dark-purple); font-weight: bold; }
-.nav-center { background: var(--dark-purple); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -25px; box-shadow: 0 5px 15px rgba(66, 72, 116, 0.4); }
+/* --- Avatar Selection --- */
+.avatars { display: flex; justify-content: space-around; margin: 20px 0; }
+.avatar-option {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.avatar-option.selected {
+    border-color: #FF6B6B;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
+}
 
-/* ANIMATIONS */
-@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-@keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
-.tab-content { display: none; animation: fadeIn 0.3s; }
-.tab-content.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* --- Animations --- */
+@keyframes squish {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.15, 0.85); } /* Basık */
+    40% { transform: scale(0.95, 1.05); } /* Uzun */
+    50% { transform: scale(1.05, 0.95); } /* Hafif basık */
+    65% { transform: scale(0.98, 1.02); }
+    75% { transform: scale(1.02, 0.98); }
+    100% { transform: scale(1); }
+}
+
+.squish-active {
+    animation: squish 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- Dashboard & Grid --- */
+.category-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.cat-card {
+    background: rgba(255,255,255,0.5);
+    padding: 20px;
+    border-radius: 25px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid white;
+}
+.cat-card.locked { opacity: 0.6; cursor: not-allowed; filter: grayscale(1); }
+
+/* --- Buddy System --- */
+.buddy-preview img, #quiz-buddy-img {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+}
+.mini-card {
+    display: flex; align-items: center; gap: 10px; padding: 10px;
+    background: linear-gradient(90deg, var(--mint), transparent);
+}
