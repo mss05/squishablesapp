@@ -1,24 +1,14 @@
 <!-- 
     ============================================================================
-    PROJE: SQUISHABLES LEARNING APP (ULTIMATE EDITION)
-    DURUM: FINAL RELEASE CANDIDATE
+    PROJE: SQUISHABLES LEARNING APP (ULTIMATE EDITION - FAIL SAFE)
+    DURUM: FINAL STABLE
     
-    DOSYA GEREKSİNİMLERİ (Aynı klasörde olmalı):
-    -------------------------------------------------------
-    [Ana Görseller]
-    1. Product1.jpg (Kutu görseli)
-    2. logo.png (App ikonu)
-    
-    [Avatarlar]
+    DOSYA GEREKSİNİMLERİ (index.html ile aynı yerde olmalı):
+    1. Product1.jpg
+    2. logo.png (Büyük/küçük harf duyarlıdır, tam adı bu olmalı)
     3. avatar1.png, avatar2.png, avatar3.png
-    
-    [Rehber - Çiçek]
-    4. cicek_adim1.jpg, cicek_adim2.jpg, cicek_adim3.jpg, cicek_adim4.jpg, cicek_adim5.jpg
-    
-    [Rehber - Kale]
+    4. cicek_adim1.jpg ... cicek_adim5.jpg
     5. kale_adim1.jpg, kale_adim2.jpg
-    
-    [Rehber - Hayvan]
     6. hayvan_adim1.jpg
     ============================================================================
 -->
@@ -30,31 +20,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Squishables - Aile Bağları ve Eğitim Kiti</title>
     
-    <!-- PWA Manifest & Meta -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#C4DFD9">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="logo.png">
 
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* =================================================================
-           BÖLÜM 1: CSS DEĞİŞKENLERİ VE RESET
-           =================================================================
-        */
+        /* --- CSS AYARLARI --- */
         :root {
-            /* Renk Paleti */
-            --primary: #C4DFD9;      /* Mint */
+            --primary: #C4DFD9;
             --primary-dark: #2e5c4d;
-            --secondary: #FFD1BA;    /* Peach */
+            --secondary: #FFD1BA;
             --secondary-dark: #d68c6d;
-            --accent: #DCD6F7;       /* Purple */
+            --accent: #DCD6F7;
             --accent-dark: #424874;
             --bg-body: #f4f7f6;
             --white: #ffffff;
@@ -65,366 +47,123 @@
             --danger: #ff7675;
             --gold: #FFD700;
             
-            /* Gölgeler */
             --shadow-sm: 0 2px 5px rgba(0,0,0,0.05);
             --shadow-md: 0 5px 15px rgba(0,0,0,0.1);
             --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
-            --shadow-float: 0 15px 35px rgba(0,0,0,0.2);
-
-            /* Geçişler */
+            
             --trans-fast: 0.2s ease;
             --trans-med: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
-        
-        body { 
-            margin: 0; padding: 0; 
-            font-family: 'Nunito', sans-serif; 
-            background-color: var(--bg-body); 
-            display: flex; justify-content: center; align-items: center; 
-            height: 100vh; overflow: hidden;
-            color: var(--text-main);
-        }
-
-        /* Scrollbar Gizleme */
+        body { margin: 0; padding: 0; font-family: 'Nunito', sans-serif; background-color: var(--bg-body); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; color: var(--text-main); }
         ::-webkit-scrollbar { width: 0px; background: transparent; }
 
-        /* =================================================================
-           BÖLÜM 2: APP İSKELETİ (ÇERÇEVE)
-           =================================================================
-        */
         #app-frame {
             width: 100%; max-width: 414px; height: 100%; max-height: 896px;
-            background-color: var(--white);
-            position: relative; overflow: hidden;
+            background-color: var(--white); position: relative; overflow: hidden;
             display: flex; flex-direction: column;
         }
-
-        /* Masaüstünde telefon çerçevesi gibi görünmesi için */
         @media (min-width: 450px) {
-            #app-frame {
-                height: 85vh; border-radius: 40px;
-                border: 12px solid #2d3436;
-                box-shadow: var(--shadow-float);
-            }
-            .notch {
-                position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-                width: 150px; height: 30px; background: #2d3436;
-                border-radius: 0 0 20px 20px; z-index: 9999;
-            }
+            #app-frame { height: 85vh; border-radius: 40px; border: 12px solid #2d3436; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+            .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 30px; background: #2d3436; border-radius: 0 0 20px 20px; z-index: 9999; }
         }
 
-        /* =================================================================
-           BÖLÜM 3: ORTAK UI BİLEŞENLERİ
-           =================================================================
-        */
+        /* ORTAK BİLEŞENLER */
         h1, h2, h3, h4 { font-family: 'Fredoka', sans-serif; margin: 0; padding: 0; letter-spacing: 0.5px; }
         p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin: 10px 0; }
 
-        /* Butonlar */
-        .btn {
-            border: none; padding: 16px; width: 100%; border-radius: 20px;
-            font-size: 1.1rem; font-weight: 700; cursor: pointer;
-            transition: var(--trans-fast); position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
+        .btn { border: none; padding: 16px; width: 100%; border-radius: 20px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: var(--trans-fast); display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn:active { transform: scale(0.97); }
-        
         .btn-primary { background: var(--primary); color: #333; box-shadow: var(--shadow-md); }
         .btn-secondary { background: #f1f2f6; color: var(--text-muted); }
         .btn-success { background: var(--success); color: white; box-shadow: 0 5px 15px rgba(0,184,148,0.3); }
-        .btn-purple { background: var(--accent); color: var(--accent-dark); }
-        .btn-peach { background: var(--secondary); color: var(--secondary-dark); }
 
-        .btn-floating {
-            position: absolute; bottom: 20px; right: 20px;
-            width: 60px; height: 60px; border-radius: 50%;
-            background: var(--text-main); color: white;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; box-shadow: var(--shadow-lg); z-index: 500;
-        }
-
-        /* Kartlar */
-        .card {
-            background: white; border-radius: 24px; padding: 20px;
-            margin-bottom: 15px; border: 1px solid #f0f0f0;
-            box-shadow: var(--shadow-sm); transition: var(--trans-fast);
-            position: relative; overflow: hidden;
-        }
+        .card { background: white; border-radius: 24px; padding: 20px; margin-bottom: 15px; border: 1px solid #f0f0f0; box-shadow: var(--shadow-sm); transition: var(--trans-fast); position: relative; overflow: hidden; }
         .card:active { transform: scale(0.98); background: #fafafa; border-color: #eee; }
-        .card-row { display: flex; align-items: center; gap: 15px; }
         
-        /* İkon Kutuları */
-        .icon-box {
-            width: 55px; height: 55px; border-radius: 18px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem; color: white; flex-shrink: 0;
-            box-shadow: inset 0 0 0 2px rgba(255,255,255,0.2);
-        }
-
-        /* Header */
-        .app-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 25px; background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px); z-index: 100;
-            border-bottom: 1px solid rgba(0,0,0,0.03);
-            position: sticky; top: 0;
-        }
+        .icon-box { width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: white; flex-shrink: 0; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.03); position: sticky; top: 0; }
         .back-btn { font-size: 1.2rem; padding: 10px; cursor: pointer; color: var(--text-main); transition: 0.2s; }
         .back-btn:hover { background: #f0f0f0; border-radius: 50%; }
 
-        /* =================================================================
-           BÖLÜM 4: BİLDİRİM & MODAL SİSTEMİ
-           =================================================================
-        */
-        #toast-container {
-            position: absolute; top: 60px; left: 50%; transform: translateX(-50%);
-            z-index: 5000; width: 90%; pointer-events: none;
-            display: flex; flex-direction: column; gap: 10px;
-        }
-        .toast {
-            background: rgba(45, 52, 54, 0.95); color: white;
-            padding: 14px 20px; border-radius: 30px; text-align: center;
-            opacity: 0; transform: translateY(-20px); transition: var(--trans-med);
-            font-size: 0.95rem; font-weight: 600;
-            box-shadow: var(--shadow-lg); display: flex; align-items: center;
-            justify-content: center; gap: 12px; backdrop-filter: blur(5px);
-        }
+        /* TOAST & MODAL */
+        #toast-container { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); z-index: 5000; width: 90%; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: rgba(45, 52, 54, 0.95); color: white; padding: 14px 20px; border-radius: 30px; text-align: center; opacity: 0; transform: translateY(-20px); transition: var(--trans-med); font-size: 0.95rem; font-weight: 600; box-shadow: var(--shadow-lg); display: flex; align-items: center; justify-content: center; gap: 12px; backdrop-filter: blur(5px); }
         .toast.show { opacity: 1; transform: translateY(0); }
         .toast.success { background: var(--primary-dark); }
         .toast.error { background: var(--danger); }
         .toast.levelup { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #333; }
 
-        .modal-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 4000; display: none;
-            align-items: center; justify-content: center;
-            animation: fadeIn 0.3s; backdrop-filter: blur(4px);
-        }
-        .modal-box {
-            background: white; width: 85%; max-height: 80%; overflow-y: auto;
-            padding: 30px; border-radius: 30px; text-align: center;
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative; box-shadow: var(--shadow-float);
-        }
-        .close-modal {
-            position: absolute; top: 20px; right: 20px; font-size: 1.5rem;
-            cursor: pointer; color: #ccc; transition: 0.2s;
-            width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-            background: #f9f9f9; border-radius: 50%;
-        }
-        .close-modal:hover { background: #eee; color: #333; }
+        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 4000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.3s; backdrop-filter: blur(4px); }
+        .modal-box { background: white; width: 85%; max-height: 80%; overflow-y: auto; padding: 30px; border-radius: 30px; text-align: center; animation: popIn 0.4s; position: relative; }
+        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #ccc; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; border-radius: 50%; }
 
-        /* =================================================================
-           BÖLÜM 5: EKRAN YÖNETİMİ & SCROLL
-           =================================================================
-        */
-        .screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-body); display: none; flex-direction: column;
-            animation: fadeIn 0.4s ease; z-index: 10;
-        }
+        /* EKRAN YÖNETİMİ */
+        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); display: none; flex-direction: column; animation: fadeIn 0.4s ease; z-index: 10; }
         .screen.active { display: flex; }
-        
-        .scroll-content { 
-            flex: 1; overflow-y: auto; padding: 25px; padding-bottom: 120px; 
-            -webkit-overflow-scrolling: touch;
-        }
+        .scroll-content { flex: 1; overflow-y: auto; padding: 25px; padding-bottom: 120px; -webkit-overflow-scrolling: touch; }
 
-        /* =================================================================
-           BÖLÜM 6: SAYFAYA ÖZEL STİLLER
-           =================================================================
-        */
-
-        /* PRODUCT HERO (ANA VİTRİN) */
-        .product-hero {
-            width: 100%; height: 260px; border-radius: 30px;
-            overflow: hidden; margin-bottom: 25px; position: relative;
-            background: white; border: 1px solid rgba(0,0,0,0.05);
-            box-shadow: var(--shadow-md);
-        }
+        /* SAYFAYA ÖZEL STİLLER */
+        .product-hero { width: 100%; height: 260px; border-radius: 30px; overflow: hidden; margin-bottom: 25px; position: relative; background: white; border: 1px solid rgba(0,0,0,0.05); box-shadow: var(--shadow-md); }
         .product-hero img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
-        .product-badge {
-            position: absolute; top: 15px; right: 15px;
-            background: var(--gold); color: #333; padding: 5px 12px;
-            border-radius: 12px; font-size: 0.8rem; font-weight: 800;
-            box-shadow: var(--shadow-sm); animation: pulse 2s infinite;
-        }
-        .product-tag {
-            position: absolute; bottom: 15px; left: 15px;
-            background: rgba(255,255,255,0.9); padding: 8px 16px;
-            border-radius: 20px; font-size: 0.85rem; font-weight: 700;
-            color: var(--text-main); backdrop-filter: blur(5px);
-            box-shadow: var(--shadow-sm);
-        }
+        .product-tag { position: absolute; bottom: 15px; left: 15px; background: rgba(255,255,255,0.9); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; color: var(--text-main); backdrop-filter: blur(5px); box-shadow: var(--shadow-sm); }
 
-        /* PROFIL SEÇİMİ */
         .avatar-grid { display: flex; gap: 15px; justify-content: center; margin: 30px 0; }
-        .avatar-opt {
-            width: 80px; height: 80px; border-radius: 50%;
-            border: 4px solid white; cursor: pointer; object-fit: cover;
-            transition: var(--trans-med); background: #eee;
-            box-shadow: var(--shadow-sm);
-        }
-        .avatar-opt.selected {
-            border-color: var(--text-main); transform: scale(1.15);
-            box-shadow: var(--shadow-md);
-        }
-        .custom-input {
-            width: 100%; padding: 18px; background: white;
-            border: 2px solid #eee; border-radius: 20px;
-            margin-bottom: 20px; font-family: 'Nunito'; font-size: 1rem;
-            transition: 0.2s; outline: none;
-        }
+        .avatar-opt { width: 80px; height: 80px; border-radius: 50%; border: 4px solid white; cursor: pointer; object-fit: cover; transition: var(--trans-med); background: #eee; box-shadow: var(--shadow-sm); }
+        .avatar-opt.selected { border-color: var(--text-main); transform: scale(1.15); box-shadow: var(--shadow-md); }
+        .custom-input { width: 100%; padding: 18px; background: white; border: 2px solid #eee; border-radius: 20px; margin-bottom: 20px; font-family: 'Nunito'; font-size: 1rem; transition: 0.2s; outline: none; }
         .custom-input:focus { border-color: var(--primary); background: #fff; }
 
-        /* BUILD GUIDE (ADIM ADIM) */
-        .step-container { text-align: center; }
-        .step-progress { 
-            display: flex; justify-content: space-between; margin-bottom: 20px; 
-            padding: 0 10px; position: relative;
-        }
-        .step-dot {
-            width: 12px; height: 12px; background: #ddd; border-radius: 50%;
-            z-index: 2; transition: 0.3s;
-        }
-        .step-dot.active { background: var(--text-main); transform: scale(1.2); }
-        .step-line {
-            position: absolute; top: 5px; left: 15px; right: 15px; height: 2px;
-            background: #eee; z-index: 1;
-        }
-        
-        /* Çift Görsel Alanı */
-        .dual-image-container {
-            display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px;
-        }
-        .step-image-box {
-            width: 100%; height: 200px; background: white; border-radius: 24px;
-            display: flex; align-items: center; justify-content: center;
-            border: 2px solid #f0f0f0; overflow: hidden; position: relative;
-            transition: var(--trans-fast);
-        }
+        .step-progress { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 0 10px; position: relative; }
+        .progress-bar { width: 100%; height: 8px; background: #eee; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--theme-color); width: 0%; transition: width 0.3s ease; }
+        .step-image-box { width: 100%; height: 200px; background: white; border-radius: 24px; display: flex; align-items: center; justify-content: center; border: 2px solid #f0f0f0; overflow: hidden; position: relative; transition: var(--trans-fast); }
         .step-image-box img { width: 100%; height: 100%; object-fit: cover; }
-        .guide-label {
-            position: absolute; top: 12px; left: 12px;
-            background: rgba(0,0,0,0.7); color: white;
-            padding: 6px 14px; border-radius: 12px; font-size: 0.75rem;
-            font-weight: bold; z-index: 2; pointer-events: none;
-        }
+        .guide-label { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.7); color: white; padding: 6px 14px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; z-index: 2; pointer-events: none; }
         .guide-label.user { background: var(--primary-dark); }
+        .step-upload-btn { background: white; border: 2px dashed #ccc; padding: 15px; border-radius: 15px; cursor: pointer; margin-bottom: 20px; text-align: center; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; color: #666; }
+        .step-upload-btn:active { background: #f0f0f0; border-color: var(--primary-dark); }
 
-        .upload-placeholder {
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-            color: #aaa;
-        }
-
-        /* REWARDS & PROFILE HEADER */
-        .profile-card {
-            background: white; border-radius: 30px; padding: 30px;
-            text-align: center; margin-bottom: 25px;
-            box-shadow: var(--shadow-sm); position: relative;
-            overflow: hidden;
-        }
-        .profile-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 80px;
-            background: var(--primary); opacity: 0.3; z-index: 0;
-        }
-        .profile-avatar-lg {
-            width: 100px; height: 100px; border-radius: 50%;
-            border: 5px solid white; margin-top: 10px; margin-bottom: 10px;
-            position: relative; z-index: 1; object-fit: cover;
-            box-shadow: var(--shadow-md);
-        }
-        
+        .profile-card { background: white; border-radius: 30px; padding: 30px; text-align: center; margin-bottom: 25px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
+        .profile-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 80px; background: var(--primary); opacity: 0.3; z-index: 0; }
+        .profile-avatar-lg { width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; margin-top: 10px; margin-bottom: 10px; position: relative; z-index: 1; object-fit: cover; box-shadow: var(--shadow-md); }
         .stat-row { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
-        .stat-box {
-            background: #f9f9f9; padding: 10px 20px; border-radius: 15px;
-            min-width: 90px;
-        }
+        .stat-box { background: #f9f9f9; padding: 10px 20px; border-radius: 15px; min-width: 90px; }
         .stat-val { font-size: 1.2rem; font-weight: 800; color: var(--text-main); display: block; }
         .stat-lbl { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* LEVEL & LESSON GRID */
         .lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .lesson-card {
-            background: white; border-radius: 24px; padding: 20px;
-            text-align: center; cursor: pointer; transition: var(--trans-fast);
-            border: 2px solid transparent; box-shadow: var(--shadow-sm);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-height: 140px; gap: 12px;
-        }
-        .lesson-card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: var(--shadow-md); }
+        .lesson-card { background: white; border-radius: 24px; padding: 20px; text-align: center; cursor: pointer; transition: var(--trans-fast); border: 2px solid transparent; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 140px; gap: 12px; }
+        .lesson-card:active { transform: scale(0.95); }
         .lesson-card i { font-size: 2.2rem; margin-bottom: 5px; }
         
-        .level-map {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;
-            padding: 20px 0;
-        }
-        .level-node {
-            aspect-ratio: 1; border-radius: 20px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 1.2rem;
-            cursor: pointer; position: relative; transition: 0.2s;
-            background: #e0e0e0; color: #999; border: 2px solid transparent;
-        }
+        .level-map { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 20px 0; }
+        .level-node { aspect-ratio: 1; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; cursor: pointer; position: relative; transition: 0.2s; background: #e0e0e0; color: #999; border: 2px solid transparent; }
         .level-node.unlocked { background: white; color: var(--text-main); border-color: #eee; box-shadow: var(--shadow-sm); }
         .level-node.completed { background: var(--primary); color: #333; border-color: var(--primary-dark); }
         .level-node:active { transform: scale(0.9); }
         .level-stars { display: flex; gap: 2px; font-size: 0.6rem; color: var(--gold); margin-top: 5px; }
 
-        /* BOTTOM NAV */
-        .bottom-nav {
-            position: absolute; bottom: 0; width: 100%; height: 90px;
-            background: white; display: flex; justify-content: space-around;
-            align-items: center; padding-bottom: 20px; z-index: 200;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.03); border-radius: 30px 30px 0 0;
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 6px;
-            color: #b2bec3; font-size: 0.7rem; cursor: pointer; width: 25%;
-            transition: 0.3s; position: relative;
-        }
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 90px; background: white; display: flex; justify-content: space-around; align-items: center; padding-bottom: 20px; z-index: 200; box-shadow: 0 -10px 30px rgba(0,0,0,0.03); border-radius: 30px 30px 0 0; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: #b2bec3; font-size: 0.7rem; cursor: pointer; width: 25%; transition: 0.3s; position: relative; }
         .nav-item i { font-size: 1.5rem; transition: 0.3s; }
         .nav-item.active { color: var(--text-main); font-weight: 700; }
         .nav-item.active i { transform: translateY(-3px); color: var(--primary-dark); }
-        .nav-item.active::after {
-            content: ''; position: absolute; bottom: -10px; width: 6px; height: 6px;
-            background: var(--primary-dark); border-radius: 50%;
-        }
+        .nav-item.active::after { content: ''; position: absolute; bottom: -10px; width: 6px; height: 6px; background: var(--primary-dark); border-radius: 50%; }
 
-        /* ANIMATIONS */
         @keyframes popIn { 0% {transform: scale(0.9); opacity: 0;} 100% {transform: scale(1); opacity: 1;} }
         @keyframes fadeIn { 0% {opacity: 0;} 100% {opacity: 1;} }
         @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
         @keyframes float { 0% {transform: translateY(0px);} 50% {transform: translateY(-10px);} 100% {transform: translateY(0px);} }
-        @keyframes slideUp { 0% {transform: translateY(20px); opacity: 0;} 100% {transform: translateY(0); opacity: 1;} }
 
-        /* QUIZ EKRANI ÖZEL */
         .quiz-timer { width: 100%; height: 6px; background: #eee; margin-bottom: 20px; border-radius: 3px; overflow: hidden; }
         .quiz-timer-fill { height: 100%; background: var(--warning); width: 100%; transition: width 1s linear; }
-        .option-btn {
-            background: white; border: 2px solid #f0f0f0; padding: 20px;
-            border-radius: 18px; font-size: 1.3rem; font-weight: 700;
-            color: var(--text-main); cursor: pointer; transition: 0.2s;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .option-btn { background: white; border: 2px solid #f0f0f0; padding: 20px; border-radius: 18px; font-size: 1.3rem; font-weight: 700; color: var(--text-main); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
         .option-btn:active { transform: scale(0.96); background: #f9f9f9; }
-        .buddy-corner {
-            position: absolute; bottom: 120px; left: 20px; display: flex; align-items: flex-end; z-index: 10;
-            pointer-events: none;
-        }
-        .buddy-avatar-small {
-            width: 70px; height: 70px; border-radius: 50%; border: 3px solid white;
-            box-shadow: var(--shadow-md); background: white; object-fit: cover;
-        }
-        .buddy-bubble {
-            background: white; padding: 10px 15px; border-radius: 15px 15px 15px 0;
-            box-shadow: var(--shadow-md); font-size: 0.85rem; color: var(--text-main);
-            max-width: 180px; margin-bottom: 15px; margin-left: 10px;
-            animation: popIn 0.3s ease; transform-origin: bottom left;
-        }
-
+        .buddy-corner { position: absolute; bottom: 120px; left: 20px; display: flex; align-items: flex-end; z-index: 10; pointer-events: none; }
+        .buddy-avatar-small { width: 70px; height: 70px; border-radius: 50%; border: 3px solid white; box-shadow: var(--shadow-md); background: white; object-fit: cover; }
+        .buddy-bubble { background: white; padding: 10px 15px; border-radius: 15px 15px 15px 0; box-shadow: var(--shadow-md); font-size: 0.85rem; color: var(--text-main); max-width: 180px; margin-bottom: 15px; margin-left: 10px; animation: popIn 0.3s ease; transform-origin: bottom left; }
     </style>
 </head>
 <body>
@@ -434,14 +173,12 @@
     <div id="toast-container"></div>
     <canvas id="confetti-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1500;"></canvas>
 
-    <!-- ================= MODALLER ================= -->
-
-    <!-- 1. ROZET DETAY MODALI -->
+    <!-- MODALLER -->
     <div id="badge-modal" class="modal-overlay" onclick="closeModal('badge-modal')">
         <div class="modal-box" onclick="event.stopPropagation()">
             <div style="font-size:5rem; margin-bottom:15px; animation: float 3s infinite;" id="m-badge-icon">🥇</div>
-            <h2 id="m-badge-title" style="color:var(--text-main);">Rozet Başlığı</h2>
-            <p id="m-badge-desc">Bu rozeti kazanmak için gerekli açıklama.</p>
+            <h2 id="m-badge-title" style="color:var(--text-main);">Rozet</h2>
+            <p id="m-badge-desc">Açıklama.</p>
             <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span style="font-size:0.8rem; color:#888;">DURUM</span>
@@ -451,164 +188,98 @@
         </div>
     </div>
 
-    <!-- 2. ARKADAŞ PROFİL MODALI -->
     <div id="friend-modal" class="modal-overlay" onclick="closeModal('friend-modal')">
         <div class="modal-box" onclick="event.stopPropagation()">
-            <i class="fa-solid fa-xmark close-modal" onclick="closeModal('friend-modal')"></i>
             <img id="m-friend-img" src="" style="width:100px; height:100px; border-radius:50%; margin-bottom:15px; border:4px solid var(--primary); object-fit:cover;">
             <h2 id="m-friend-name">İsim</h2>
             <p id="m-friend-title" style="color:var(--primary-dark); font-weight:bold;">Usta Tasarımcı</p>
-            
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;">
-                <div style="background:#f4f7f6; padding:15px; border-radius:15px;">
-                    <i class="fa-solid fa-trophy" style="color:gold; font-size:1.5rem; margin-bottom:5px;"></i><br>
-                    <b>1500</b><br><small>XP Puan</small>
-                </div>
-                <div style="background:#f4f7f6; padding:15px; border-radius:15px;">
-                    <i class="fa-solid fa-palette" style="color:var(--secondary-dark); font-size:1.5rem; margin-bottom:5px;"></i><br>
-                    <b>Sanat</b><br><small>Favori Ders</small>
-                </div>
+                <div style="background:#f4f7f6; padding:15px; border-radius:15px;"><i class="fa-solid fa-trophy" style="color:gold;"></i><br><b>1500</b></div>
+                <div style="background:#f4f7f6; padding:15px; border-radius:15px;"><i class="fa-solid fa-palette" style="color:var(--secondary-dark);"></i><br><b>Sanat</b></div>
             </div>
-            <button class="btn-primary" style="margin-top:20px;" onclick="showToast('Arkadaşlık isteği gönderildi!', 'success'); closeModal('friend-modal')">Arkadaş Ekle</button>
+            <button class="btn-primary" style="margin-top:20px;" onclick="showToast('İstek gönderildi!', 'success'); closeModal('friend-modal')">Ekle</button>
         </div>
     </div>
 
-    <!-- 3. AYARLAR MODALI -->
     <div id="settings-modal" class="modal-overlay" onclick="closeModal('settings-modal')">
         <div class="modal-box" onclick="event.stopPropagation()">
             <h3>Ayarlar</h3>
             <div style="text-align:left; margin-top:20px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <span>Ses Efektleri</span>
-                    <i class="fa-solid fa-toggle-on" style="font-size:1.5rem; color:var(--success);"></i>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <span>Müzik</span>
-                    <i class="fa-solid fa-toggle-off" style="font-size:1.5rem; color:#ccc;"></i>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <span>Bildirimler</span>
-                    <i class="fa-solid fa-toggle-on" style="font-size:1.5rem; color:var(--success);"></i>
-                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>Ses</span><i class="fa-solid fa-toggle-on" style="font-size:1.5rem; color:var(--success);"></i></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>Müzik</span><i class="fa-solid fa-toggle-off" style="font-size:1.5rem; color:#ccc;"></i></div>
             </div>
-            <button class="btn-secondary" style="margin-top:10px; color:var(--danger);" onclick="resetProgress()">İlerlemeyi Sıfırla</button>
-            <button class="btn-primary" style="margin-top:10px;" onclick="closeModal('settings-modal')">Kaydet</button>
+            <button class="btn-secondary" style="margin-top:10px; color:var(--danger);" onclick="resetProgress()">Sıfırla</button>
+            <button class="btn-primary" style="margin-top:10px;" onclick="closeModal('settings-modal')">Kapat</button>
         </div>
     </div>
 
-    <!-- ================= EKRANLAR ================= -->
-
-    <!-- EKRAN 1: SPLASH (Açılış) -->
+    <!-- EKRAN 1: SPLASH -->
     <div id="s-splash" class="screen active" style="align-items:center; justify-content:center; background:var(--bg-body);">
-        <img src="logo.png" alt="Logo" style="width:160px; animation:popIn 1s; border-radius:30px; box-shadow:var(--shadow-lg);">
+        <img src="logo.png" alt="Logo" style="width:160px; animation:popIn 1s; border-radius:30px; box-shadow:var(--shadow-lg);" onerror="this.src='https://placehold.co/150x150?text=Logo';">
         <h1 style="margin-top:25px; color:var(--text-main); font-size:2rem;">Squishables</h1>
         <p style="font-size:1rem;">Yaratıcılığın Dokunuşu</p>
         <div style="margin-top:40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary-dark);"></i></div>
+        <!-- Güvenlik Butonu: Eğer otomatik geçmezse -->
+        <button id="force-start-btn" class="btn-primary" style="display:none; width:auto; padding:10px 20px; margin-top:20px;" onclick="nav('s-onboarding')">Uygulamayı Başlat</button>
     </div>
 
     <!-- EKRAN 2: ONBOARDING -->
     <div id="s-onboarding" class="screen" style="padding:0;">
         <div class="product-hero" style="height:55%; border-radius:0 0 40px 40px; border:none; margin:0; background:white;">
-            <img src="Product1.jpg" style="width:100%; height:100%; object-fit:contain; padding:40px;">
+            <img src="Product1.jpg" style="width:100%; height:100%; object-fit:contain; padding:40px;" onerror="this.src='https://placehold.co/400x400?text=Urun+Gorseli';">
         </div>
         <div style="padding:40px 30px; text-align:center; flex:1; display:flex; flex-direction:column;">
             <h1 style="font-size:2rem; margin-bottom:10px;">Aile Bağları Kiti</h1>
-            <p>Bu kutu ile ailecek hem öğrenin, hem eğlenin, hem de harika anılar biriktirin.</p>
-            <div style="display:flex; justify-content:center; gap:10px; margin:20px 0;">
-                <div style="width:10px; height:10px; background:var(--text-main); border-radius:50%;"></div>
-                <div style="width:10px; height:10px; background:#ddd; border-radius:50%;"></div>
-                <div style="width:10px; height:10px; background:#ddd; border-radius:50%;"></div>
-            </div>
+            <p>Bu kutu ile ailecek hem öğrenin, hem eğlenin.</p>
             <button class="btn-primary" style="margin-top:auto;" onclick="nav('s-profile-setup')">Hadi Başlayalım!</button>
         </div>
     </div>
 
     <!-- EKRAN 3: PROFIL KURULUMU -->
     <div id="s-profile-setup" class="screen">
-        <div class="header">
-            <i class="fa-solid fa-chevron-left back-btn" onclick="nav('s-onboarding')"></i>
-            <h3>Profilini Yarat</h3>
-            <div style="width:30px;"></div>
-        </div>
+        <div class="header"><i class="fa-solid fa-chevron-left back-btn" onclick="nav('s-onboarding')"></i><h3>Profilini Yarat</h3><div></div></div>
         <div class="scroll-content">
-            <p style="text-align:center; font-weight:bold; margin-bottom:20px;">Seni en iyi yansıtan Avatar hangisi?</p>
+            <p style="text-align:center; font-weight:bold; margin-bottom:20px;">Avatarını Seç</p>
             <div class="avatar-grid">
-                <img src="avatar1.png" class="avatar-opt selected" onclick="pickAvatar(this, 'avatar1.png')">
-                <img src="avatar2.png" class="avatar-opt" onclick="pickAvatar(this, 'avatar2.png')">
-                <img src="avatar3.png" class="avatar-opt" onclick="pickAvatar(this, 'avatar3.png')">
+                <img src="avatar1.png" class="avatar-opt selected" onclick="pickAvatar(this, 'avatar1.png')" onerror="this.src='https://placehold.co/100x100?text=A1';">
+                <img src="avatar2.png" class="avatar-opt" onclick="pickAvatar(this, 'avatar2.png')" onerror="this.src='https://placehold.co/100x100?text=A2';">
+                <img src="avatar3.png" class="avatar-opt" onclick="pickAvatar(this, 'avatar3.png')" onerror="this.src='https://placehold.co/100x100?text=A3';">
             </div>
-
-            <div class="input-group">
-                <label style="font-weight:bold; margin-bottom:5px; display:block;">İsmin Nedir?</label>
-                <input type="text" id="inp-name" class="custom-input" placeholder="Örn: Deniz">
-            </div>
-
-            <div class="input-group">
-                <label style="font-weight:bold; margin-bottom:5px; display:block;">Yaşın</label>
-                <input type="number" class="custom-input" placeholder="5">
-            </div>
-
-            <p style="text-align:center; margin-top:20px; font-size:0.8rem;">Verilerin sadece cihazında saklanır.</p>
+            <div class="input-group"><label style="font-weight:bold;">İsmin Nedir?</label><input type="text" id="inp-name" class="custom-input" placeholder="Örn: Deniz"></div>
+            <div class="input-group"><label style="font-weight:bold;">Yaşın</label><input type="number" class="custom-input" placeholder="5"></div>
         </div>
-        <div style="padding:20px;">
-            <button class="btn-primary" onclick="saveProfileAndStart()">Maceraya Atıl 🚀</button>
-        </div>
+        <div style="padding:20px;"><button class="btn-primary" onclick="saveProfileAndStart()">Maceraya Atıl 🚀</button></div>
     </div>
 
-    <!-- EKRAN 4: ANA SAYFA (HOME) -->
+    <!-- EKRAN 4: ANA SAYFA -->
     <div id="s-home" class="screen">
-        <div class="header" style="padding-bottom:10px;">
-            <div>
-                <p style="margin:0; font-size:0.9rem;">Tekrar Merhaba,</p>
-                <h2 style="margin:0; color:var(--primary-dark);" id="home-name-display">Arkadaşım</h2>
-            </div>
+        <div class="header">
+            <div><p style="margin:0; font-size:0.9rem;">Merhaba,</p><h2 style="margin:0; color:var(--primary-dark);" id="home-name-display">Arkadaşım</h2></div>
             <div style="display:flex; gap:10px;">
-                <div style="background:#FFF3E0; color:#FF9800; padding:5px 12px; border-radius:20px; font-weight:bold; font-size:0.9rem; display:flex; align-items:center; gap:5px;">
-                    <i class="fa-solid fa-fire"></i> 3
-                </div>
+                <div style="background:#FFF3E0; color:#FF9800; padding:5px 12px; border-radius:20px; font-weight:bold; font-size:0.9rem; display:flex; align-items:center; gap:5px;"><i class="fa-solid fa-fire"></i> 3</div>
                 <i class="fa-solid fa-gear back-btn" onclick="document.getElementById('settings-modal').style.display='flex'"></i>
             </div>
         </div>
-        
         <div class="scroll-content">
-            <!-- XP Progress -->
             <div class="card" style="padding:15px; background:white; border-left: 5px solid var(--primary);" onclick="nav('s-rewards')">
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                    <b>Seviye <span id="home-lvl">1</span></b>
-                    <span style="font-size:0.9rem; color:var(--text-muted);"><span id="home-xp">0</span> / 100 XP</span>
-                </div>
-                <div style="width:100%; height:8px; background:#f0f0f0; border-radius:4px; overflow:hidden;">
-                    <div id="home-xp-bar" style="height:100%; width:0%; background:var(--primary); transition:width 0.5s;"></div>
-                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><b>Seviye <span id="home-lvl">1</span></b><span style="font-size:0.9rem; color:var(--text-muted);"><span id="home-xp">0</span> / 100 XP</span></div>
+                <div style="width:100%; height:8px; background:#f0f0f0; border-radius:4px; overflow:hidden;"><div id="home-xp-bar" style="height:100%; width:0%; background:var(--primary); transition:width 0.5s;"></div></div>
             </div>
-
-            <!-- Quick Actions -->
             <h3 style="margin:20px 0 10px 0;">Bugün Ne Yapalım?</h3>
             <div class="dash-grid">
                 <div class="card" style="flex-direction:column; padding:25px; border-bottom:4px solid var(--secondary-dark);" onclick="nav('s-build-hub')">
-                    <div style="background:var(--secondary); width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; margin-bottom:10px;">
-                        📚
-                    </div>
-                    <b>Ders Çalış</b>
-                    <small>Yeni şeyler öğren</small>
+                    <div style="background:var(--secondary); width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; margin-bottom:10px;">📚</div><b>Ders Çalış</b>
                 </div>
                 <div class="card" style="flex-direction:column; padding:25px; border-bottom:4px solid var(--primary-dark);" onclick="nav('s-challenges')">
-                    <div style="background:var(--primary); width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; margin-bottom:10px;">
-                        🎨
-                    </div>
-                    <b>Bir Şey Yap</b>
-                    <small>Kutunu kullan</small>
+                    <div style="background:var(--primary); width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; margin-bottom:10px;">🎨</div><b>Bir Şey Yap</b>
                 </div>
             </div>
-
-            <!-- New Product Promo (Vitrin) -->
             <h3 style="margin:25px 0 10px 0;">Kutunun İçindekiler</h3>
             <div class="product-hero" style="height:180px;" onclick="nav('s-challenges')">
-                <img src="Product1.jpg">
+                <img src="Product1.jpg" onerror="this.src='https://placehold.co/400x200?text=Urun+Kutusu';">
                 <div class="product-tag">Keşfet</div>
             </div>
         </div>
-
         <div class="bottom-nav">
             <div class="nav-item active" onclick="nav('s-home')"><i class="fa-solid fa-house"></i>Ev</div>
             <div class="nav-item" onclick="nav('s-challenges')"><i class="fa-solid fa-hammer"></i>Yap</div>
@@ -617,44 +288,17 @@
         </div>
     </div>
 
-    <!-- EKRAN 5: DERSLER HUB (BUILD HUB) -->
+    <!-- EKRAN 5: DERSLER HUB -->
     <div id="s-build-hub" class="screen">
-        <div class="header">
-            <h3>Dersler</h3>
-            <span style="font-size:0.9rem; color:var(--text-muted);">Toplam 6 Ders</span>
-        </div>
+        <div class="header"><h3>Dersler</h3></div>
         <div class="scroll-content">
             <div class="lesson-grid">
-                <div class="lesson-card" onclick="openLevelMap('math')">
-                    <i class="fa-solid fa-calculator" style="color:var(--purple);"></i>
-                    <b>Matematik</b>
-                    <small>10 Seviye</small>
-                </div>
-                <div class="lesson-card" onclick="openLevelMap('colors')">
-                    <i class="fa-solid fa-palette" style="color:var(--secondary-dark);"></i>
-                    <b>Renkler</b>
-                    <small>10 Seviye</small>
-                </div>
-                <div class="lesson-card" onclick="openLevelMap('shapes')">
-                    <i class="fa-solid fa-shapes" style="color:var(--primary-dark);"></i>
-                    <b>Şekiller</b>
-                    <small>10 Seviye</small>
-                </div>
-                <div class="lesson-card" onclick="openLevelMap('space')">
-                    <i class="fa-solid fa-rocket" style="color:#0984e3;"></i>
-                    <b>Uzay</b>
-                    <small>10 Seviye</small>
-                </div>
-                <div class="lesson-card" onclick="openLevelMap('music')">
-                    <i class="fa-solid fa-music" style="color:#fd79a8;"></i>
-                    <b>Müzik</b>
-                    <small>10 Seviye</small>
-                </div>
-                <div class="lesson-card" onclick="openLevelMap('animals')">
-                    <i class="fa-solid fa-paw" style="color:#e17055;"></i>
-                    <b>Hayvanlar</b>
-                    <small>10 Seviye</small>
-                </div>
+                <div class="lesson-card" onclick="openLevelMap('math')"><i class="fa-solid fa-calculator" style="color:var(--purple);"></i><b>Matematik</b><small>10 Seviye</small></div>
+                <div class="lesson-card" onclick="openLevelMap('colors')"><i class="fa-solid fa-palette" style="color:var(--secondary-dark);"></i><b>Renkler</b><small>10 Seviye</small></div>
+                <div class="lesson-card" onclick="openLevelMap('shapes')"><i class="fa-solid fa-shapes" style="color:var(--primary-dark);"></i><b>Şekiller</b><small>10 Seviye</small></div>
+                <div class="lesson-card" onclick="openLevelMap('space')"><i class="fa-solid fa-rocket" style="color:#0984e3;"></i><b>Uzay</b><small>10 Seviye</small></div>
+                <div class="lesson-card" onclick="openLevelMap('music')"><i class="fa-solid fa-music" style="color:#fd79a8;"></i><b>Müzik</b><small>10 Seviye</small></div>
+                <div class="lesson-card" onclick="openLevelMap('animals')"><i class="fa-solid fa-paw" style="color:#e17055;"></i><b>Hayvanlar</b><small>10 Seviye</small></div>
             </div>
         </div>
         <div class="bottom-nav">
@@ -665,73 +309,52 @@
         </div>
     </div>
 
-    <!-- EKRAN 6: SEVİYE HARİTASI (LEVEL MAP) -->
+    <!-- EKRAN 6: SEVİYE HARİTASI -->
     <div id="s-level-map" class="screen">
-        <div class="header">
-            <i class="fa-solid fa-chevron-left back-btn" onclick="nav('s-build-hub')"></i>
-            <h3 id="map-title">Matematik</h3>
-            <div></div>
-        </div>
+        <div class="header"><i class="fa-solid fa-chevron-left back-btn" onclick="nav('s-build-hub')"></i><h3 id="map-title">Matematik</h3><div></div></div>
         <div class="scroll-content" style="text-align:center;">
             <p>Sırayla tüm yıldızları topla!</p>
-            <div class="level-map" id="level-grid-container">
-                <!-- JS ile dolacak -->
-            </div>
+            <div class="level-map" id="level-grid-container"></div>
         </div>
     </div>
 
-    <!-- EKRAN 7: QUIZ EKRANI -->
+    <!-- EKRAN 7: QUIZ -->
     <div id="s-quiz" class="screen">
-        <div class="header">
-            <i class="fa-solid fa-xmark back-btn" onclick="nav('s-level-map')" style="color:var(--danger);"></i>
-            <h3 id="quiz-level-ind">Level 1</h3>
-            <div style="width:30px;"></div>
-        </div>
+        <div class="header"><i class="fa-solid fa-xmark back-btn" onclick="nav('s-level-map')" style="color:var(--danger);"></i><h3 id="quiz-level-ind">Level 1</h3><div style="width:30px;"></div></div>
         <div class="scroll-content" style="display:flex; flex-direction:column; justify-content:center;">
             <div class="quiz-timer"><div class="quiz-timer-fill" id="timer-bar"></div></div>
-            
             <div style="text-align:center; margin-bottom:40px;">
-                <h1 style="font-size:3.5rem; color:var(--text-main); margin-bottom:10px;" id="quiz-question">2 + 2 = ?</h1>
+                <h1 style="font-size:3.5rem; color:var(--text-main); margin-bottom:10px;" id="quiz-question">?</h1>
                 <p>Doğru cevabı seç!</p>
             </div>
-
-            <div class="dash-grid" id="quiz-options">
-                <!-- JS ile dolacak -->
-            </div>
-
-            <!-- Buddy -->
+            <div class="dash-grid" id="quiz-options"></div>
             <div class="buddy-corner">
                 <div class="buddy-bubble" id="quiz-buddy-msg">Başarılar!</div>
-                <img src="avatar1.png" class="buddy-avatar-small" id="quiz-buddy-img">
+                <img src="avatar1.png" class="buddy-avatar-small" id="quiz-buddy-img" onerror="this.src='https://placehold.co/100x100?text=B';">
             </div>
         </div>
     </div>
 
-    <!-- EKRAN 8: CHALLENGES (YAP) -->
+    <!-- EKRAN 8: CHALLENGES -->
     <div id="s-challenges" class="screen">
         <div class="header"><h3>Aktiviteler</h3></div>
         <div class="scroll-content">
             <div class="card" onclick="startGuide('flower')" style="padding:0;">
                 <div style="height:120px; width:100%; background:#ffeaa7; display:flex; align-items:center; justify-content:center; font-size:4rem;">🌸</div>
                 <div style="padding:15px; width:100%; display:flex; align-items:center; justify-content:space-between;">
-                    <div><h3>Çiçek Yap</h3><p style="margin:0;">5 Adım • Kolay</p></div>
-                    <button class="btn-primary" style="width:auto; padding:10px 20px;">Başla</button>
+                    <div><h3>Çiçek Yap</h3><p style="margin:0;">5 Adım • Kolay</p></div><button class="btn-primary" style="width:auto; padding:10px 20px;">Başla</button>
                 </div>
             </div>
-
             <div class="card" onclick="startGuide('castle')" style="padding:0;">
                 <div style="height:120px; width:100%; background:#74b9ff; display:flex; align-items:center; justify-content:center; font-size:4rem;">🏰</div>
                 <div style="padding:15px; width:100%; display:flex; align-items:center; justify-content:space-between;">
-                    <div><h3>Kale Yap</h3><p style="margin:0;">2 Adım • Orta</p></div>
-                    <button class="btn-primary" style="width:auto; padding:10px 20px;">Başla</button>
+                    <div><h3>Kale Yap</h3><p style="margin:0;">2 Adım • Orta</p></div><button class="btn-primary" style="width:auto; padding:10px 20px;">Başla</button>
                 </div>
             </div>
-
             <div class="card" onclick="startGuide('animal')" style="padding:0;">
                 <div style="height:120px; width:100%; background:#a29bfe; display:flex; align-items:center; justify-content:center; font-size:4rem;">🦁</div>
                 <div style="padding:15px; width:100%; display:flex; align-items:center; justify-content:space-between;">
-                    <div><h3>Hayvan Yap</h3><p style="margin:0;">1 Adım • Kolay</p></div>
-                    <button class="btn-primary" style="width:auto; padding:10px 20px;">Başla</button>
+                    <div><h3>Hayvan Yap</h3><p style="margin:0;">1 Adım • Kolay</p></div><button class="btn-primary" style="width:auto; padding:10px 20px;">Başla</button>
                 </div>
             </div>
         </div>
@@ -743,43 +366,16 @@
         </div>
     </div>
 
-    <!-- EKRAN 9: GUIDE STEPS (REHBER ADIMLARI) -->
+    <!-- EKRAN 9: GUIDE ADIMLARI -->
     <div id="s-guide-steps" class="screen">
-        <div class="header">
-            <i class="fa-solid fa-xmark back-btn" onclick="nav('s-challenges')"></i>
-            <h3 id="guide-step-header">Adım 1/5</h3>
-            <div style="width:30px;"></div>
-        </div>
-        <div class="scroll-content">
-            <div class="step-progress">
-                <!-- JS ile noktalar eklenecek -->
-            </div>
-
-            <!-- ÖRNEK GÖRSEL -->
-            <div class="step-image-box">
-                <div class="guide-label">Örnek</div>
-                <img id="guide-example-img" src="" alt="Örnek">
-            </div>
-
-            <!-- KULLANICI GÖRSELİ -->
-            <div class="step-image-box" id="guide-user-box" style="display:none; border-color:var(--primary);">
-                <div class="guide-label user">Senin Eserin</div>
-                <img id="guide-user-img" src="" alt="Senin Eserin">
-            </div>
-
-            <div style="text-align:center; margin:20px 0;">
-                <h2 id="guide-step-title">Başlık</h2>
-                <p id="guide-step-desc">Açıklama</p>
-            </div>
-
-            <!-- FOTOĞRAF YÜKLEME BUTONU -->
-            <div class="step-upload-btn" onclick="document.getElementById('guide-file-input').click()">
-                <i class="fa-solid fa-camera" style="font-size:1.5rem; margin-bottom:5px; color:var(--text-muted);"></i>
-                <div>Fotoğraf Çek / Yükle</div>
-            </div>
+        <div class="header"><i class="fa-solid fa-xmark back-btn" onclick="nav('s-challenges')"></i><h3 id="guide-step-header">Adım 1/5</h3><div style="width:30px;"></div></div>
+        <div class="scroll-content" style="text-align:center;">
+            <div class="progress-bar"><div class="progress-fill" id="p-fill"></div></div>
+            <div class="step-image-box"><div class="guide-label">Örnek</div><img id="guide-example-img" src="" alt="Örnek" onerror="this.src='https://placehold.co/400x200?text=Ornek+Yok';"></div>
+            <div class="step-image-box" id="guide-user-box" style="display:none; border-color:var(--primary);"><div class="guide-label user">Senin Eserin</div><img id="guide-user-img" src=""></div>
+            <div style="text-align:center; margin:20px 0;"><h2 id="guide-step-title">Başlık</h2><p id="guide-step-desc">Açıklama</p></div>
+            <div class="step-upload-btn" onclick="document.getElementById('guide-file-input').click()"><i class="fa-solid fa-camera" style="font-size:1.5rem; margin-bottom:5px; color:var(--text-muted);"></i><div>Fotoğraf Çek / Yükle</div></div>
             <input type="file" id="guide-file-input" style="display:none;" accept="image/*" onchange="handlePhotoUpload(this)">
-
-            <!-- NAVİGASYON -->
             <div style="display:flex; gap:15px; margin-top:25px;">
                 <button class="btn-secondary" style="flex:1;" onclick="prevStep()">Geri</button>
                 <button class="btn-primary" style="flex:2;" id="btn-guide-next" onclick="nextStep()">İleri</button>
@@ -787,76 +383,36 @@
         </div>
     </div>
 
-    <!-- EKRAN 10: GUIDE SUCCESS (SONUÇ) -->
+    <!-- EKRAN 10: GUIDE BAŞARI -->
     <div id="s-guide-success" class="screen" style="text-align:center; padding:30px;">
-        <div style="width:100px; height:100px; background:var(--success); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem; margin:20px auto; animation:popIn 0.5s;">
-            <i class="fa-solid fa-check"></i>
-        </div>
-        <h1>Harika İş!</h1>
-        <p>İşte yaratıcılığının hikayesi:</p>
-        
-        <div class="scroll-content" style="flex:1; padding:0;">
-            <div class="summary-grid" id="summary-grid">
-                <!-- Yüklenen fotolar buraya gelecek -->
-            </div>
-        </div>
-        
-        <div style="padding:20px 0;">
-            <button class="btn-primary" onclick="claimGuideReward()">Ödülünü Al (+50 XP)</button>
-        </div>
+        <div style="width:100px; height:100px; background:var(--success); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem; margin:20px auto; animation:popIn 0.5s;"><i class="fa-solid fa-check"></i></div>
+        <h1>Harika İş!</h1><p>İşte yaratıcılığının hikayesi:</p>
+        <div class="scroll-content" style="flex:1; padding:0;"><div class="summary-grid" id="summary-grid"></div></div>
+        <div style="padding:20px 0;"><button class="btn-primary" onclick="claimGuideReward()">Ödülünü Al (+50 XP)</button></div>
     </div>
 
-    <!-- EKRAN 11: REWARDS & PROFILE (BEN) -->
+    <!-- EKRAN 11: REWARDS & PROFIL -->
     <div id="s-rewards" class="screen">
         <div class="scroll-content" style="padding:0;">
             <div class="profile-card">
                 <div style="position:relative; z-index:2;">
-                    <img id="profile-avatar-main" src="avatar1.png" class="profile-avatar-lg">
-                    <h2 id="profile-name-main">İsimsiz</h2>
-                    <p style="margin:5px 0;">Usta Yaratıcı</p>
-                    
+                    <img id="profile-avatar-main" src="avatar1.png" class="profile-avatar-lg" onerror="this.src='https://placehold.co/100x100?text=A';">
+                    <h2 id="profile-name-main">İsimsiz</h2><p style="margin:5px 0;">Usta Yaratıcı</p>
                     <div class="stat-row">
-                        <div class="stat-box">
-                            <span class="stat-val" id="profile-lvl">1</span>
-                            <span class="stat-lbl">Seviye</span>
-                        </div>
-                        <div class="stat-box">
-                            <span class="stat-val" id="profile-xp">0</span>
-                            <span class="stat-lbl">XP Puan</span>
-                        </div>
+                        <div class="stat-box"><span class="stat-val" id="profile-lvl">1</span><span class="stat-lbl">Seviye</span></div>
+                        <div class="stat-box"><span class="stat-val" id="profile-xp">0</span><span class="stat-lbl">XP</span></div>
                     </div>
                 </div>
             </div>
-
             <div style="padding:0 25px;">
-                <!-- Rozetler -->
                 <h3>Koleksiyonun</h3>
-                <div class="badge-grid" id="badge-container">
-                    <!-- JS ile dolacak -->
-                </div>
-
-                <!-- Liderlik -->
+                <div class="badge-grid" id="badge-container"></div>
                 <h3>Liderlik Tablosu</h3>
                 <div class="card" style="padding:0; overflow:hidden;">
                     <div class="leaderboard-list">
-                        <div class="lb-item" onclick="openFriendModal('Ayşe', 'Seviye 5', 'avatar2.png')">
-                            <div class="lb-rank" style="color:var(--gold);">1</div>
-                            <img src="avatar2.png" class="lb-avatar">
-                            <div class="lb-info"><span class="lb-name">Ayşe</span><span class="lb-level">Seviye 5</span></div>
-                            <div class="lb-score">1500 XP</div>
-                        </div>
-                        <div class="lb-item" onclick="openFriendModal('Ali', 'Seviye 4', 'avatar3.png')">
-                            <div class="lb-rank" style="color:#bdc3c7;">2</div>
-                            <img src="avatar3.png" class="lb-avatar">
-                            <div class="lb-info"><span class="lb-name">Ali</span><span class="lb-level">Seviye 4</span></div>
-                            <div class="lb-score">1250 XP</div>
-                        </div>
-                        <div class="lb-item" style="background:#f0f0f0; border-left:4px solid var(--primary);">
-                            <div class="lb-rank">3</div>
-                            <img id="lb-my-avatar" src="avatar1.png" class="lb-avatar">
-                            <div class="lb-info"><span class="lb-name" id="lb-my-name">Sen</span><span class="lb-level" id="lb-my-lvl">Seviye 1</span></div>
-                            <div class="lb-score" id="lb-my-score">0 XP</div>
-                        </div>
+                        <div class="lb-item" onclick="openFriendModal('Ayşe', 'Seviye 5', 'avatar2.png')"><div class="lb-rank" style="color:var(--gold);">1</div><img src="avatar2.png" class="lb-avatar"><div class="lb-info"><span class="lb-name">Ayşe</span><span class="lb-level">Seviye 5</span></div><div class="lb-score">1500 XP</div></div>
+                        <div class="lb-item" onclick="openFriendModal('Ali', 'Seviye 4', 'avatar3.png')"><div class="lb-rank" style="color:#bdc3c7;">2</div><img src="avatar3.png" class="lb-avatar"><div class="lb-info"><span class="lb-name">Ali</span><span class="lb-level">Seviye 4</span></div><div class="lb-score">1250 XP</div></div>
+                        <div class="lb-item" style="background:#f0f0f0; border-left:4px solid var(--primary);"><div class="lb-rank">3</div><img id="lb-my-avatar" src="avatar1.png" class="lb-avatar"><div class="lb-info"><span class="lb-name" id="lb-my-name">Sen</span><span class="lb-level" id="lb-my-lvl">Seviye 1</span></div><div class="lb-score" id="lb-my-score">0 XP</div></div>
                     </div>
                 </div>
             </div>
@@ -871,27 +427,14 @@
 
 </div>
 
-<!-- KONFETİ KÜTÜPHANESİ -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
 <script>
-    /* =================================================================
-       BÖLÜM 7: JAVASCRIPT MANTIĞI & VERİ TABANI
-       =================================================================
-    */
-
-    // --- 7.1 VERİ YAPILARI ---
+    /* ================= JAVASCRIPT MANTIĞI ================= */
     
-    // Kullanıcı Durumu (State)
+    // Veri Modeli
     let state = {
-        name: "Yaratıcı",
-        avatar: "avatar1.png",
-        theme: "#C4DFD9",
-        xp: 0,
-        level: 1,
-        unlockedLevels: { // Her dersin açılan son seviyesi
-            math: 1, colors: 1, shapes: 1, space: 1, music: 1, animals: 1
-        },
+        name: "Yaratıcı", avatar: "avatar1.png", theme: "#C4DFD9", xp: 0, level: 1,
+        unlockedLevels: { math: 1, colors: 1, shapes: 1, space: 1, music: 1, animals: 1 },
         badges: [
             { id: "b1", title: "İlk Adım", desc: "Uygulamaya ilk girişini yaptın.", icon: "🥇", unlocked: true },
             { id: "b2", title: "Usta Yapıcı", desc: "Bir rehberi tamamla.", icon: "🛠️", unlocked: false },
@@ -900,87 +443,59 @@
         ]
     };
 
-    // Rehber Verileri
     const guides = {
-        flower: {
-            id: "flower",
-            title: "Çiçek Yapımı",
-            steps: [
-                { t: "Merkezi Yap", d: "Turuncu hamurdan yuvarlak yap.", img: "cicek_adim1.jpg" },
-                { t: "Yaprakları Hazırla", d: "Pembe toplar oluştur.", img: "cicek_adim2.jpg" },
-                { t: "Birleştir", d: "Yaprakları merkeze ekle.", img: "cicek_adim3.jpg" },
-                { t: "Sapı Ekle", d: "Yeşil sapı monte et.", img: "cicek_adim4.jpg" },
-                { t: "Son Dokunuş", d: "Küçük yaprakları ekle.", img: "cicek_adim5.jpg" }
-            ]
-        },
-        castle: {
-            id: "castle",
-            title: "Kale Yapımı",
-            steps: [
-                { t: "Taban", d: "Kare taban hazırla.", img: "kale_adim1.jpg" },
-                { t: "Kuleler", d: "Köşelere kule ekle.", img: "kale_adim2.jpg" }
-            ]
-        },
-        animal: {
-            id: "animal",
-            title: "Hayvan Yapımı",
-            steps: [
-                { t: "Gövde", d: "Gövdeyi oluştur.", img: "hayvan_adim1.jpg" }
-            ]
-        }
+        flower: { id: "flower", title: "Çiçek Yapımı", steps: [
+            { t: "Merkezi Yap", d: "Turuncu hamurdan yuvarlak yap.", img: "cicek_adim1.jpg" },
+            { t: "Yaprakları Hazırla", d: "Pembe toplar oluştur.", img: "cicek_adim2.jpg" },
+            { t: "Birleştir", d: "Yaprakları merkeze ekle.", img: "cicek_adim3.jpg" },
+            { t: "Sapı Ekle", d: "Yeşil sapı monte et.", img: "cicek_adim4.jpg" },
+            { t: "Son Dokunuş", d: "Küçük yaprakları ekle.", img: "cicek_adim5.jpg" }
+        ]},
+        castle: { id: "castle", title: "Kale Yapımı", steps: [
+            { t: "Taban", d: "Kare taban hazırla.", img: "kale_adim1.jpg" },
+            { t: "Kuleler", d: "Köşelere kule ekle.", img: "kale_adim2.jpg" }
+        ]},
+        animal: { id: "animal", title: "Hayvan Yapımı", steps: [{ t: "Gövde", d: "Gövdeyi oluştur.", img: "hayvan_adim1.jpg" }] }
     };
 
-    // Ders Soruları (Basitleştirilmiş Simülasyon Veritabanı)
     const quizzes = {
-        math: [
-            { q: "2 + 2 = ?", a: ["4", "5", "3", "6"], corr: "4" },
-            { q: "5 - 3 = ?", a: ["2", "3", "1", "0"], corr: "2" },
-            { q: "3 + 3 = ?", a: ["6", "9", "5", "7"], corr: "6" }
-        ],
-        colors: [
-            { q: "Kırmızı Hangisi?", a: ["🟥", "🟦", "🟩", "🟨"], corr: "🟥" },
-            { q: "Mavi Hangisi?", a: ["🟦", "🟥", "🟨", "🟧"], corr: "🟦" }
-        ],
-        shapes: [
-            { q: "Kare Hangisi?", a: ["⬛", "🔵", "🔺", "⭐"], corr: "⬛" },
-            { q: "Daire Hangisi?", a: ["🔵", "⬛", "🔷", "🔶"], corr: "🔵" }
-        ]
-        // Diğerleri için benzer mantıkla devam eder...
+        math: [{q:"2+2=?",a:["4","5"],c:"4"},{q:"5-3=?",a:["2","3"],c:"2"},{q:"3+3=?",a:["6","9"],c:"6"}],
+        colors: [{q:"Kırmızı?",a:["🟥","🟦"],c:"🟥"},{q:"Mavi?",a:["🟦","🟨"],c:"🟦"}],
+        shapes: [{q:"Kare?",a:["⬛","🔵"],c:"⬛"},{q:"Daire?",a:["🔵","🔷"],c:"🔵"}]
     };
 
-    // Geçici Değişkenler
-    let activeGuide = null;
-    let currentStep = 0;
-    let uploadedPhotos = []; // Kullanıcının rehberde yükledikleri
-    let currentLesson = null;
-    let currentLessonLevel = 1;
+    let activeGuide = null, currentStep = 0, uploadedPhotos = [], currentLesson = null, currentLessonLevel = 1;
 
-    // --- 7.2 BAŞLATMA VE YÜKLEME ---
-    
-    // Sayfa Yüklendiğinde
+    // --- BAŞLATMA (SAFE BOOT) ---
     window.onload = function() {
-        loadData(); // Verileri çek
-        updateUI(); // Arayüzü güncelle
-        
-        // İlk kez giriyorsa Splash -> Onboarding, yoksa Splash -> Home
-        setTimeout(() => {
-            if(localStorage.getItem('squish_setup_done')) {
-                nav('s-home');
-            } else {
-                nav('s-onboarding');
-            }
-        }, 2000);
+        try {
+            loadData();
+            updateUI();
+            
+            // Eğer 3 saniye içinde açılmazsa butonu göster
+            setTimeout(() => {
+                if(document.getElementById('s-splash').classList.contains('active')) {
+                    document.getElementById('force-start-btn').style.display = 'block';
+                }
+            }, 3000);
+
+            // Normal açılış
+            setTimeout(() => {
+                if(localStorage.getItem('squish_setup_done')) nav('s-home');
+                else nav('s-onboarding');
+            }, 2000);
+        } catch(e) {
+            console.error("Başlatma hatası:", e);
+            localStorage.clear(); // Hata varsa sıfırla
+            document.getElementById('force-start-btn').style.display = 'block';
+        }
     };
 
     function loadData() {
-        const saved = localStorage.getItem('squish_state');
-        if(saved) {
-            const parsed = JSON.parse(saved);
-            // State birleştirme (yeni alanlar eklendiyse bozulmasın diye)
-            state = { ...state, ...parsed };
-            // Badge dizisini güncelle (referans kaybetmemek için)
-            // Gerçek uygulamada daha karmaşık merge gerekir.
-        }
+        try {
+            const saved = localStorage.getItem('squish_state');
+            if(saved) state = { ...state, ...JSON.parse(saved) };
+        } catch(e) { console.error("Veri hatası", e); }
     }
 
     function saveData() {
@@ -989,342 +504,193 @@
         updateUI();
     }
 
-    // --- 7.3 NAVİGASYON ---
+    // --- NAVİGASYON ---
     function nav(screenId) {
-        // Tüm ekranları gizle
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        // Hedef ekranı göster
         document.getElementById(screenId).classList.add('active');
-        
-        // Bottom Nav güncelle
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        
-        if (screenId === 's-home') activateNav(0);
-        else if (screenId === 's-challenges' || screenId.includes('guide')) activateNav(1);
-        else if (screenId === 's-build-hub' || screenId.includes('level') || screenId === 's-quiz') activateNav(2);
-        else if (screenId === 's-rewards') activateNav(3);
+        if(screenId=='s-home') activateNav(0);
+        else if(screenId=='s-challenges'||screenId.includes('guide')) activateNav(1);
+        else if(screenId=='s-build-hub'||screenId.includes('level')||screenId=='s-quiz') activateNav(2);
+        else if(screenId=='s-rewards') activateNav(3);
     }
+    function activateNav(i) { document.querySelectorAll('.nav-item')[i]?.classList.add('active'); }
 
-    function activateNav(index) {
-        const items = document.querySelectorAll('.nav-item');
-        if(items[index]) items[index].classList.add('active');
-    }
-
-    // --- 7.4 PROFİL İŞLEMLERİ ---
+    // --- PROFİL ---
     function pickAvatar(el, src) {
         document.querySelectorAll('.avatar-opt').forEach(a => a.classList.remove('selected'));
         el.classList.add('selected');
         state.avatar = src;
     }
-
-    function pickColor(color) {
-        state.theme = color;
-        document.documentElement.style.setProperty('--primary', color);
-        // Koyu tonu basitçe ayarlıyoruz (gerçekte HSL manipülasyonu daha iyi olur)
-        if(color === '#C4DFD9') document.documentElement.style.setProperty('--primary-dark', '#2e5c4d');
-        if(color === '#FFD1BA') document.documentElement.style.setProperty('--primary-dark', '#d68c6d');
-        if(color === '#DCD6F7') document.documentElement.style.setProperty('--primary-dark', '#424874');
-    }
-
     function saveProfileAndStart() {
         const nameInput = document.getElementById('inp-name').value;
-        if(nameInput.trim() !== "") state.name = nameInput;
+        if(nameInput.trim()) state.name = nameInput;
         saveData();
         showToast(`Hoş geldin, ${state.name}!`, 'success');
         nav('s-home');
     }
-
-    function saveProfile() {
-        // Profil sayfasından kaydetme
-        saveData();
-        showToast('Profil güncellendi', 'success');
-    }
-
     function resetProgress() {
-        if(confirm("Tüm ilerlemen silinecek. Emin misin?")) {
-            localStorage.removeItem('squish_state');
-            localStorage.removeItem('squish_setup_done');
+        if(confirm("Sıfırlamak istediğine emin misin?")) {
+            localStorage.clear();
             location.reload();
         }
     }
 
-    // --- 7.5 REHBER (GUIDE) MANTIĞI ---
-    function setupGuide(key) {
+    // --- REHBER ---
+    function startGuide(key) {
         activeGuide = guides[key];
         document.getElementById('intro-title').innerText = activeGuide.title;
-        // İkonu dinamik yapabiliriz ama şimdilik sabit
         nav('s-guide-intro');
     }
-
     function startActualGuide() {
         currentStep = 0;
         uploadedPhotos = new Array(activeGuide.steps.length).fill(null);
         renderStep();
         nav('s-guide-steps');
     }
-
     function renderStep() {
-        const stepData = activeGuide.steps[currentStep];
-        const isLast = currentStep === activeGuide.steps.length - 1;
-
-        // Başlıklar
+        const d = activeGuide.steps[currentStep];
         document.getElementById('guide-step-header').innerText = `Adım ${currentStep + 1}/${activeGuide.steps.length}`;
-        document.getElementById('guide-step-title').innerText = stepData.t;
-        document.getElementById('guide-step-desc').innerText = stepData.d;
-
-        // Görseller
-        document.getElementById('guide-example-img').src = stepData.img;
+        document.getElementById('guide-step-title').innerText = d.t;
+        document.getElementById('guide-step-desc').innerText = d.d;
+        document.getElementById('guide-example-img').src = d.img;
         
         const userBox = document.getElementById('guide-user-box');
         const userImg = document.getElementById('guide-user-img');
-        
-        if (uploadedPhotos[currentStep]) {
+        if(uploadedPhotos[currentStep]) {
             userImg.src = uploadedPhotos[currentStep];
             userBox.style.display = 'flex';
         } else {
             userBox.style.display = 'none';
         }
 
-        // Buton Durumu
-        const nextBtn = document.getElementById('btn-guide-next');
-        if(isLast) {
-            nextBtn.innerText = "Macerayı Tamamla 🎉";
-            nextBtn.classList.add('btn-success');
-        } else {
-            nextBtn.innerText = "İleri";
-            nextBtn.classList.remove('btn-success');
-        }
-
-        // Progress Dots
-        // (Basitçe barı dolduralım)
-        const pct = ((currentStep + 1) / activeGuide.steps.length) * 100;
-        document.querySelector('#s-guide-steps .progress-fill').style.width = `${pct}%`;
+        const btn = document.getElementById('btn-guide-next');
+        const isLast = currentStep === activeGuide.steps.length - 1;
+        btn.innerText = isLast ? "Tamamla 🎉" : "İleri";
+        btn.className = isLast ? "btn-primary btn-success" : "btn-primary";
+        
+        document.querySelector('.progress-fill').style.width = `${((currentStep+1)/activeGuide.steps.length)*100}%`;
     }
-
     function handlePhotoUpload(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
+        if(input.files && input.files[0]) {
+            const r = new FileReader();
+            r.onload = e => {
                 uploadedPhotos[currentStep] = e.target.result;
                 renderStep();
-                showToast('Fotoğraf Yüklendi! 📸', 'success');
+                showToast('Yüklendi! 📸', 'success');
             };
-            reader.readAsDataURL(input.files[0]);
+            r.readAsDataURL(input.files[0]);
         }
     }
-
-    function prevStep() {
-        if(currentStep > 0) {
-            currentStep--;
-            renderStep();
-        } else {
-            nav('s-guide-intro');
-        }
-    }
-
     function nextStep() {
-        // Fotoğraf zorunluluğu kontrolü
-        if(!uploadedPhotos[currentStep]) {
-            showToast('Lütfen önce yaptığını çek ve yükle!', 'error');
-            return;
-        }
-
+        if(!uploadedPhotos[currentStep]) return showToast('Önce fotoğraf yükle!', 'error');
         if(currentStep < activeGuide.steps.length - 1) {
             currentStep++;
             renderStep();
         } else {
-            // Bitiş
-            finishGuide();
+            const grid = document.getElementById('summary-grid');
+            grid.innerHTML = "";
+            uploadedPhotos.forEach((p, i) => {
+                grid.innerHTML += `<div class="card" style="padding:10px;"><img src="${p}" style="width:100%; border-radius:10px;"><b>Adım ${i+1}</b></div>`;
+            });
+            nav('s-guide-success');
+            if(!state.badges[1].unlocked) { state.badges[1].unlocked=true; showToast('ROZET KAZANDIN!', 'levelup'); }
         }
     }
+    function prevStep() { if(currentStep > 0) { currentStep--; renderStep(); } else nav('s-guide-intro'); }
+    function claimGuideReward() { addXP(50); launchConfetti(); nav('s-rewards'); }
 
-    function finishGuide() {
-        // Özet ekranını doldur
-        const grid = document.getElementById('summary-grid');
-        grid.innerHTML = "";
-        
-        uploadedPhotos.forEach((photo, idx) => {
-            const div = document.createElement('div');
-            div.className = 'summary-card';
-            div.innerHTML = `
-                <img src="${photo}" class="summary-thumb">
-                <div style="text-align:left;">
-                    <b>Adım ${idx + 1}</b><br>
-                    <small style="color:var(--success);">Tamamlandı</small>
-                </div>
-            `;
-            grid.appendChild(div);
-        });
-
-        nav('s-guide-success');
-        
-        // Rozet Kontrolü (Usta Yapıcı)
-        if(!state.badges[1].unlocked) {
-            state.badges[1].unlocked = true;
-            setTimeout(() => showToast('ROZET KAZANDIN: Usta Yapıcı!', 'levelup'), 1000);
-        }
-    }
-
-    function claimGuideReward() {
-        addXP(50);
-        launchConfetti();
-        nav('s-rewards');
-    }
-
-    // --- 7.6 DERS & LEVEL SİSTEMİ ---
-    function openLevelMap(lessonId) {
-        currentLesson = lessonId;
-        // Başlık ayarla
-        const titles = {math: "Matematik", colors: "Renkler", shapes: "Şekiller", space: "Uzay", music: "Müzik", animals: "Hayvanlar"};
-        document.getElementById('map-title').innerText = titles[lessonId];
-        
-        // Grid oluştur
+    // --- DERSLER ---
+    function openLevelMap(id) {
+        currentLesson = id;
+        document.getElementById('map-title').innerText = id.toUpperCase();
         const container = document.getElementById('level-grid-container');
         container.innerHTML = "";
-        
-        const unlockedCount = state.unlockedLevels[lessonId];
-
+        const unlocked = state.unlockedLevels[id] || 1;
         for(let i=1; i<=10; i++) {
-            let statusClass = "locked";
-            if(i <= unlockedCount) statusClass = "unlocked";
-            if(i < unlockedCount) statusClass = "completed"; // Basitlik için
-
-            let content = `<i class="fa-solid fa-lock"></i>`;
-            if(statusClass !== "locked") content = i;
-            if(statusClass === "completed") content = `<i class="fa-solid fa-check"></i>`;
-
+            let status = i <= unlocked ? "unlocked" : "locked";
+            if(i < unlocked) status = "completed";
             const div = document.createElement('div');
-            div.className = `level-node ${statusClass}`;
-            div.innerHTML = `
-                <div>${content}</div>
-                ${statusClass !== 'locked' ? '<div class="level-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>' : ''}
-            `;
-            
-            if(statusClass !== 'locked') {
-                div.onclick = () => startQuiz(i);
-            } else {
-                div.onclick = () => showToast("Önceki seviyeyi tamamlamalısın!", "error");
-            }
+            div.className = `level-node ${status}`;
+            div.innerHTML = `<div>${status=='locked'?'<i class="fa-solid fa-lock"></i>':i}</div>`;
+            div.onclick = () => {
+                if(status !== 'locked') startQuiz(i);
+                else showToast("Önceki seviyeyi bitir!", "error");
+            };
             container.appendChild(div);
         }
         nav('s-level-map');
     }
-
     function startQuiz(lvl) {
         currentLessonLevel = lvl;
         document.getElementById('quiz-level-ind').innerText = `Level ${lvl}`;
         nav('s-quiz');
-        
-        // Soru yükle (Simülasyon: Rastgele soru seç)
-        // Gerçekte lessonId ve lvl'e göre filtreleme yapılır.
-        // Burada basitlik adına rastgele bir soru gösteriyoruz.
-        let pool = quizzes[currentLesson] || quizzes.math; // Fallback
-        let qData = pool[Math.floor(Math.random() * pool.length)];
-        
-        document.getElementById('quiz-question').innerText = qData.q;
-        
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = "";
-        
-        qData.a.forEach(opt => {
+        let pool = quizzes[currentLesson] || quizzes.math;
+        let q = pool[Math.floor(Math.random()*pool.length)];
+        document.getElementById('quiz-question').innerText = q.q;
+        const opts = document.getElementById('quiz-options');
+        opts.innerHTML = "";
+        q.a.forEach(opt => {
             const btn = document.createElement('div');
-            btn.className = 'option-btn';
-            btn.innerText = opt;
-            btn.onclick = () => checkAnswer(opt, qData.corr, btn);
-            optsContainer.appendChild(btn);
+            btn.className = 'option-btn'; btn.innerText = opt;
+            btn.onclick = () => {
+                if(opt === q.c) {
+                    showToast("Doğru!", "success");
+                    setTimeout(() => {
+                        if(currentLessonLevel === state.unlockedLevels[currentLesson]) state.unlockedLevels[currentLesson]++;
+                        addXP(15);
+                        openLevelMap(currentLesson);
+                    }, 1000);
+                } else showToast("Tekrar dene", "error");
+            };
+            opts.appendChild(btn);
         });
-
-        // Timer animasyonu
-        const timer = document.getElementById('timer-bar');
-        timer.style.width = '100%';
-        setTimeout(() => timer.style.width = '0%', 100);
     }
 
-    function checkAnswer(selected, correct, btnEl) {
-        if(selected === correct) {
-            btnEl.style.background = "var(--success)";
-            btnEl.style.color = "white";
-            btnEl.style.borderColor = "var(--success)";
-            showToast("Doğru!", "success");
-            
-            setTimeout(() => {
-                // Seviye geçişi
-                if(currentLessonLevel === state.unlockedLevels[currentLesson]) {
-                    state.unlockedLevels[currentLesson]++;
-                    showToast("Yeni Seviye Açıldı!", "levelup");
-                }
-                addXP(15);
-                openLevelMap(currentLesson);
-            }, 1000);
-        } else {
-            btnEl.style.background = "var(--danger)";
-            btnEl.style.color = "white";
-            showToast("Tekrar dene!", "error");
-        }
-    }
-
-    // --- 7.7 YARDIMCI FONKSİYONLAR ---
-    function addXP(amount) {
-        state.xp += amount;
-        if(state.xp >= 100) {
-            state.level++;
-            state.xp = state.xp - 100;
-            showToast(`TEBRİKLER! SEVİYE ${state.level} OLDUN! 🎉`, 'levelup');
-            launchConfetti();
-        }
+    // --- YARDIMCI ---
+    function addXP(n) {
+        state.xp += n;
+        if(state.xp >= 100) { state.level++; state.xp -= 100; showToast(`SEVİYE ${state.level}! 🎉`, 'levelup'); launchConfetti(); }
         saveData();
     }
-
     function updateUI() {
-        // İsimler
         document.getElementById('home-name').innerText = state.name;
         document.getElementById('home-name-display').innerText = state.name;
-        document.getElementById('profile-name-display').innerText = state.name;
+        document.getElementById('profile-name-main').innerText = state.name;
         document.getElementById('lb-my-name').innerText = state.name;
         
-        // Avatarlar
-        const avatarSrc = state.avatar;
-        document.getElementById('profile-avatar-display').src = avatarSrc;
-        document.getElementById('profile-avatar-main').src = avatarSrc;
-        document.getElementById('lb-my-avatar').src = avatarSrc;
-        document.getElementById('quiz-buddy-img').src = avatarSrc;
+        document.getElementById('profile-avatar-display').src = state.avatar;
+        document.getElementById('profile-avatar-main').src = state.avatar;
+        document.getElementById('lb-my-avatar').src = state.avatar;
+        document.getElementById('quiz-buddy-img').src = state.avatar;
 
-        // Stats
         document.getElementById('home-lvl').innerText = state.level;
         document.getElementById('home-xp').innerText = state.xp;
         document.getElementById('profile-lvl').innerText = state.level;
-        document.getElementById('p-lvl').innerText = state.level;
-        document.getElementById('p-xp').innerText = state.xp;
+        document.getElementById('profile-xp').innerText = state.xp;
         document.getElementById('lb-my-lvl').innerText = `Seviye ${state.level}`;
         document.getElementById('lb-my-score').innerText = `${state.xp + (state.level-1)*100} XP`;
-        
-        // XP Bar
         document.getElementById('home-xp-bar').style.width = `${state.xp}%`;
 
-        // Tema
-        pickColor(state.theme);
-
-        // Rozetleri Render Et
-        renderBadges();
-    }
-
-    function renderBadges() {
-        const container = document.getElementById('badge-container');
-        container.innerHTML = "";
-        
+        const badgeContainer = document.getElementById('badge-container');
+        badgeContainer.innerHTML = "";
         state.badges.forEach(b => {
             const div = document.createElement('div');
             div.className = `badge-item ${b.unlocked ? 'unlocked' : ''}`;
             div.onclick = () => openBadgeModal(b.title, b.desc, b.icon, b.unlocked ? 'Kazanıldı' : 'Kilitli');
-            div.innerHTML = `
-                <span class="badge-icon">${b.icon}</span>
-                <small>${b.title}</small>
-            `;
-            container.appendChild(div);
+            div.innerHTML = `<span class="badge-icon">${b.icon}</span><small>${b.title}</small>`;
+            badgeContainer.appendChild(div);
         });
     }
-
-    // Modal İşlemleri
+    
+    function showToast(msg, type='neutral') {
+        const box = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        t.className = `toast ${type}`; t.innerHTML = msg;
+        box.appendChild(t);
+        setTimeout(()=>t.classList.add('show'),10);
+        setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),300); }, 3000);
+    }
     function openBadgeModal(t, d, i, s) {
         document.getElementById('m-badge-title').innerText = t;
         document.getElementById('m-badge-desc').innerText = d;
@@ -1332,26 +698,14 @@
         document.getElementById('m-badge-status').innerText = s;
         document.getElementById('badge-modal').style.display = 'flex';
     }
-    
     function openFriendModal(n, l, img) {
         document.getElementById('m-friend-name').innerText = n;
         document.getElementById('m-friend-level').innerText = l;
         document.getElementById('m-friend-img').src = img;
         document.getElementById('friend-modal').style.display = 'flex';
     }
-
-    function closeModal(id) {
-        document.getElementById(id).style.display = 'none';
-    }
-
-    function launchConfetti() {
-        confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 }
-        });
-    }
-
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function launchConfetti() { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }
 </script>
 
 </body>
