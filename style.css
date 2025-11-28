@@ -1,158 +1,150 @@
 :root {
+    /* Renk Paleti (PDF'ten esinlenildi) */
     --mint: #C4DFD9;
     --peach: #FFD1BA;
     --lavender: #DCD6F7;
     --text-dark: #4A4A4A;
-    --glass-bg: rgba(255, 255, 255, 0.45);
-    --glass-border: rgba(255, 255, 255, 0.5);
-    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    --glass-bg: rgba(255, 255, 255, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.8);
+    
+    /* Telefon Boyutları */
+    --phone-w: 400px;
+    --phone-h: 850px;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Comic Sans MS', 'Varela Round', sans-serif; /* Çocuk dostu fontlar */
-}
+* { box-sizing: border-box; user-select: none; }
 
 body {
-    background: linear-gradient(135deg, var(--mint), var(--lavender), var(--peach));
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    min-height: 100vh;
+    background: #f0f2f5; /* Masaüstü arka planı */
     display: flex;
     justify-content: center;
-    color: var(--text-dark);
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Varela Round', sans-serif;
+    margin: 0;
 }
 
-/* --- Container & Layout --- */
-.app-container {
-    width: 100%;
-    max-width: 480px; /* Mobil öncelikli sınırlama */
-    padding: 20px;
+/* --- TELEFON KASASI (Phone Chassis) --- */
+#phone-chassis {
+    width: var(--phone-w);
+    height: var(--phone-h);
+    background: linear-gradient(135deg, var(--mint), var(--peach));
+    border-radius: 45px;
+    /* Telefon Çerçevesi Efekti */
+    box-shadow: 
+        0 0 0 12px #2d3436, 
+        20px 20px 50px rgba(0,0,0,0.3);
     position: relative;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
-.hidden { display: none !important; }
-.screen { animation: fadeIn 0.5s ease-out; }
+#phone-notch {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 150px; height: 30px;
+    background: #2d3436;
+    border-radius: 0 0 15px 15px;
+    z-index: 100;
+}
 
-/* --- Glassmorphism Components --- */
-.glass-header, .glass-card {
+#home-indicator {
+    position: absolute;
+    bottom: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 5px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    z-index: 100;
+}
+
+#screen-container {
+    width: 100%; height: 100%;
+    overflow-y: auto; /* İçerik kaydırma */
+    padding: 50px 20px 40px 20px;
+}
+#screen-container::-webkit-scrollbar { display: none; }
+
+/* --- ORTAK COMPONENTLER --- */
+.hidden { display: none !important; }
+
+.glass-card {
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 30px;
     border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow);
+    border-radius: 20px;
     padding: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-.glass-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-}
-
-.app-logo { height: 40px; }
-
-/* --- Buttons & Inputs --- */
-.btn-primary, .btn-secondary, .upload-btn, .btn-small {
-    border: none;
-    padding: 15px 30px;
-    border-radius: 50px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 10px;
+.btn {
+    width: 100%; padding: 15px;
+    border: none; border-radius: 15px;
+    font-size: 1.1rem; font-weight: bold;
+    cursor: pointer; margin-top: 10px;
     transition: transform 0.1s;
 }
 
-.btn-primary { background: white; color: var(--text-dark); border: 2px solid var(--peach); }
-.btn-secondary { background: rgba(255,255,255,0.6); margin-bottom: 10px;}
-.btn-back { background: transparent; border: none; font-size: 1.5rem; margin-bottom: 10px; cursor: pointer; color: white;}
+.btn-primary { background: var(--peach); color: #5a3a2a; }
+.btn-secondary { background: white; color: var(--text-dark); }
+.btn-back { background: transparent; border: none; font-size: 1.2rem; cursor: pointer; margin-bottom: 15px; color: #444; }
 
-.input-group input {
-    width: 100%;
-    padding: 15px;
-    border-radius: 20px;
-    border: 2px solid white;
-    background: rgba(255,255,255,0.6);
-    margin: 15px 0;
-    font-size: 1.1rem;
-    text-align: center;
-}
+/* Squish Animasyonu */
+.squish-effect:active { transform: scale(0.90); }
 
-/* --- Avatar Selection --- */
-.avatars { display: flex; justify-content: space-around; margin: 20px 0; }
-.avatar-option {
-    width: 70px; height: 70px;
-    border-radius: 50%;
-    border: 3px solid transparent;
-    cursor: pointer;
-    transition: all 0.3s;
+/* --- EKRANLARA ÖZEL STİLLER --- */
+
+/* Splash */
+#screen-splash {
+    text-align: center; padding-top: 50%;
+    animation: fadeOut 0.5s ease-out 2.5s forwards;
 }
-.avatar-option.selected {
-    border-color: #FF6B6B;
-    transform: scale(1.1);
-    box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
+.app-logo { width: 120px; animation: bounce 2s infinite; }
+
+/* Profile */
+.avatar-grid { display: flex; justify-content: space-around; margin: 20px 0; }
+.avatar-option { 
+    width: 70px; height: 70px; border-radius: 50%; 
+    border: 3px solid transparent; cursor: pointer; 
+}
+.avatar-option.selected { border-color: var(--peach); transform: scale(1.1); }
+.input-group input { 
+    width: 100%; padding: 15px; border-radius: 15px; 
+    border: none; background: rgba(255,255,255,0.8); text-align: center; 
 }
 
-/* --- Animations --- */
-@keyframes squish {
-    0% { transform: scale(1); }
-    30% { transform: scale(1.15, 0.85); } /* Basık */
-    40% { transform: scale(0.95, 1.05); } /* Uzun */
-    50% { transform: scale(1.05, 0.95); } /* Hafif basık */
-    65% { transform: scale(0.98, 1.02); }
-    75% { transform: scale(1.02, 0.98); }
-    100% { transform: scale(1); }
+/* Dashboard */
+.header-card { display: flex; justify-content: space-between; align-items: center; }
+.user-info { display: flex; align-items: center; gap: 10px; }
+.user-info img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid white; }
+.nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+.nav-item { 
+    background: rgba(255,255,255,0.5); border-radius: 20px; 
+    padding: 20px; text-align: center; cursor: pointer; 
 }
+.icon-box { 
+    font-size: 1.5rem; margin-bottom: 10px; 
+    width: 50px; height: 50px; margin: 0 auto 10px auto;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; color: white;
+}
+.c1 { background: #FF9F43; }
+.c2 { background: #54A0FF; }
+.c3 { background: #5F27CD; }
+.c4 { background: #1DD1A1; }
 
-.squish-active {
-    animation: squish 0.4s ease-in-out;
+/* Workshop Upload */
+.comparison-view { display: flex; flex-direction: column; gap: 15px; }
+.target-img, .user-img { 
+    background: white; border-radius: 15px; padding: 10px; text-align: center; 
 }
+.target-img img, #preview-img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; }
+#upload-area { 
+    height: 150px; border: 2px dashed #ccc; border-radius: 10px; 
+    display: flex; align-items: center; justify-content: center; cursor: pointer; 
+}
+#btn-complete-step:disabled { opacity: 0.5; cursor: not-allowed; }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* --- Dashboard & Grid --- */
-.category-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.cat-card {
-    background: rgba(255,255,255,0.5);
-    padding: 20px;
-    border-radius: 25px;
-    text-align: center;
-    cursor: pointer;
-    border: 1px solid white;
-}
-.cat-card.locked { opacity: 0.6; cursor: not-allowed; filter: grayscale(1); }
-
-/* --- Buddy System --- */
-.buddy-preview img, #quiz-buddy-img {
-    width: 60px; height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid white;
-}
-.mini-card {
-    display: flex; align-items: center; gap: 10px; padding: 10px;
-    background: linear-gradient(90deg, var(--mint), transparent);
-}
+/* Animations */
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
