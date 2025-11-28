@@ -1,13 +1,15 @@
 <!-- 
-    ÖNEMLİ: FOTOĞRAF KURULUMU
-    Bu uygulamanın tam düzgün görünmesi için, index.html dosyasının olduğu yere
-    "images" adında bir klasör açın ve içine şu isimlerde resimlerinizi koyun:
-
-    1. Ürün Görseli: Product1.jpg (index.html ile aynı yerde olabilir veya images içinde)
-    2. Logo: logo.png (images klasöründe)
-    3. Avatarlar: avatar1.png, avatar2.png, avatar3.png (images klasöründe)
-    4. Rehber Örnekleri (Çiçek): 
-       cicek_adim1.jpg, cicek_adim2.jpg, cicek_adim3.jpg, cicek_adim4.jpg, cicek_adim5.jpg
+    GÜNCELLENMİŞ BİLGİ:
+    Dosyalarınızı "images" klasörü yerine direkt ana dizine (root) yüklediğiniz için
+    kod içerisindeki "images/" takılarını kaldırdık.
+    
+    Yüklemeniz gereken dosya isimleri (yanlarında oldukları sürece çalışır):
+    1. Product1.jpg
+    2. logo.png
+    3. avatar1.png, avatar2.png, avatar3.png
+    4. cicek_adim1.jpg, cicek_adim2.jpg, cicek_adim3.jpg, cicek_adim4.jpg, cicek_adim5.jpg
+    5. kale_adim1.jpg, kale_adim2.jpg
+    6. hayvan_adim1.jpg
 -->
 
 <!DOCTYPE html>
@@ -19,7 +21,8 @@
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#DCD6F7">
-    <link rel="apple-touch-icon" href="images/logo.png">
+    <!-- images/logo.png yerine direkt logo.png -->
+    <link rel="apple-touch-icon" href="logo.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -182,13 +185,15 @@
 
     <!-- 1. SPLASH -->
     <div id="s-splash" class="screen active" style="align-items:center; justify-content:center; background:var(--bg-color);">
-        <img src="images/logo.png" alt="Logo" style="width:140px; animation:popIn 0.8s;">
+        <!-- images/logo.png yerine logo.png -->
+        <img src="logo.png" alt="Logo" style="width:140px; animation:popIn 0.8s;">
         <h1 style="margin-top:20px; color:var(--dark-purple);">Squishables</h1>
     </div>
 
     <!-- 2. ONBOARDING -->
     <div id="s-on1" class="screen" style="padding:30px; text-align:center;">
         <div class="product-hero" style="height:300px; border:none; box-shadow:none;">
+            <!-- Direkt Product1.jpg -->
             <img src="Product1.jpg" style="object-fit:contain;">
         </div>
         <h1>Kutunu Aç, Dünyanı Yarat</h1>
@@ -208,9 +213,10 @@
         <div class="scroll-content">
             <p style="text-align:center; font-weight:bold; margin-bottom:15px;">Bir Avatar Seç:</p>
             <div class="avatar-grid">
-                <img src="images/avatar1.png" class="avatar-opt selected" onclick="pickAvatar(this)">
-                <img src="images/avatar2.png" class="avatar-opt" onclick="pickAvatar(this)">
-                <img src="images/avatar3.png" class="avatar-opt" onclick="pickAvatar(this)">
+                <!-- images/ takıları kaldırıldı -->
+                <img src="avatar1.png" class="avatar-opt selected" onclick="pickAvatar(this)">
+                <img src="avatar2.png" class="avatar-opt" onclick="pickAvatar(this)">
+                <img src="avatar3.png" class="avatar-opt" onclick="pickAvatar(this)">
             </div>
 
             <div class="input-group">
@@ -240,6 +246,7 @@
         <div class="scroll-content">
             <!-- Ürün Kartı -->
             <div class="product-hero" onclick="nav('s-challenges')">
+                <!-- Direkt Product1.jpg -->
                 <img src="Product1.jpg" alt="Ürün">
                 <div class="product-tag">Kutumun İçindekiler</div>
             </div>
@@ -409,7 +416,8 @@
     <div id="s-rewards" class="screen">
         <div class="scroll-content" style="padding:0;">
             <div class="profile-header">
-                <img id="profile-avatar-display" src="images/avatar1.png" style="width:90px; height:90px; border-radius:50%; border:4px solid white; margin-bottom:10px; background:#fff;">
+                <!-- images/avatar1.png yerine avatar1.png -->
+                <img id="profile-avatar-display" src="avatar1.png" style="width:90px; height:90px; border-radius:50%; border:4px solid white; margin-bottom:10px; background:#fff;">
                 <h2 style="margin:0; color:white;" id="profile-name-display">İsimsiz</h2>
                 <p style="color:rgba(255,255,255,0.9); margin-top:5px;">Seviye <span id="p-lvl">1</span> • Çırak</p>
                 
@@ -439,21 +447,22 @@
 
                 <h3>Arkadaşların (Liderlik)</h3>
                 <div class="card" style="flex-direction:column; align-items:stretch; gap:0; padding:0;">
-                    <div class="lb-item" onclick="openFriendModal('Ayşe', 'Seviye 5', 'images/avatar2.png')">
+                    <!-- avatar2.png yerine images/ takısı olmadan -->
+                    <div class="lb-item" onclick="openFriendModal('Ayşe', 'Seviye 5', 'avatar2.png')">
                         <div class="lb-rank" style="color:gold;">1</div>
-                        <img src="images/avatar2.png" class="lb-avatar">
+                        <img src="avatar2.png" class="lb-avatar">
                         <div class="lb-info"><span class="lb-name">Ayşe</span></div>
                         <div class="lb-score">1500</div>
                     </div>
-                    <div class="lb-item" onclick="openFriendModal('Ali', 'Seviye 4', 'images/avatar3.png')">
+                    <div class="lb-item" onclick="openFriendModal('Ali', 'Seviye 4', 'avatar3.png')">
                         <div class="lb-rank" style="color:silver;">2</div>
-                        <img src="images/avatar3.png" class="lb-avatar">
+                        <img src="avatar3.png" class="lb-avatar">
                         <div class="lb-info"><span class="lb-name">Ali</span></div>
                         <div class="lb-score">1250</div>
                     </div>
                     <div class="lb-item" style="background:#f0f0f0;">
                         <div class="lb-rank">3</div>
-                        <img id="lb-my-avatar" src="images/avatar1.png" class="lb-avatar">
+                        <img id="lb-my-avatar" src="avatar1.png" class="lb-avatar">
                         <div class="lb-info"><span class="lb-name">Sen</span></div>
                         <div class="lb-score" id="lb-score">0</div>
                     </div>
@@ -477,21 +486,22 @@
         flower: { 
             title: "Çiçek Yapımı", icon: "🌸",
             steps: [
-                { t: "Merkezi Yap", d: "Turuncu hamuru yuvarla.", img: "images/cicek_adim1.jpg" },
-                { t: "Yaprakları Hazırla", d: "Pembe toplar yap.", img: "images/cicek_adim2.jpg" },
-                { t: "Birleştir", d: "Yaprakları merkeze ekle.", img: "images/cicek_adim3.jpg" },
-                { t: "Sapı Ekle", d: "Yeşil hamurdan sap yap.", img: "images/cicek_adim4.jpg" },
-                { t: "Yaprakları Ekle", d: "Sapa küçük yeşil yapraklar ekle.", img: "images/cicek_adim5.jpg" } // New Step
+                // images/ takıları kaldırıldı
+                { t: "Merkezi Yap", d: "Turuncu hamuru yuvarla.", img: "cicek_adim1.jpg" },
+                { t: "Yaprakları Hazırla", d: "Pembe toplar yap.", img: "cicek_adim2.jpg" },
+                { t: "Birleştir", d: "Yaprakları merkeze ekle.", img: "cicek_adim3.jpg" },
+                { t: "Sapı Ekle", d: "Yeşil hamurdan sap yap.", img: "cicek_adim4.jpg" },
+                { t: "Yaprakları Ekle", d: "Sapa küçük yeşil yapraklar ekle.", img: "cicek_adim5.jpg" }
             ]
         },
         castle: { 
             title: "Kale Yapımı", icon: "🏰",
             steps: [
-                { t: "Taban", d: "Kare bir taban yap.", img: "images/kale_adim1.jpg" },
-                { t: "Kuleler", d: "4 silindir kule ekle.", img: "images/kale_adim2.jpg" }
+                { t: "Taban", d: "Kare bir taban yap.", img: "kale_adim1.jpg" },
+                { t: "Kuleler", d: "4 silindir kule ekle.", img: "kale_adim2.jpg" }
             ]
         },
-        animal: { title: "Hayvan", icon: "🦁", steps: [{ t: "Gövde", d: "Oval gövde yap.", img: "images/hayvan_adim1.jpg" }] }
+        animal: { title: "Hayvan", icon: "🦁", steps: [{ t: "Gövde", d: "Oval gövde yap.", img: "hayvan_adim1.jpg" }] }
     };
 
     /* --- DEĞİŞKENLER --- */
