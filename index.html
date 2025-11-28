@@ -1,845 +1,148 @@
-<!-- 
-    ============================================================================
-    PROJE: SQUISHABLES LEARNING APP - ULTIMATE MASTER
-    SÜRÜM: 13.0 (DESIGN POLISHED)
-    
-    GÜNCELLEME NOTLARI (CSS):
-    - "Squish" tıklama efektleri eklendi.
-    - Glassmorphism (Buzlu Cam) menüler güçlendirildi.
-    - Avatar seçimleri için animasyonlu border eklendi.
-    - İlerleme çubuklarına "striped" animasyon eklendi.
-    
-    RESİMLER: index.html ile aynı dizinde olmalı.
-    ============================================================================
--->
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Squishables - Yaratıcı Öğrenme</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#C4DFD9">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    
-    <link rel="apple-touch-icon" href="logo.png">
-    <link rel="shortcut icon" href="logo.png" type="image/png">
-
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squishables - Oyna ve Öğren</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- =================================================================
-         BÖLÜM 1: CSS (GELİŞMİŞ TASARIM KATMANI)
-         ================================================================= -->
-    <style>
-        :root {
-            /* Renk Paleti */
-            --primary: #C4DFD9;      
-            --primary-dark: #2e5c4d;
-            --secondary: #FFD1BA;    
-            --secondary-dark: #d68c6d;
-            --accent: #DCD6F7;       
-            --accent-dark: #424874;
-            
-            --bg-body: #f0f4f8;      
-            --white: #ffffff;
-            --text-main: #2D3436;    
-            --text-muted: #636E72;   
-            
-            --success: #00b894;      
-            --warning: #fdcb6e;      
-            --danger: #ff7675;       
-            --gold: #FFD700;         
-            
-            /* Gölgeler - Daha Yumuşak */
-            --shadow-xs: 0 2px 4px rgba(149, 157, 165, 0.1);
-            --shadow-sm: 0 4px 8px rgba(149, 157, 165, 0.15);
-            --shadow-md: 0 8px 24px rgba(149, 157, 165, 0.2);
-            --shadow-lg: 0 15px 35px rgba(149, 157, 165, 0.25);
-            --shadow-float: 0 20px 50px rgba(0,0,0,0.15);
-            
-            /* Animasyon */
-            --trans-bounce: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --trans-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; outline: none; }
-        
-        body { 
-            margin: 0; padding: 0; 
-            font-family: 'Nunito', sans-serif; 
-            background-color: var(--bg-body); 
-            display: flex; justify-content: center; align-items: center; 
-            height: 100vh; width: 100vw; overflow: hidden;
-            color: var(--text-main);
-        }
-
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
-
-        /* APP ÇERÇEVESİ */
-        #app-frame {
-            width: 100%; max-width: 414px; height: 100%; max-height: 915px;
-            background-color: var(--bg-body); /* İçerik arka planı */
-            position: relative; overflow: hidden;
-            display: flex; flex-direction: column;
-            transition: var(--trans-smooth);
-        }
-
-        @media (min-width: 450px) {
-            #app-frame {
-                height: 90vh; border-radius: 45px;
-                border: 14px solid #2d3436;
-                box-shadow: var(--shadow-float);
-                background-color: #fff;
-            }
-            .notch {
-                position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-                width: 160px; height: 30px; background: #2d3436;
-                border-radius: 0 0 20px 20px; z-index: 9999;
-            }
-        }
-
-        /* EKRAN YÖNETİMİ */
-        .screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-body); 
-            display: none; flex-direction: column;
-            opacity: 0; transform: scale(0.98);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            z-index: 10;
-        }
-        .screen.active { display: flex; opacity: 1; transform: scale(1); }
-        
-        .scroll-content { 
-            flex: 1; overflow-y: auto; padding: 25px; 
-            padding-bottom: 130px; 
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: smooth;
-        }
-
-        /* GENEL UI */
-        h1, h2, h3 { font-family: 'Fredoka', sans-serif; margin: 0; letter-spacing: 0.5px; }
-        p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin: 8px 0; }
-
-        /* SQUISHY BUTONLAR */
-        .btn {
-            border: none; padding: 18px; width: 100%; border-radius: 24px;
-            font-size: 1.1rem; font-weight: 700; cursor: pointer;
-            transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s; 
-            position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            font-family: 'Fredoka', sans-serif; text-transform: uppercase; letter-spacing: 1px;
-        }
-        /* Tıklama Efekti */
-        .btn:active { transform: scale(0.95); } 
-        
-        .btn-primary { 
-            background: var(--primary); color: #2d3436; 
-            box-shadow: 0 8px 20px rgba(196, 223, 217, 0.6); 
-            border-bottom: 4px solid rgba(0,0,0,0.1); /* 3D hissi */
-        }
-        .btn-primary:active { border-bottom-width: 0px; transform: translateY(4px) scale(0.95); }
-
-        .btn-secondary { 
-            background: white; color: var(--text-muted); border: 2px solid #eee; 
-            box-shadow: var(--shadow-sm);
-        }
-        .btn-action { 
-            padding: 10px 18px; font-size: 0.85rem; width: auto; 
-            background: var(--primary-dark); color: white; border-radius: 16px;
-            box-shadow: 0 4px 10px rgba(46, 92, 77, 0.3);
-        }
-        
-        /* KARTLAR */
-        .card {
-            background: white; border-radius: 30px; padding: 20px;
-            margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.5);
-            box-shadow: var(--shadow-md); position: relative; overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .card:active { transform: scale(0.98); box-shadow: var(--shadow-sm); }
-        
-        /* HEADER (GLASSMORPHISM) */
-        .header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 25px; background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.5);
-            position: sticky; top: 0; height: 85px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-        }
-        .back-btn { 
-            width: 44px; height: 44px; border-radius: 16px;
-            display: flex; align-items: center; justify-content: center;
-            background: white; color: var(--text-main); font-size: 1.2rem;
-            cursor: pointer; transition: 0.2s; box-shadow: var(--shadow-sm);
-        }
-        .back-btn:active { transform: scale(0.9); }
-
-        /* SAYFA ÖZEL TASARIMLARI */
-        .product-hero {
-            width: 100%; height: 280px; border-radius: 40px;
-            overflow: hidden; margin-bottom: 25px; position: relative;
-            background: white; box-shadow: var(--shadow-md);
-        }
-        .product-hero img { 
-            width: 100%; height: 100%; object-fit: contain; padding: 20px; 
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
-        }
-        .product-tag {
-            position: absolute; bottom: 15px; left: 15px;
-            background: rgba(255,255,255,0.95); padding: 10px 20px;
-            border-radius: 25px; font-size: 0.9rem; font-weight: 700;
-            color: var(--text-main); backdrop-filter: blur(10px);
-            box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 8px;
-        }
-
-        /* AVATAR SEÇİMİ (PULSE EFEKTİ) */
-        .avatar-grid { display: flex; gap: 20px; justify-content: center; margin: 30px 0; }
-        .avatar-opt {
-            width: 90px; height: 90px; border-radius: 50%;
-            border: 4px solid white; cursor: pointer; object-fit: cover;
-            transition: var(--trans-bounce); background: #fff;
-            box-shadow: var(--shadow-sm);
-        }
-        .avatar-opt.selected {
-            border-color: var(--primary-dark); 
-            transform: scale(1.2); 
-            box-shadow: 0 0 0 4px rgba(46, 92, 77, 0.2);
-        }
-        
-        .custom-input {
-            width: 100%; padding: 20px; background: white;
-            border: 2px solid #eee; border-radius: 25px;
-            margin-bottom: 20px; font-family: 'Nunito'; font-size: 1.1rem;
-            transition: 0.3s; outline: none; color: var(--text-main);
-        }
-        .custom-input:focus { border-color: var(--primary); box-shadow: 0 10px 25px rgba(196, 223, 217, 0.3); }
-
-        /* DERSLER & LEVEL */
-        .lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .lesson-card {
-            background: white; border-radius: 30px; padding: 25px 15px;
-            text-align: center; cursor: pointer; transition: var(--trans-fast);
-            border: 2px solid transparent; box-shadow: var(--shadow-sm);
-            display: flex; flex-direction: column; align-items: center; 
-            justify-content: center; min-height: 160px; gap: 15px;
-        }
-        .lesson-card:active { transform: scale(0.96); border-color: var(--primary); }
-        .lesson-card i { 
-            font-size: 3rem; 
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
-            transition: transform 0.3s;
-        }
-        .lesson-card:hover i { transform: rotate(10deg) scale(1.1); }
-        
-        /* HARİTA (LEVEL MAP) */
-        .level-map { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; padding: 40px 20px; }
-        .level-node {
-            aspect-ratio: 1; border-radius: 30px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 1.6rem; cursor: pointer; position: relative;
-            transition: var(--trans-bounce);
-            background: #e0e0e0; color: #a4b0be; border: 4px solid transparent;
-        }
-        .level-node.unlocked { 
-            background: white; color: var(--text-main); 
-            border-color: #fff; box-shadow: var(--shadow-md); 
-        }
-        .level-node.completed { 
-            background: var(--primary); color: #333; 
-            border-color: var(--primary-dark); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.1); 
-        }
-        .level-node:active { transform: scale(0.9); }
-
-        /* PROFIL & SHOP */
-        .profile-card {
-            background: white; border-radius: 0 0 50px 50px; padding: 40px 30px;
-            text-align: center; margin-bottom: 30px; margin-top: -20px;
-            box-shadow: var(--shadow-md); position: relative; overflow: hidden;
-            border-bottom: 1px solid #eee;
-        }
-        .profile-bg-pattern {
-            position: absolute; top: 0; left: 0; width: 100%; height: 150px;
-            background: radial-gradient(circle at top right, var(--accent), transparent),
-                        radial-gradient(circle at top left, var(--primary), transparent);
-            opacity: 0.4; z-index: 0; border-radius: 0 0 50% 50% / 20px;
-        }
-        .profile-avatar-lg {
-            width: 130px; height: 130px; border-radius: 50%;
-            border: 6px solid white; margin-top: 60px; margin-bottom: 15px;
-            position: relative; z-index: 1; object-fit: cover;
-            box-shadow: var(--shadow-lg); background: white;
-        }
-        
-        .shop-item { 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 20px; border-bottom: 1px solid #f4f4f4; 
-        }
-        .shop-icon { 
-            width: 55px; height: 55px; background: #fff5f5; 
-            border-radius: 18px; display: flex; align-items: center; 
-            justify-content: center; font-size: 1.8rem; margin-right: 15px; 
-        }
-
-        /* ALT MENÜ (GLASSMORPHISM) */
-        .bottom-nav {
-            position: absolute; bottom: 0; width: 100%; height: 100px;
-            background: rgba(255,255,255,0.9); display: flex; justify-content: space-around;
-            align-items: center; padding-bottom: 25px; z-index: 200;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.05); border-radius: 40px 40px 0 0;
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255,255,255,0.5);
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 6px;
-            color: #b2bec3; font-size: 0.75rem; cursor: pointer; width: 25%;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; font-weight: 700;
-        }
-        .nav-item.active { color: var(--text-main); transform: translateY(-5px); }
-        .nav-item.active i { color: var(--primary-dark); font-size: 1.8rem; }
-        .nav-item i { font-size: 1.6rem; transition: 0.3s; }
-
-        /* REHBER (STRIPED PROGRESS BAR) */
-        .step-progress { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 0 5px; position: relative; }
-        .progress-bar { width: 100%; height: 14px; background: #e0e0e0; border-radius: 7px; margin-bottom: 25px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
-        .progress-fill { 
-            height: 100%; background: repeating-linear-gradient(
-                45deg, var(--primary-dark), var(--primary-dark) 10px, 
-                var(--primary) 10px, var(--primary) 20px
-            ); 
-            width: 0%; transition: width 0.5s ease; border-radius: 7px; 
-            animation: moveStripe 20s linear infinite;
-        }
-        @keyframes moveStripe { 0% {background-position: 0 0;} 100% {background-position: 500px 0;} }
-
-        .step-image-box {
-            width: 100%; height: 240px; background: white; border-radius: 30px;
-            display: flex; align-items: center; justify-content: center;
-            border: 3px solid #f0f0f0; overflow: hidden; position: relative;
-            transition: var(--trans-fast); margin-bottom: 15px;
-            box-shadow: var(--shadow-md);
-        }
-        .step-image-box img { width: 100%; height: 100%; object-fit: cover; }
-        .guide-label {
-            position: absolute; top: 15px; left: 15px;
-            background: rgba(255,255,255,0.9); color: var(--text-main);
-            padding: 8px 16px; border-radius: 16px; font-size: 0.8rem;
-            font-weight: 800; z-index: 2; pointer-events: none;
-            backdrop-filter: blur(4px); box-shadow: var(--shadow-sm);
-        }
-        .guide-label.user { background: var(--primary-dark); color: white; }
-        
-        /* QUIZ */
-        .quiz-timer { width: 100%; height: 10px; background: #eee; margin-bottom: 30px; border-radius: 5px; overflow: hidden; }
-        .quiz-timer-fill { height: 100%; background: var(--warning); width: 100%; transition: width 1s linear; border-radius: 5px; }
-        .option-btn {
-            background: white; border: 2px solid #f0f0f0; padding: 25px;
-            border-radius: 24px; font-size: 1.3rem; font-weight: 800;
-            color: var(--text-main); cursor: pointer; transition: 0.2s;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: var(--shadow-md);
-        }
-        .option-btn:active { transform: scale(0.95); background: #f8f8f8; border-color: var(--primary); }
-        
-        /* TOAST & MODAL */
-        #toast-container { position: absolute; top: 100px; left: 50%; transform: translateX(-50%); z-index: 5000; display: flex; flex-direction: column; gap: 12px; width: 90%; pointer-events: none; }
-        .toast { 
-            background: rgba(45, 52, 54, 0.95); color: white; 
-            padding: 16px 24px; border-radius: 35px; text-align: center; 
-            opacity: 0; transform: translateY(-40px); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            font-size: 1rem; font-weight: 700; box-shadow: var(--shadow-lg); 
-            display: flex; align-items: center; justify-content: center; gap: 12px; 
-            backdrop-filter: blur(8px); border: 2px solid rgba(255,255,255,0.1);
-        }
-        .toast.show { opacity: 1; transform: translateY(0); }
-        
-        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 4000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.3s; backdrop-filter: blur(8px); }
-        .modal-box { background: white; width: 90%; max-height: 85%; overflow-y: auto; padding: 35px; border-radius: 40px; text-align: center; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; box-shadow: var(--shadow-float); }
-        .close-modal { position: absolute; top: 25px; right: 25px; font-size: 1.4rem; cursor: pointer; color: var(--text-muted); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #f5f6fa; border-radius: 50%; transition: 0.2s; }
-        .close-modal:active { transform: scale(0.9); background: #eee; }
-
-        /* Animations */
-        @keyframes popIn { 0% {transform: scale(0.9); opacity: 0;} 100% {transform: scale(1); opacity: 1;} }
-        @keyframes fadeIn { 0% {opacity: 0;} 100% {opacity: 1;} }
-    </style>
 </head>
 <body>
 
-<div id="app-frame">
-    <div class="notch"></div>
-    <div id="toast-container"></div>
-    <canvas id="confetti-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1500;"></canvas>
-
-    <!-- MODALLER -->
-    <div id="badge-modal" class="modal-overlay" onclick="closeModal('badge-modal')">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <div style="font-size:6rem; margin-bottom:15px;" id="m-badge-icon">🥇</div>
-            <h2 id="m-badge-title" style="color:var(--text-main);">Rozet</h2>
-            <p id="m-badge-desc" style="font-size:1.1rem;">Açıklama.</p>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:25px; border-top:2px solid #f4f4f4; padding-top:20px;">
-                <span style="font-size:0.9rem; color:#aaa; font-weight:800; letter-spacing:1px;">DURUM</span>
-                <span id="m-badge-status" style="font-weight:800; background:#f0f0f0; padding:8px 16px; border-radius:12px; color:#555;">Kilitli</span>
+    <div class="app-container">
+        <header class="glass-header">
+            <img src="logo.png" alt="Squishables Logo" class="app-logo">
+            <div id="user-stats" class="hidden">
+                <span class="stat-badge"><i class="fas fa-star"></i> <span id="xp-display">0</span> XP</span>
+                <span class="stat-badge"><i class="fas fa-crown"></i> Lv. <span id="level-display">1</span></span>
             </div>
-            <button class="btn-secondary" style="margin-top:30px; border-radius:18px;" onclick="closeModal('badge-modal')">Kapat</button>
-        </div>
-    </div>
+        </header>
 
-    <div id="friend-modal" class="modal-overlay" onclick="closeModal('friend-modal')">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <img id="m-friend-img" src="" style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; border:6px solid var(--primary); object-fit:cover; box-shadow:var(--shadow-md);">
-            <h2 id="m-friend-name" style="font-size:1.8rem;">İsim</h2>
-            <p style="color:var(--primary-dark); font-weight:800; margin-bottom:25px; font-size:1rem;">Usta Tasarımcı</p>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:25px;">
-                <div style="background:#f8f9fa; padding:20px; border-radius:25px;"><i class="fa-solid fa-trophy" style="color:var(--gold); font-size:2rem; margin-bottom:5px;"></i><br><b>1500</b></div>
-                <div style="background:#f8f9fa; padding:20px; border-radius:25px;"><i class="fa-solid fa-palette" style="color:var(--secondary-dark); font-size:2rem; margin-bottom:5px;"></i><br><b>Sanat</b></div>
-            </div>
-            <button class="btn-primary" style="border-radius:20px;" onclick="showToast('İstek gönderildi!', 'success'); closeModal('friend-modal')">Arkadaş Ekle</button>
-        </div>
-    </div>
-
-    <div id="settings-modal" class="modal-overlay" onclick="closeModal('settings-modal')">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <h2 style="margin-bottom:30px;">Ayarlar</h2>
-            <button class="btn" style="background:#fff0f0; color:var(--danger); font-weight:800; margin-top:10px;" onclick="resetProgress()">
-                <i class="fa-solid fa-trash-can"></i> İlerlemeyi Sıfırla
-            </button>
-            <button class="btn-primary" style="margin-top:20px;" onclick="closeModal('settings-modal')">Kapat</button>
-        </div>
-    </div>
-
-    <!-- EKRAN 1: SPLASH -->
-    <div id="s-splash" class="screen active" style="align-items:center; justify-content:center; background:var(--bg-body);">
-        <img src="logo.png" style="width:180px; border-radius:45px; box-shadow:var(--shadow-lg);" onerror="this.src='https://placehold.co/150x150?text=Logo'">
-        <h1 style="margin-top:40px; color:var(--text-main); font-size:2.5rem;">Squishables</h1>
-        <p style="font-size:1.2rem; opacity:0.6; font-weight:600;">Yaratıcılığın Dokunuşu</p>
-        <div style="margin-top:60px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:3rem; color:var(--primary-dark);"></i></div>
-        <button id="force-start-btn" class="btn-primary" style="display:none; width:auto; padding:15px 40px; margin-top:40px; box-shadow:var(--shadow-lg);" onclick="nav('s-onboarding')">BAŞLAT</button>
-    </div>
-
-    <!-- EKRAN 2: ONBOARDING -->
-    <div id="s-onboarding" class="screen" style="padding:0;">
-        <div class="product-hero" style="height:60%; border-radius:0 0 60px 60px; margin:0; background:white; box-shadow:var(--shadow-float);">
-            <img src="Product1.jpg" style="width:100%; height:100%; object-fit:contain; padding:50px;" onerror="this.src='https://placehold.co/400x400?text=Urun'">
-        </div>
-        <div style="padding:50px 35px; text-align:center; flex:1; display:flex; flex-direction:column; justify-content:center;">
-            <h1 style="font-size:2.4rem; margin-bottom:15px;">Aile Bağları Kiti</h1>
-            <p style="font-size:1.2rem; margin-bottom:40px; color:var(--text-muted);">Bu kutu ile ailecek hem öğrenin, hem eğlenin.</p>
-            <button class="btn-primary" style="box-shadow:var(--shadow-lg); padding:20px;" onclick="nav('s-profile-create')">Hadi Başlayalım! <i class="fa-solid fa-arrow-right"></i></button>
-        </div>
-    </div>
-
-    <!-- EKRAN 3: PROFIL OLUŞTURMA -->
-    <div id="s-profile-create" class="screen">
-        <div class="header">
-            <div class="back-btn" onclick="nav('s-onboarding')"><i class="fa-solid fa-chevron-left"></i></div>
-            <h3>Profilini Yarat</h3><div style="width:40px;"></div>
-        </div>
-        <div class="scroll-content">
-            <div style="text-align:center; margin:30px 0 50px 0;">
-                <p style="font-weight:800; margin-bottom:25px; font-size:1.3rem;">Avatarını Seç</p>
-                <div class="avatar-grid">
-                    <img src="avatar1.png" class="avatar-opt selected" onclick="pickAvatar(this, 'avatar1.png')" onerror="this.src='https://placehold.co/100x100?text=A1'">
-                    <img src="avatar2.png" class="avatar-opt" onclick="pickAvatar(this, 'avatar2.png')" onerror="this.src='https://placehold.co/100x100?text=A2'">
-                    <img src="avatar3.png" class="avatar-opt" onclick="pickAvatar(this, 'avatar3.png')" onerror="this.src='https://placehold.co/100x100?text=A3'">
+        <section id="onboarding" class="screen active">
+            <div class="glass-card">
+                <h1>Merhaba Kâşif! 👋</h1>
+                <p>Maceraya başlamadan önce kendini tanıt.</p>
+                
+                <div class="avatar-selection">
+                    <h3>Avatarını Seç</h3>
+                    <div class="avatars">
+                        <img src="avatar1.png" data-id="1" class="avatar-option" alt="Avatar 1">
+                        <img src="avatar2.png" data-id="2" class="avatar-option" alt="Avatar 2">
+                        <img src="avatar3.png" data-id="3" class="avatar-option" alt="Avatar 3">
+                    </div>
                 </div>
-            </div>
-            <div class="input-group"><label style="font-weight:800; display:block; margin-bottom:12px; margin-left:10px;">İsmin Nedir?</label><input type="text" id="inp-name" class="custom-input" placeholder="Örn: Deniz"></div>
-            <div class="input-group"><label style="font-weight:800; display:block; margin-bottom:12px; margin-left:10px;">Kaç Yaşındasın?</label><input type="number" class="custom-input" placeholder="5"></div>
-        </div>
-        <div style="padding:30px;">
-            <button class="btn-primary" onclick="saveProfileAndStart()">Maceraya Atıl 🚀</button>
-        </div>
-    </div>
 
-    <!-- EKRAN 4: ANA SAYFA -->
-    <div id="s-home" class="screen">
-        <div class="header">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <img id="home-header-avatar" src="avatar1.png" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:3px solid var(--primary);" onerror="this.src='https://placehold.co/50x50'">
-                <div><p style="margin:0; font-size:0.85rem; font-weight:700; color:var(--text-muted);">Merhaba,</p><h3 style="margin:0; font-size:1.4rem; color:var(--text-main);" id="home-name-display">Arkadaşım</h3></div>
-            </div>
-            <div style="background:#FFF3E0; color:#FF9800; padding:10px 18px; border-radius:25px; font-weight:800; font-size:1rem; display:flex; align-items:center; gap:8px; box-shadow:var(--shadow-sm);"><i class="fa-solid fa-fire"></i> 3</div>
-        </div>
-        <div class="scroll-content">
-            <div class="card" style="padding:25px; border-left: 8px solid var(--primary);" onclick="nav('s-rewards')">
-                <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                    <b style="font-size:1.2rem;">Seviye <span id="home-lvl" style="color:var(--primary-dark);">1</span></b>
-                    <span style="font-size:1rem; font-weight:700; color:var(--text-muted);"><span id="home-xp">0</span> / 100 XP</span>
+                <div class="input-group">
+                    <input type="text" id="username-input" placeholder="Adın ne?">
                 </div>
-                <div style="width:100%; height:12px; background:#f0f0f0; border-radius:6px; overflow:hidden;">
-                    <div id="home-xp-bar" style="height:100%; width:0%; background:var(--primary); border-radius:6px; transition:width 0.5s;"></div>
-                </div>
-            </div>
-            <h3 style="margin:30px 0 20px 0; font-size:1.4rem; padding-left:5px;">Bugün Ne Yapalım?</h3>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                <div class="card" style="flex-direction:column; padding:30px; border-bottom:6px solid var(--secondary-dark); min-height:180px; justify-content:center;" onclick="nav('s-lessons')">
-                    <div style="background:var(--secondary); width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.2rem; margin-bottom:20px; color:var(--secondary-dark); margin-left:auto; margin-right:auto; box-shadow:0 10px 20px rgba(255, 209, 186, 0.4);"><i class="fa-solid fa-book-open"></i></div>
-                    <b style="font-size:1.1rem;">Ders Çalış</b>
-                </div>
-                <div class="card" style="flex-direction:column; padding:30px; border-bottom:6px solid var(--primary-dark); min-height:180px; justify-content:center;" onclick="nav('s-challenges')">
-                    <div style="background:var(--primary); width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.2rem; margin-bottom:20px; color:var(--primary-dark); margin-left:auto; margin-right:auto; box-shadow:0 10px 20px rgba(196, 223, 217, 0.4);"><i class="fa-solid fa-palette"></i></div>
-                    <b style="font-size:1.1rem;">Bir Şey Yap</b>
-                </div>
-            </div>
-        </div>
-        <div class="bottom-nav">
-            <div class="nav-item active" onclick="nav('s-home')"><i class="fa-solid fa-house"></i>Ev</div>
-            <div class="nav-item" onclick="nav('s-lessons')"><i class="fa-solid fa-book"></i>Ders</div>
-            <div class="nav-item" onclick="nav('s-challenges')"><i class="fa-solid fa-hammer"></i>Yap</div>
-            <div class="nav-item" onclick="nav('s-rewards')"><i class="fa-solid fa-user"></i>Ben</div>
-        </div>
-    </div>
 
-    <!-- EKRAN 5: DERSLER & BUDDY -->
-    <div id="s-lessons" class="screen">
-        <div class="header"><h3>Dersler</h3></div>
-        <div class="scroll-content">
-            <!-- Buddy Kartı -->
-            <div class="card" style="background:#fff0f5; border-left:6px solid #e84393; display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:25px;" onclick="document.getElementById('buddy-file').click()">
-                <div>
-                    <h3 style="margin:0; font-size:1.2rem; color:#d63031; margin-bottom:5px;">Çalışma Arkadaşı</h3>
-                    <p style="margin:0; font-size:0.9rem;">Hamurdan arkadaşını yükle!</p>
-                </div>
-                <div style="font-size:2.5rem; background:white; width:60px; height:60px; display:flex; align-items:center; justify-content:center; border-radius:50%; box-shadow:var(--shadow-sm);">📸</div>
-                <input type="file" id="buddy-file" style="display:none;" accept="image/*" onchange="handleBuddy(this)">
+                <button id="start-btn" class="btn-primary squish-effect">Maceraya Atıl 🚀</button>
             </div>
+        </section>
 
-            <div class="lesson-grid" style="margin-top:25px;">
-                <div class="lesson-card" onclick="openLevelMap('math')"><i class="fa-solid fa-calculator" style="color:var(--accent-dark);"></i><b>Matematik</b><small style="color:var(--success);">10 Seviye</small></div>
-                <div class="lesson-card" onclick="openLevelMap('colors')"><i class="fa-solid fa-palette" style="color:var(--secondary-dark);"></i><b>Renkler</b><small style="color:var(--success);">10 Seviye</small></div>
-                <div class="lesson-card" onclick="openLevelMap('shapes')"><i class="fa-solid fa-shapes" style="color:var(--primary-dark);"></i><b>Şekiller</b><small style="color:var(--success);">10 Seviye</small></div>
-                <div class="lesson-card" onclick="openLevelMap('space')"><i class="fa-solid fa-rocket" style="color:#0984e3;"></i><b>Uzay</b><small style="color:var(--success);">10 Seviye</small></div>
-                <div class="lesson-card" onclick="openLevelMap('music')"><i class="fa-solid fa-music" style="color:#fd79a8;"></i><b>Müzik</b><small style="color:var(--success);">10 Seviye</small></div>
-                <div class="lesson-card" onclick="openLevelMap('animals')"><i class="fa-solid fa-paw" style="color:#e17055;"></i><b>Hayvanlar</b><small style="color:var(--success);">10 Seviye</small></div>
-            </div>
-        </div>
-        <div class="bottom-nav">
-            <div class="nav-item" onclick="nav('s-home')"><i class="fa-solid fa-house"></i>Ev</div>
-            <div class="nav-item active" onclick="nav('s-lessons')"><i class="fa-solid fa-book"></i>Ders</div>
-            <div class="nav-item" onclick="nav('s-challenges')"><i class="fa-solid fa-hammer"></i>Yap</div>
-            <div class="nav-item" onclick="nav('s-rewards')"><i class="fa-solid fa-user"></i>Ben</div>
-        </div>
-    </div>
-
-    <!-- EKRAN 6: CHALLENGES -->
-    <div id="s-challenges" class="screen">
-        <div class="header"><h3>Rehberler</h3></div>
-        <div class="scroll-content">
-            <div class="card" onclick="startGuide('flower')" style="padding:0; min-height:auto;">
-                <div style="height:150px; width:100%; background:#ffeaa7; display:flex; align-items:center; justify-content:center; font-size:6rem;">🌸</div>
-                <div style="padding:25px; width:100%; display:flex; align-items:center; justify-content:space-between;">
-                    <div><h3 style="margin:0;">Çiçek Yap</h3><p style="margin:5px 0 0 0; font-weight:600;">5 Adım • Kolay</p></div>
-                    <button class="btn-primary" style="width:auto; padding:10px 25px;">Başla</button>
+        <section id="dashboard" class="screen hidden">
+            <div class="welcome-banner glass-card">
+                <div class="profile-info">
+                    <img id="dashboard-avatar" src="" alt="User Avatar">
+                    <h2 id="greeting">Merhaba!</h2>
                 </div>
-            </div>
-            <div class="card" onclick="startGuide('castle')" style="padding:0; min-height:auto;">
-                <div style="height:150px; width:100%; background:#74b9ff; display:flex; align-items:center; justify-content:center; font-size:6rem;">🏰</div>
-                <div style="padding:25px; width:100%; display:flex; align-items:center; justify-content:space-between;">
-                    <div><h3 style="margin:0;">Kale Yap</h3><p style="margin:5px 0 0 0; font-weight:600;">2 Adım • Orta</p></div>
-                    <button class="btn-primary" style="width:auto; padding:10px 25px;">Başla</button>
-                </div>
-            </div>
-        </div>
-        <div class="bottom-nav">
-            <div class="nav-item" onclick="nav('s-home')"><i class="fa-solid fa-house"></i>Ev</div>
-            <div class="nav-item" onclick="nav('s-lessons')"><i class="fa-solid fa-book"></i>Ders</div>
-            <div class="nav-item active" onclick="nav('s-challenges')"><i class="fa-solid fa-hammer"></i>Yap</div>
-            <div class="nav-item" onclick="nav('s-rewards')"><i class="fa-solid fa-user"></i>Ben</div>
-        </div>
-    </div>
-
-    <!-- EKRAN 7: REWARDS & SHOP -->
-    <div id="s-rewards" class="screen">
-        <div class="scroll-content" style="padding:0;">
-            <div class="profile-card">
-                <div class="profile-bg-pattern"></div>
-                <div style="position:relative; z-index:2;">
-                    <img id="profile-avatar-main" src="avatar1.png" class="profile-avatar-lg" onerror="this.src='https://placehold.co/100x100?text=A';">
-                    <h2 id="profile-name-main">İsimsiz</h2>
-                    <div class="stat-row">
-                        <div class="stat-box"><span class="stat-val" id="profile-lvl">1</span><span class="stat-lbl">Seviye</span></div>
-                        <div class="stat-box"><span class="stat-val" id="profile-xp">0</span><span class="stat-lbl">Toplam XP</span></div>
+                <div class="buddy-preview">
+                    <p><small>Oyun Hamuru Arkadaşın:</small></p>
+                    <div id="buddy-container">
+                        <div class="buddy-placeholder"><i class="fas fa-camera"></i> Yok</div>
                     </div>
                 </div>
             </div>
 
-            <div style="padding:0 25px;">
-                <h3 style="border-left:5px solid var(--success); padding-left:15px; margin-bottom:20px;">Ödül Dükkanı</h3>
-                <div class="card" style="padding:0;">
-                    <div class="shop-item">
-                        <div style="display:flex; align-items:center;">
-                            <div class="shop-icon" style="color:#e84393;">🎁</div>
-                            <div><b>%15 İndirim Kodu</b><br><small style="color:var(--text-muted);">Squishables Mağazası</small></div>
-                        </div>
-                        <button class="btn-action" onclick="redeemReward(500)">500 XP</button>
-                    </div>
-                    <div class="shop-item">
-                        <div style="display:flex; align-items:center;">
-                            <div class="shop-icon" style="color:#0984e3;">🧢</div>
-                            <div><b>Özel Avatar</b><br><small style="color:var(--text-muted);">Kilitli içerik</small></div>
-                        </div>
-                        <button class="btn-action" style="background:#ccc;">1000 XP</button>
-                    </div>
+            <h3>Ders Kategorileri</h3>
+            <div class="category-grid">
                 </div>
 
-                <h3 style="border-left:5px solid var(--gold); padding-left:15px; margin-top:40px; margin-bottom:20px;">Haftalık Sıralama</h3>
-                <div class="card" style="padding:0; overflow:hidden;">
-                    <div class="leaderboard-list">
-                        <div class="shop-item" style="background:#fff9c4;">
-                            <div style="display:flex; align-items:center;">
-                                <b style="margin-right:15px; color:var(--gold); font-size:1.4rem;">1</b>
-                                <img src="avatar2.png" style="width:45px; height:45px; border-radius:50%; margin-right:15px;">
-                                <span>Ayşe</span>
-                            </div>
-                            <b>1500 XP</b>
-                        </div>
-                        <div class="shop-item">
-                            <div style="display:flex; align-items:center;">
-                                <b style="margin-right:15px; color:silver; font-size:1.4rem;">2</b>
-                                <img src="avatar3.png" style="width:45px; height:45px; border-radius:50%; margin-right:15px;">
-                                <span>Ali</span>
-                            </div>
-                            <b>1250 XP</b>
-                        </div>
-                        <div class="shop-item" style="background:#f0fdf4; border-left:5px solid var(--success);">
-                            <div style="display:flex; align-items:center;">
-                                <b style="margin-right:15px; font-size:1.4rem;">3</b>
-                                <img id="lb-my-avatar" src="avatar1.png" style="width:45px; height:45px; border-radius:50%; margin-right:15px;">
-                                <span id="lb-my-name">Sen</span>
-                            </div>
-                            <b id="lb-my-score">0 XP</b>
-                        </div>
-                    </div>
-                </div>
+            <div class="quick-actions">
+                <button onclick="app.showGuide()" class="btn-secondary squish-effect"><i class="fas fa-book-open"></i> Rehber</button>
+                <button onclick="app.showShop()" class="btn-secondary squish-effect"><i class="fas fa-store"></i> Mağaza</button>
             </div>
-        </div>
-        <div class="bottom-nav">
-            <div class="nav-item" onclick="nav('s-home')"><i class="fa-solid fa-house"></i>Ev</div>
-            <div class="nav-item" onclick="nav('s-lessons')"><i class="fa-solid fa-book"></i>Ders</div>
-            <div class="nav-item" onclick="nav('s-challenges')"><i class="fa-solid fa-hammer"></i>Yap</div>
-            <div class="nav-item active" onclick="nav('s-rewards')"><i class="fa-solid fa-user"></i>Ben</div>
-        </div>
-    </div>
+        </section>
 
-    <!-- DİĞER EKRANLAR (LEVEL MAP, QUIZ, GUIDE STEPS, GUIDE SUCCESS) -->
-    <!-- Kodun uzamaması için aynı mantıkla devam ediyor, yukarıdaki JS bunları yönetiyor -->
-    <div id="s-level-map" class="screen">
-        <div class="header"><div class="back-btn" onclick="nav('s-build-hub')"><i class="fa-solid fa-chevron-left"></i></div><h3 id="map-title">Matematik</h3><div style="width:40px;"></div></div>
-        <div class="scroll-content" style="text-align:center;">
-            <div style="background:white; padding:20px; border-radius:20px; margin-bottom:20px; box-shadow:var(--shadow-sm);"><i class="fa-solid fa-star" style="color:var(--gold); font-size:2rem; margin-bottom:10px;"></i><p>Sırayla tüm yıldızları topla!</p></div>
-            <div class="level-map" id="level-grid-container"></div>
-        </div>
-    </div>
-
-    <div id="s-quiz" class="screen">
-        <div class="header"><div class="back-btn" onclick="nav('s-level-map')"><i class="fa-solid fa-xmark" style="color:var(--danger);"></i></div><h3 id="quiz-level-ind">Level 1</h3><div style="width:40px;"></div></div>
-        <div class="scroll-content" style="display:flex; flex-direction:column; justify-content:center; padding-top:40px;">
-            <div class="quiz-timer"><div class="quiz-timer-fill" id="timer-bar"></div></div>
-            <div style="text-align:center; margin-bottom:50px;"><h1 style="font-size:4rem; color:var(--text-main); margin-bottom:15px; font-weight:800;" id="quiz-question">?</h1><p style="font-size:1.2rem;">Doğru cevabı seç!</p></div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;" id="quiz-options"></div>
+        <section id="lesson-screen" class="screen hidden">
+            <button onclick="app.goHome()" class="btn-back"><i class="fas fa-arrow-left"></i> Çık</button>
             
-            <!-- BUDDY GÖRÜNÜMÜ -->
-            <div class="buddy-corner">
-                <div class="buddy-bubble" id="buddy-msg">Başarılar!</div>
-                <img id="quiz-buddy" src="avatar1.png" class="buddy-avatar-small" onerror="this.style.display='none'">
+            <div id="quiz-buddy-area" class="glass-card mini-card hidden">
+                <img id="quiz-buddy-img" src="" alt="Buddy Support">
+                <p>Buddy sana inanıyor! 🌟</p>
             </div>
-        </div>
-    </div>
 
-    <div id="s-guide-steps" class="screen">
-        <div class="header"><div class="back-btn" onclick="nav('s-challenges')"><i class="fa-solid fa-xmark"></i></div><h3 id="guide-step-header">Adım 1/5</h3><div style="width:40px;"></div></div>
-        <div class="scroll-content" style="text-align:center;">
-            <div class="step-progress"><div class="progress-bar"><div class="progress-fill" id="p-fill"></div></div></div>
-            <div class="step-image-box"><div class="guide-label">Örnek</div><img id="guide-example-img" src="" alt="Örnek" onerror="this.src='https://placehold.co/400x200?text=Ornek+Yok';"></div>
-            <div class="step-image-box" id="guide-user-box" style="display:none; border-color:var(--primary); height:220px;"><div class="guide-label user"><i class="fa-solid fa-user"></i> Senin Eserin</div><img id="guide-user-img" src=""></div>
-            <div style="text-align:center; margin:25px 0;"><h2 id="guide-step-title" style="margin-bottom:10px;">Başlık</h2><p id="guide-step-desc">Açıklama</p></div>
-            <div class="step-upload-btn" onclick="document.getElementById('guide-file-input').click()"><i class="fa-solid fa-camera" style="font-size:2rem; margin-bottom:10px; color:var(--text-muted);"></i><div style="font-weight:700;">Fotoğraf Çek / Yükle</div><small>Devam etmek için yüklemelisin</small></div>
-            <input type="file" id="guide-file-input" style="display:none;" accept="image/*" onchange="handlePhotoUpload(this)">
-            <div style="display:flex; gap:15px; margin-top:30px;">
-                <button class="btn-secondary" style="flex:1;" onclick="prevStep()">Geri</button>
-                <button class="btn-primary" style="flex:2;" id="btn-guide-next" onclick="nextStep()">İleri <i class="fa-solid fa-arrow-right"></i></button>
+            <div class="glass-card question-card">
+                <h2 id="lesson-title">Matematik</h2>
+                <div class="progress-bar"><div id="progress-fill"></div></div>
+                
+                <div id="question-area">
+                    </div>
+
+                <div id="buddy-upload-area" class="hidden">
+                    <label for="buddy-file" class="upload-btn squish-effect">
+                        <i class="fas fa-camera"></i> Buddy Fotoğrafı Yükle
+                    </label>
+                    <input type="file" id="buddy-file" accept="image/*" hidden>
+                </div>
             </div>
-        </div>
+        </section>
+
+        <section id="guide-screen" class="screen hidden">
+            <button onclick="app.goHome()" class="btn-back"><i class="fas fa-arrow-left"></i></button>
+            <div class="glass-card">
+                <h2>Yapım Rehberi</h2>
+                <div class="guide-tabs">
+                    <button onclick="guide.load('flower')" class="squish-effect">Çiçek 🌸</button>
+                    <button onclick="guide.load('castle')" class="squish-effect">Kale 🏰</button>
+                    <button onclick="guide.load('animal')" class="squish-effect">Hayvan 🦁</button>
+                </div>
+                
+                <div id="step-container" class="step-view hidden">
+                    <img id="step-image" src="" alt="Adım Görseli">
+                    <p id="step-desc">Adım Açıklaması</p>
+                    
+                    <div class="user-craft-upload">
+                        <p>Senin yaptığını görelim:</p>
+                        <input type="file" id="craft-upload" accept="image/*">
+                    </div>
+
+                    <div class="step-nav">
+                        <button id="prev-step" class="btn-small">Geri</button>
+                        <button id="next-step" class="btn-small">İleri</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="shop-screen" class="screen hidden">
+            <button onclick="app.goHome()" class="btn-back"><i class="fas fa-arrow-left"></i></button>
+            <div class="glass-card">
+                <h2><i class="fas fa-shopping-cart"></i> XP Mağazası</h2>
+                <p>Mevcut XP: <span class="xp-val">0</span></p>
+                
+                <div class="shop-item">
+                    <img src="Product1.jpg" alt="Ürün">
+                    <div>
+                        <h4>Squishables Oyun Hamuru Seti</h4>
+                        <p>%15 İndirim Kuponu</p>
+                        <button onclick="app.buyCoupon()" class="btn-primary squish-effect">500 XP ile Al</button>
+                    </div>
+                </div>
+                <div id="coupon-area" class="hidden code-box">KOD: SQUISH15</div>
+            </div>
+            
+            <div class="glass-card" style="margin-top: 20px;">
+                <h3>🏆 Haftanın Liderleri</h3>
+                <ul id="leaderboard-list">
+                    <li>1. Ayşe - 1200 XP</li>
+                    <li>2. Can - 1150 XP</li>
+                    <li>3. Sen - <span class="xp-val">0</span> XP</li>
+                </ul>
+            </div>
+        </section>
+
     </div>
-
-    <div id="s-guide-success" class="screen" style="text-align:center; padding:30px;">
-        <div style="margin-top:40px; margin-bottom:20px;">
-            <div style="width:120px; height:120px; background:var(--success); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:3.5rem; margin:0 auto; animation:popIn 0.5s; box-shadow:0 10px 30px rgba(0,184,148,0.4);"><i class="fa-solid fa-check"></i></div>
-        </div>
-        <h1 style="font-size:2.5rem; margin-bottom:10px;">Harika İş!</h1><p>İşte yaratıcılığının hikayesi:</p>
-        <div class="scroll-content" style="flex:1; padding:20px 0;"><div class="summary-grid" id="summary-grid" style="display:flex; flex-direction:column; gap:15px;"></div></div>
-        <div style="padding:20px 0;"><button class="btn-primary" onclick="claimGuideReward()">Ödülünü Al (+50 XP) <i class="fa-solid fa-gift"></i></button></div>
-    </div>
-
-</div>
-
-<!-- SCRIPT -->
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-<script>
-    // --- VERİ YÖNETİMİ ---
-    let appData = { name: "Misafir", avatar: "avatar1.png", xp: 0, level: 1, buddy: null };
-
-    window.onload = function() {
-        try {
-            const saved = localStorage.getItem('squish_data_v12');
-            if(saved) {
-                appData = JSON.parse(saved);
-                nav('s-home');
-            } else {
-                nav('s-splash');
-                setTimeout(() => nav('s-onboarding'), 2000); // Otomatik onboarding'e
-            }
-            updateUI();
-        } catch(e) {
-            console.error("Start Error", e);
-            nav('s-onboarding');
-        }
-    };
-
-    function saveData() {
-        localStorage.setItem('squish_data_v12', JSON.stringify(appData));
-        updateUI();
-    }
-
-    function updateUI() {
-        const names = document.querySelectorAll('#home-name, #home-name-display, #profile-name-main, #lb-my-name');
-        names.forEach(el => { if(el) el.innerText = appData.name; });
-        
-        const avatars = document.querySelectorAll('#home-header-avatar, #profile-avatar-main, #lb-my-avatar');
-        avatars.forEach(el => { if(el) el.src = appData.avatar; });
-
-        // Buddy Update
-        const buddyImg = document.getElementById('quiz-buddy');
-        if(buddyImg && appData.buddy) { buddyImg.src = appData.buddy; buddyImg.style.display = 'block'; }
-
-        if(document.getElementById('home-lvl')) document.getElementById('home-lvl').innerText = appData.level;
-        if(document.getElementById('home-xp')) document.getElementById('home-xp').innerText = appData.xp;
-        if(document.getElementById('profile-lvl')) document.getElementById('profile-lvl').innerText = appData.level;
-        if(document.getElementById('profile-xp')) document.getElementById('profile-xp').innerText = appData.xp;
-        if(document.getElementById('lb-my-score')) document.getElementById('lb-my-score').innerText = appData.xp + " XP";
-        
-        if(document.getElementById('home-xp-bar')) document.getElementById('home-xp-bar').style.width = (appData.xp % 100) + "%";
-    }
-
-    function nav(id) {
-        document.querySelectorAll('.screen').forEach(s => { s.classList.remove('active'); s.style.display='none'; });
-        const t = document.getElementById(id);
-        if(t) { t.style.display='flex'; setTimeout(()=>t.classList.add('active'),10); }
-        
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        if(id==='s-home') updateNav(0);
-        else if(id==='s-lessons') updateNav(1);
-        else if(id==='s-challenges') updateNav(2);
-        else if(id==='s-rewards') updateNav(3);
-    }
-    function updateNav(i) { document.querySelectorAll('.nav-item')[i].classList.add('active'); }
-
-    // --- BUTTON FIX (KESİN ÇÖZÜM) ---
-    function saveProfileAndStart() {
-        try {
-            const nameInput = document.getElementById('inp-name');
-            if(nameInput && nameInput.value.trim() !== "") appData.name = nameInput.value;
-            saveData();
-            alert("Hoş geldin " + appData.name + "!");
-            nav('s-home'); // Zorla geçiş
-        } catch(e) {
-            console.error(e);
-            nav('s-home'); // Hata olsa bile geç
-        }
-    }
-
-    function pickAvatar(el, src) {
-        document.querySelectorAll('.avatar-opt').forEach(a => a.classList.remove('selected'));
-        el.classList.add('selected');
-        appData.avatar = src;
-    }
-
-    // --- REWARD & SHOP LOGIC ---
-    function redeemReward(cost) {
-        if(appData.xp >= cost) {
-            if(confirm(cost + " XP harcayarak %15 İndirim Kodunu almak istiyor musun?")) {
-                appData.xp -= cost;
-                saveData();
-                alert("Tebrikler! İndirim Kodunuz: SQUISH15");
-                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-            }
-        } else {
-            alert("Yetersiz Puan! " + (cost - appData.xp) + " XP daha kazanmalısın.");
-        }
-    }
-
-    function handleBuddy(input) {
-        if(input.files && input.files[0]) {
-            const r = new FileReader();
-            r.onload = e => {
-                appData.buddy = e.target.result;
-                saveData();
-                alert("Arkadaşın eklendi! Derslerde seni destekleyecek.");
-            }
-            r.readAsDataURL(input.files[0]);
-        }
-    }
-
-    // --- REHBERLER ---
-    // (Diğer rehber ve quiz kodları aynı kalabilir)
-    // (Not: Kod uzunluğu sınırı nedeniyle fonksiyonların geri kalanı önceki versiyondaki gibidir. 
-    // Ancak burada buton ve ekran ID'leri %100 eşleşmiştir.)
-    
-    const guides = {
-        flower: { steps: [
-            {t:"Adım 1", d:"Yap", i:"cicek_adim1.jpg"}, {t:"Adım 2", d:"Yap", i:"cicek_adim2.jpg"},
-            {t:"Adım 3", d:"Yap", i:"cicek_adim3.jpg"}, {t:"Adım 4", d:"Yap", i:"cicek_adim4.jpg"},
-            {t:"Adım 5", d:"Bitir", i:"cicek_adim5.jpg"}
-        ]},
-        castle: { steps: [{t:"Adım 1", d:"Yap", i:"kale_adim1.jpg"}, {t:"Adım 2", d:"Bitir", i:"kale_adim2.jpg"}] }
-    };
-    let activeGuide=null, gIdx=0, gPhoto=null;
-
-    function startGuide(key) {
-        activeGuide = guides[key];
-        gIdx = 0;
-        renderStep();
-        nav('s-guide-steps');
-    }
-
-    function renderStep() {
-        const s = activeGuide.steps[gIdx];
-        document.getElementById('guide-step-header').innerText = `Adım ${gIdx+1}`;
-        document.getElementById('guide-step-title').innerText = s.t;
-        document.getElementById('guide-step-desc').innerText = s.d;
-        document.getElementById('guide-example-img').src = s.i;
-        gPhoto = null;
-        document.getElementById('guide-user-box').style.display = 'none';
-        document.getElementById('btn-guide-next').innerText = (gIdx === activeGuide.steps.length-1) ? "Bitir" : "İleri";
-    }
-    function handlePhotoUpload(i) {
-        if(i.files && i.files[0]) {
-            const r = new FileReader();
-            r.onload = e => { gPhoto = e.target.result; document.getElementById('guide-user-img').src = gPhoto; document.getElementById('guide-user-box').style.display = 'flex'; }
-            r.readAsDataURL(i.files[0]);
-        }
-    }
-    function nextStep() {
-        if(!gPhoto) return alert("Fotoğraf yükle!");
-        if(gIdx < activeGuide.steps.length - 1) { gIdx++; renderStep(); }
-        else { claimGuideReward(); }
-    }
-    function prevStep() { if(gIdx>0) { gIdx--; renderStep(); } else nav('s-challenges'); }
-    function claimGuideReward() { appData.xp+=50; saveData(); launchConfetti(); nav('s-rewards'); alert("Tebrikler! Aktivite Tamamlandı."); }
-
-    function openLevelMap(id) { alert(id + " dersi açılıyor..."); }
-    function startQuiz(type) { /* Quiz Logic Here */ } // Önceki koddan eklenebilir
-    
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    function openFriendModal(n, l, img) { 
-        document.getElementById('m-friend-name').innerText = n;
-        document.getElementById('friend-modal').style.display = 'flex'; 
-    }
-    function resetProgress() { localStorage.removeItem('squish_data_v12'); location.reload(); }
-    function launchConfetti() { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
